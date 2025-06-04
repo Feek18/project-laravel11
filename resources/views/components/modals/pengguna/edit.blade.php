@@ -1,0 +1,68 @@
+<!-- Main modal -->
+<div id="edit-modal-{{ $user->id }}" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-gray-200 rounded-lg shadow-sm">
+            <!-- Modal header -->
+            <div
+                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900">
+                    Edit Data Pengguna
+                </h3>
+                <button type="button"
+                    class="end-2.5 text-gray-500 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                    data-modal-hide="edit-modal-{{ $user->id }}">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <form class="space-y-4" method="POST" action="{{ route('pengguna.update', $user->id) }}">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
+                        <input type="text" name="nama" id="nama"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            placeholder="Masukkan nama anda" required value="{{ old('nama', $user->nama) }}" />
+                    </div>
+                    <div>
+                        <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900">Alamat</label>
+                        <input type="textarea" name="alamat" id="alamat"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            placeholder="Masukkan alamat anda" required value="{{ old('alamat', $user->alamat) }}" />
+                    </div>
+                    <div>
+                        <label for="gender" class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
+                        <select name="gender" id="gender"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 ">
+                            <option disabled {{ old('gender', $user->gender) === null ? 'selected' : '' }}>Pilih gender
+                            </option>
+                            <option value="pria" {{ old('gender', $user->gender) == 'pria' ? 'selected' : '' }}>Pria
+                            </option>
+                            <option value="wanita" {{ old('gender', $user->gender) == 'wanita' ? 'selected' : '' }}>
+                                Wanita</option>
+
+                        </select>
+                    </div>
+                    <div>
+                        <label for="no_telp" class="block mb-2 text-sm font-medium text-gray-900">No.
+                            Telepon</label>
+                        <input type="number" name="no_telp" id="no_telp"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            placeholder="Masukkan nomor telepon anda" required
+                            value="{{ old('no_telp', $user->no_telp) }}" />
+                    </div>
+                    <button type="submit"
+                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
