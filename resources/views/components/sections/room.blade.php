@@ -7,7 +7,8 @@
         <div class="flex flex-col justify-center items-center lg:grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach ($ruangans as $ruangan)
                 <div class="max-w-sm bg-white rounded-lg shadow-sm dark:bg-gray-800">
-                    <img class="w-[330px] h-[220px] rounded-t-lg" src="../img/room1.png" alt="" />
+                    <img class="w-[330px] h-[220px] bg-cover object-cover rounded-t-lg" src="{{ $ruangan->gambar }}"
+                        alt="" />
                     <div class="p-5">
                         <div class="flex justify-between items-center text-white opacity-75 text-[13px] mb-2">
                             <p>{{ $ruangan->lokasi }}</p>

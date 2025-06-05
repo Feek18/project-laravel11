@@ -12,6 +12,7 @@ class Ruangan extends Model
     protected $primaryKey = 'id_ruang';
 
     protected $fillable = [
+        'gambar',
         'nama_ruangan',
         'lokasi',
     ];

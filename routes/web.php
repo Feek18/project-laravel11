@@ -16,7 +16,7 @@ require __DIR__ . '/auth.php';
 
 // homepage
 Route::get('/', [HomeController::class, 'index']);
-
+Route::get('/ruangan/{id}', [HomeController::class, 'show'])->name('ruangan.show');
 
 // Route::get('/dashboard', function () {
 //     return view('components.admin.dashboard');
@@ -49,10 +49,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UsersController::class);
 
         // detail ruangan
-        Route::controller(HomeController::class)->group(function () {
-            Route::get('/ruangan/{id}', 'show')->name('ruangan.show');
-        });
-        // Route::get('/ruangan/{id}', [HomeController::class, 'show'])->name('ruangan.show');
+        // Route::controller(HomeController::class)->group(function () {
+        //     Route::get('/ruangan/{id}', 'show')->name('ruangan.show');
+        // });
+
         // pemesanan untuk pinjam ruangan
         // Route::resource('pemesanan', PemesananController::class);
 

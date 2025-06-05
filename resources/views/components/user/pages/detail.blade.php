@@ -14,9 +14,6 @@
 </head>
 
 <body class="font-poppins">
-    @role('pengguna')
-        <p>halo</p>
-    @endrole
     {{-- navbar --}}
     @include('layouts.header')
 
@@ -35,8 +32,7 @@
                         <div
                             class="rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
                             <img class="w-full h-[300px] md:h-[420px] object-cover object-center"
-                                src="https://i.pinimg.com/736x/90/c3/ba/90c3ba81ec1d9728b503d5fdb7f192d5.jpg"
-                                alt="Room Image">
+                                src="{{ $ruangan->gambar }}" alt="Room Image">
                         </div>
                         <p class="text-sm text-gray-500 mt-4">{{ $ruangan->lokasi }}</p>
                         <h2 class="text-2xl lg:text-4xl font-semibold mt-1">{{ $ruangan->nama_ruangan }}</h2>

@@ -17,6 +17,7 @@ class RuanganFactory extends Factory
     public function definition(): array
     {
         return [
+            'gambar' => $this->faker->imageUrl(640, 480, null, true),
             'nama_ruangan' => 'Ruang ' . $this->faker->randomElement(['Gedung']) . ' ' . $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8]),
             'lokasi' => $this->faker->randomElement([
                 'Gedung D4 TRPL - Lantai 3',
