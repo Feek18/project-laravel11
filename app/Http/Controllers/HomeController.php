@@ -9,15 +9,23 @@ use Spatie\Permission\Traits\HasRoles;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware('role:pengguna')->only('show');
+    }
+
     public function index()
     {
         $ruangans = Ruangan::all()->slice(0, 4);
-        // dd($ruangans);
+
         return view('index', compact('ruangans'));
     }
     public function show($id)
     {
         $ruangan = Ruangan::find($id);
+
         return view('components.user.pages.detail', compact('ruangan'));
     }
 }

@@ -14,9 +14,6 @@
 </head>
 
 <body class="font-poppins">
-    @role('pengguna')
-        <p>halo</p>
-    @endrole
     {{-- navbar --}}
     @include('layouts.header')
 
@@ -35,8 +32,8 @@
                         <div
                             class="rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
                             <img class="w-full h-[300px] md:h-[420px] object-cover object-center"
-                                src="https://i.pinimg.com/736x/90/c3/ba/90c3ba81ec1d9728b503d5fdb7f192d5.jpg"
-                                alt="Room Image">
+                                 src="https://i.pinimg.com/736x/90/c3/ba/90c3ba81ec1d9728b503d5fdb7f192d5.jpg"
+                                 alt="Room Image">
                         </div>
                         <p class="text-sm text-gray-500 mt-4">{{ $ruangan->lokasi }}</p>
                         <h2 class="text-2xl lg:text-4xl font-semibold mt-1">{{ $ruangan->nama_ruangan }}</h2>
@@ -50,15 +47,15 @@
                                 <label for="nama_pengguna" class="block text-sm font-medium text-gray-700">Nama
                                     Pengguna</label>
                                 <input type="text" id="nama_pengguna" name="nama_pengguna"
-                                    class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Masukkan nama anda" required />
+                                       class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                                       placeholder="Masukkan nama anda" required />
                             </div>
 
                             <div class="mb-4">
                                 <label for="nama_ruangan" class="block mb-2 text-sm font-medium text-gray-700">Nama
                                     Ruangan</label>
                                 <select id="nama_ruangan" name="nama_ruangan"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option selected>Pilih ruangan</option>
                                     <option value="US">United States</option>
                                     <option value="CA">Canada</option>
@@ -71,8 +68,8 @@
                                 <label for="tanggal_pinjam" class="block text-sm font-medium text-gray-700">Tanggal
                                     Pinjam</label>
                                 <input type="date" name="tanggal_pinjam " id="tanggal_pinjam"
-                                    class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                    required />
+                                       class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                                       required />
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
@@ -80,16 +77,16 @@
                                     <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu
                                         Mulai</label>
                                     <input type="datetime" name="waktu_mulai " id="waktu_mulai"
-                                        class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                        required />
+                                           class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                                           required />
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="waktu_selesai" class="block text-sm font-medium text-gray-700">Waktu
                                         Selesai</label>
                                     <input type="datetime" name="waktu_selesai " id="waktu_selesai"
-                                        class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                        required />
+                                           class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                                           required />
                                 </div>
                             </div>
 
@@ -97,13 +94,13 @@
                                 <label for="keperluan" class="block text-sm font-medium text-gray-700">Keperluan
                                     Pinjam</label>
                                 <textarea id="keperluan" name="keperluan" rows="4"
-                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500
+                                          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500
                                     placeholder="Masukkan
-                                    keperluan anda"></textarea>
+                                          keperluan anda"></textarea>
                             </div>
 
                             <button type="submit"
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">Submit</button>
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">Submit</button>
                         </form>
                     </div>
                 </div>
