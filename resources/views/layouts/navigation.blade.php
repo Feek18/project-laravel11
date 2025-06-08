@@ -30,7 +30,7 @@
                     <x-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')">
                         {{ __('Pengguna') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('peminjam')" :active="request()->routeIs('peminjam')">
+                    <x-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')">
                         {{ __('Peminjam') }}
                     </x-nav-link>
                 </div>
@@ -107,7 +107,7 @@
             <x-responsive-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')">
                 {{ __('Pengguna') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('peminjam')" :active="request()->routeIs('peminjam')">
+            <x-responsive-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')">
                 {{ __('Peminjam') }}
             </x-responsive-nav-link>
         </div>

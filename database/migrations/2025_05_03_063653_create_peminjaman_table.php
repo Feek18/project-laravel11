@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('keperluan');
             $table->string('status_persetujuan')->default('pending');
             $table->date('tanggal_pinjam');
-            $table->dateTime('waktu_mulai');
-            $table->dateTime('waktu_selesai');
+            $table->time('waktu_mulai');
+            $table->time('waktu_selesai');
             $table->timestamps();
 
             $table->foreign('id_pengguna')->references('id')->on('penggunas');

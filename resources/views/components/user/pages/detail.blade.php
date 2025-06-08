@@ -41,32 +41,30 @@
                     <div class="w-full lg:w-[400px] bg-white shadow-md rounded-2xl p-6">
                         <h3 class="text-xl font-semibold">Form Peminjaman Ruangan</h3>
                         <p class="text-sm text-gray-600 mb-4">Silakan isi form peminjaman ruangan di bawah ini</p>
-                        <form>
-                            <div class="mb-4">
+                        <form action="{{ route('pemesanan.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}">
+                            {{-- <div class="mb-4">
                                 <label for="nama_pengguna" class="block text-sm font-medium text-gray-700">Nama
                                     Pengguna</label>
                                 <input type="text" id="nama_pengguna" name="nama_pengguna"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Masukkan nama anda" required />
-                            </div>
+                            </div> --}}
 
                             <div class="mb-4">
-                                <label for="nama_ruangan" class="block mb-2 text-sm font-medium text-gray-700">Nama
+                                <label for="nama_ruangan" class="block text-sm font-medium text-gray-700">Nama
                                     Ruangan</label>
-                                <select id="nama_ruangan" name="nama_ruangan"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                    <option selected>Pilih ruangan</option>
-                                    <option value="US">United States</option>
-                                    <option value="CA">Canada</option>
-                                    <option value="FR">France</option>
-                                    <option value="DE">Germany</option>
-                                </select>
+                                <input type="text" id="nama_ruangan" name="nama_ruangan"
+                                    value="{{ $ruangan->nama_ruangan }}" readonly
+                                    class="mt-1 block w-full bg-gray-100 rounded-lg border border-gray-300 p-2.5" />
                             </div>
+                            {{-- <pre>{{ dd($ruangan->getAttributes()) }}</pre> --}}
 
                             <div class="mb-4">
                                 <label for="tanggal_pinjam" class="block text-sm font-medium text-gray-700">Tanggal
                                     Pinjam</label>
-                                <input type="date" name="tanggal_pinjam " id="tanggal_pinjam"
+                                <input type="date" name="tanggal_pinjam" id="tanggal_pinjam"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                     required />
                             </div>
@@ -75,7 +73,7 @@
                                 <div class="mb-4">
                                     <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu
                                         Mulai</label>
-                                    <input type="datetime" name="waktu_mulai " id="waktu_mulai"
+                                    <input type="time" name="waktu_mulai" id="waktu_mulai"
                                         class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                         required />
                                 </div>
@@ -83,7 +81,7 @@
                                 <div class="mb-4">
                                     <label for="waktu_selesai" class="block text-sm font-medium text-gray-700">Waktu
                                         Selesai</label>
-                                    <input type="datetime" name="waktu_selesai " id="waktu_selesai"
+                                    <input type="time" name="waktu_selesai" id="waktu_selesai"
                                         class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                         required />
                                 </div>

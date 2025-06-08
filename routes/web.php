@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AkunController;
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\MatkulController;
+use App\Http\Controllers\Admin\PeminjamanController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
@@ -22,10 +23,6 @@ Route::get('/ruangan/{id}', [HomeController::class, 'show'])->name('ruangan.show
 //     return view('components.admin.dashboard');
 // })->middleware(['auth', 'role:admin'])->name('dashboard');
 
-Route::get('/peminjam', function () {
-    return view('components.admin.peminjam');
-})->middleware(['auth'])->name('peminjam');
-
 Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
@@ -43,6 +40,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('pengguna', UserController::class);
         // Akun
         Route::resource('akun', AkunController::class);
+        // Peminjam
+        Route::resource('peminjam', PeminjamanController::class);
+        Route::put('/peminjam/{id}/persetujuan', [PeminjamanController::class, 'statusPersetujuan'])
+            ->name('peminjam.persetujuan');
     });
 
     Route::middleware(['role:pengguna'])->group(function () {
@@ -54,7 +55,7 @@ Route::middleware('auth')->group(function () {
         // });
 
         // pemesanan untuk pinjam ruangan
-        // Route::resource('pemesanan', PemesananController::class);
+        Route::resource('pemesanan', PemesananController::class);
 
         // Profile
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

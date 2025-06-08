@@ -101,6 +101,16 @@
                     <span class="ms-3">Ruangan</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('users.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg group">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6M9 4h6a2 2 0 0 1 2 2v1H7V6a2 2 0 0 1 2-2zM4 7h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" />
+                    </svg>
+                    <span class="ms-3">Pesanan Saya</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>
