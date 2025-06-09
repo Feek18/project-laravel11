@@ -16,6 +16,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
     @endif
+    <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+    <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 </head>
 
 <body class="font-poppins">

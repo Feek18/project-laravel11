@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\PemesananController;
+use App\Http\Controllers\User\PesananController;
 use App\Http\Controllers\User\RuanganController;
 use App\Http\Controllers\User\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('akun', AkunController::class);
         // Peminjam
         Route::resource('peminjam', PeminjamanController::class);
-        Route::put('/peminjam/{id}/persetujuan', [PeminjamanController::class, 'statusPersetujuan'])
+        Route::put('/peminjam/{id}/persetujuan', [PeminjamanController::class, 'persetujuan'])
             ->name('peminjam.persetujuan');
     });
 
@@ -56,6 +57,9 @@ Route::middleware('auth')->group(function () {
 
         // pemesanan untuk pinjam ruangan
         Route::resource('pemesanan', PemesananController::class);
+
+        // pesanan ruangan
+        Route::resource('pesanRuangan', PesananController::class);
 
         // Profile
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

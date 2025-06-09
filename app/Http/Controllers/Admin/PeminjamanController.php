@@ -72,7 +72,7 @@ class PeminjamanController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Peminjaman berhasil dihapus.');
     }
 
-    public function statusPersetujuan(Request $request, $id)
+    public function persetujuan(Request $request, $id)
     {
         $request->validate([
             'status_persetujuan' => 'required|in:disetujui,ditolak',

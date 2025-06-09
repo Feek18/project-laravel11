@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
+use App\Models\MataKuliah;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class JadwalController extends Controller
     {
         $jadwals = Jadwal::with('ruangan')->get();
         $ruangan = Ruangan::all();
-        return view('components.admin.jadwal', compact('jadwals', 'ruangan'));
+        $matkul = MataKuliah::all();
+        return view('components.admin.jadwal', compact('jadwals', 'ruangan', 'matkul'));
     }
 
     public function store(Request $request)
@@ -21,6 +23,7 @@ class JadwalController extends Controller
         // dd($request->all());
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
+            'id_matkul' => 'required|numeric',
             'nama_perkuliahan' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'hari' => 'required|string|max:255',

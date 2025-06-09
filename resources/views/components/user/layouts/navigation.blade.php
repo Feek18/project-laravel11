@@ -91,7 +91,7 @@
                     <span class="ms-3">Dashboard</span>
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="{{ route('users.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg group">
                     <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 22 21"
                         xmlns="http://www.w3.org/2000/svg">
@@ -100,9 +100,9 @@
                     </svg>
                     <span class="ms-3">Ruangan</span>
                 </a>
-            </li>
+            </li> --}}
             <li>
-                <a href="{{ route('users.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg group">
+                <a href="{{ route('pesanRuangan.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg group">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round"
