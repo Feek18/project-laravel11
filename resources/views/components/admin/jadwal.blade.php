@@ -15,6 +15,16 @@
                         class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Tambah
                         jadwal</button>
                 </div>
+
+                @if ($errors->any())
+                    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                        <ul class="list-disc ml-5 text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
 
             <div class="relative overflow-x-auto">
@@ -60,7 +70,7 @@
                                     {{ $j->ruangan->nama_ruangan }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ $j->nama_perkuliahan }}
+                                    {{ $j->matkul->mata_kuliah }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ $j->tanggal }}

@@ -33,26 +33,27 @@
                             <option value="" disabled {{ old('id_ruang') == null ? 'selected' : '' }}>Pilih
                                 ruangan</option>
                             @foreach ($ruangan as $r)
-                                <option value="{{ $r->id_ruang }}">{{ $r->nama_ruangan }}</option>
+                                <option value="{{ $r->id_ruang }}">{{ $r->nama_ruangan }} - {{ $r->lokasi }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div>
                         <label for="id_matkul" class="block mb-2 text-sm font-medium text-gray-900">Nama
-                            Matkul</label>
+                            Mata Kuliah</label>
                         <select id="id_matkul" name="id_matkul"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="" disabled {{ old('id_matkul') == null ? 'selected' : '' }}>Pilih
+                            <option value="" disabled {{ old('id_ruang') == null ? 'selected' : '' }}>Pilih
                                 matkul</option>
                             @foreach ($matkul as $m)
                                 <option value="{{ $m->id }}">{{ $m->mata_kuliah }}</option>
                             @endforeach
                         </select>
-                        <label for="nama_perkuliahan" class="block mb-2 text-sm font-medium text-gray-900">Nama
+                        {{-- <label for="nama_perkuliahan" class="block mb-2 text-sm font-medium text-gray-900">Nama
                             Perkuliahan</label>
                         <input type="text" name="nama_perkuliahan" id="nama_perkuliahan"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan nama perkuliahan" required />
+                            placeholder="Masukkan nama perkuliahan" required /> --}}
                     </div>
                     <div>
                         <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
