@@ -44,12 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     backgroundColor: peminjaman.backgroundColor,
                     borderColor: peminjaman.borderColor,
                     color: '#FFFFFF',
-                    raw: {
-                        status: peminjaman.status,
-                        pengguna: peminjaman.pengguna,
-                        ruangan: peminjaman.ruangan,
-                        keperluan: peminjaman.description
-                    }
                 };
             });
             
@@ -81,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         calendar.on('clickEvent', function(event) {
             const eventData = event.event;
+            console.log('Clicked event:', eventData);
             const raw = eventData.raw || {};
         });
 

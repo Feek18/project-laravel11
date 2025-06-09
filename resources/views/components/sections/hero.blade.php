@@ -19,5 +19,26 @@
 
 <!-- Kalender Offside -->
 <div class="relative -mt-12 md:-mt-16 lg:-mt-48 px-4 md:px-16 lg:px-32">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-semibold text-gray-900">Kalender Peminjaman Ruangan</h3>
+        <div class="flex items-center space-x-4">
+            {{-- Legend --}}
+            <div class="flex items-center space-x-4 text-sm">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                    <span class="text-gray-600">Disetujui</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                    <span class="text-gray-600">Pending</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-4 text-sm text-gray-500">
+        <p>📌 Klik pada event untuk melihat detail peminjaman. Kalender ini hanya untuk melihat jadwal peminjaman
+            ruangan.</p>
+    </div>
     <div id="calendar" class="w-full h-[600px] bg-white rounded-lg shadow-lg"></div>
 </div>
