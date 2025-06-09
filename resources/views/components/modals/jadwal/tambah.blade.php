@@ -8,7 +8,7 @@
             <div
                 class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-xl font-semibold text-gray-900">
-                    Tambah Pengguna
+                    Tambah Jadwal
                 </h3>
                 <button type="button"
                     class="end-2.5 text-gray-500 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -39,11 +39,11 @@
                     </div>
                     <div>
                         <label for="id_matkul" class="block mb-2 text-sm font-medium text-gray-900">Nama
-                            Ruangan</label>
+                            Matkul</label>
                         <select id="id_matkul" name="id_matkul"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="" disabled {{ old('id_ruang') == null ? 'selected' : '' }}>Pilih
-                                ruangan</option>
+                            <option value="" disabled {{ old('id_matkul') == null ? 'selected' : '' }}>Pilih
+                                matkul</option>
                             @foreach ($matkul as $m)
                                 <option value="{{ $m->id }}">{{ $m->mata_kuliah }}</option>
                             @endforeach

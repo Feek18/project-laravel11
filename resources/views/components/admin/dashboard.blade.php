@@ -70,6 +70,19 @@
                 </div>
             </div>
 
+            {{-- Calendar Section --}}
+            <div class="mt-8">
+                <div class="bg-white rounded-2xl border border-gray-200 p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6">Kalender Peminjaman Ruangan</h3>
+                    <div id="calendar" style="height: 600px;"></div>
+                </div>
+            </div>
+
         </div>
     </div>
+
+    {{-- Pass peminjaman data to JavaScript --}}
+    <script>
+        window.peminjamanData = @json($peminjamans);
+    </script>
 </x-app-layout>

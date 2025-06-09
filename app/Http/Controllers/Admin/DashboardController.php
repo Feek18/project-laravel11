@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Ruangan;
+use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Traits\HasRoles;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
-        $ruangans = Ruangan::all()->slice(0, 4);
+        // Get all peminjaman data for the calendar
         $peminjamans = Peminjaman::with(['pengguna', 'ruangan'])
             ->whereIn('status_persetujuan', ['pending', 'disetujui'])
             ->get()
@@ -30,8 +28,8 @@ class HomeController extends Controller
                 'borderColor' => $this->getStatusColor($peminjaman->status_persetujuan),
             ];
             });
-        // dd($ruangans);
-        return view('index', compact('ruangans', 'peminjamans'));
+
+        return view('components.admin.dashboard', compact('peminjamans'));
     }
 
     private function getStatusColor($status)
@@ -45,11 +43,5 @@ class HomeController extends Controller
             default:
                 return '#F59E0B'; // yellow
         }
-    }
-    
-    public function show($id)
-    {
-        $ruangan = Ruangan::find($id);
-        return view('components.user.pages.detail', compact('ruangan'));
     }
 }

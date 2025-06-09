@@ -8,7 +8,7 @@
     <div class="p-4 sm:ml-64">
         <div class="p-4 mt-14">
             <div class="max-w-2xl px-4 sm:px-6 lg:px-0 text-3xl font-semibold text-gray-900">
-                {{ __('Selamat Datang di Halaman Dashboard, ' . Auth::user()->pengguna->nama) }}
+                {{ __('Selamat Datang di Halaman Dashboard, ' . (Auth::user()->pengguna->nama ?? null)) }}
             </div>
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 md:gap-6 mt-6">
                 {{-- Metric Item: Customers --}}

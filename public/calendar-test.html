@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar API Test</title>
+    <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+    <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+</head>
+<body>
+    <h1>Calendar API Test</h1>
+    <div id="calendar" style="height: 400px; border: 1px solid #ddd;"></div>
+
+    <script>
+        const calendar = new toastui.Calendar('#calendar', {
+            defaultView: 'month',
+            useCreationPopup: true,
+            useDetailPopup: true,
+        });
+
+        // Debug available methods
+        console.log('Calendar prototype methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(calendar)));
+        console.log('Has createEvents:', typeof calendar.createEvents === 'function');
+        console.log('Has createSchedules:', typeof calendar.createSchedules === 'function');
+        console.log('Has createEvent:', typeof calendar.createEvent === 'function');
+
+        // Test sample data
+        const testEvents = [
+            {
+                id: '1',
+                calendarId: 'cal1',
+                title: 'Test Event',
+                category: 'time',
+                start: new Date(),
+                end: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours later
+                backgroundColor: '#10B981',
+                borderColor: '#10B981'
+            }
+        ];
+
+        // Try different methods
+        try {
+            if (calendar.createEvents) {
+                calendar.createEvents(testEvents);
+                console.log('✓ createEvents worked!');
+            }
+        } catch (e) {
+            console.log('✗ createEvents failed:', e);
+        }
+
+        try {
+            if (calendar.createSchedules) {
+                calendar.createSchedules(testEvents);
+                console.log('✓ createSchedules worked!');
+            }
+        } catch (e) {
+            console.log('✗ createSchedules failed:', e);
+        }
+    </script>
+</body>
+</html>

@@ -45,9 +45,10 @@
                     <button class="flex items-center gap-3 text-white text-sm" id="avatarButton" type="button"
                         data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start">
                         <img class="w-10 h-10 rounded-full cursor-pointer bg-cover bg-center"
-                            src="{{ asset('storage/' . auth()->user()->pengguna->gambar) }}" alt="User dropdown">
+                            src="{{ auth()->user()->pengguna && auth()->user()->pengguna->gambar ? asset('storage/' . auth()->user()->pengguna->gambar) : asset('images/default-avatar.png') }}" 
+                            alt="User dropdown">
                         <div class="hidden md:block text-left">
-                            <h3>{{ Auth::user()->pengguna->nama }}</h3>
+                            <h3>{{ Auth::user()->pengguna->nama ?? '' }}</h3>
                             <p class="text-xs font-normal opacity-75">{{ Auth::user()->email }} </p>
                         </div>
                     </button>

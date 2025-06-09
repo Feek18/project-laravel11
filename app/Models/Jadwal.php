@@ -9,6 +9,7 @@ class Jadwal extends Model
     protected $table = 'jadwals';
     protected $fillable = [
         'id_ruang',
+        'id_matkul',
         'nama_perkuliahan',
         'tanggal',
         'hari',

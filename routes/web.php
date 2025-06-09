@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AkunController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\MatkulController;
 use App\Http\Controllers\Admin\PeminjamanController;
@@ -27,9 +28,7 @@ Route::get('/ruangan/{id}', [HomeController::class, 'show'])->name('ruangan.show
 Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('components.admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // jadwal
         Route::resource('jadwal', JadwalController::class);

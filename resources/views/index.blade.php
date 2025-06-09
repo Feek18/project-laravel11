@@ -46,7 +46,9 @@
 
     {{-- footer --}}
     @include('layouts.footer')
-
+    <script>
+        window.peminjamanData = @json($peminjamans);
+    </script>
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
 </body>
 
