@@ -14,11 +14,14 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Jadwal::with('ruangan')->select('jadwals.*');
+            $data = Jadwal::with(['ruangan', 'matkul'])->select('jadwals.*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('ruangan_nama', function($row){
                     return $row->ruangan->nama_ruangan ?? '-';
+                })
+                ->addColumn('nama_perkuliahan', function($row){
+                    return $row->matkul->mata_kuliah ?? '-';
                 })
                 ->addColumn('action', function($row){
                     $editBtn = '<button onclick="loadEditModal(\'jadwal\', '.$row->id.')" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
@@ -71,13 +74,14 @@ class JadwalController extends Controller
     {
         $jadwal = Jadwal::findOrFail($id);
         $ruangan = \App\Models\Ruangan::all(); // Need to load ruangan for the modal
+        $matkul = \App\Models\MataKuliah::all(); // Need to load matkul for the modal
         
         // If this is an AJAX request, return the modal HTML
         if (request()->ajax()) {
-            return view('components.modals.jadwal.edit', compact('jadwal', 'ruangan'))->render();
+            return view('components.modals.jadwal.edit', compact('jadwal', 'ruangan', 'matkul'))->render();
         }
         
-        return view('components.modals.jadwal.edit', compact('jadwal', 'ruangan'));
+        return view('components.modals.jadwal.edit', compact('jadwal', 'ruangan', 'matkul'));
     }
 
 
