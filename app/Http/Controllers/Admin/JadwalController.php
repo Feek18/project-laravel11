@@ -54,8 +54,8 @@ class JadwalController extends Controller
         // dd($request->all());
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
-            'id_matkul' => 'required|numeric',
-            'nama_perkuliahan' => 'required|string|max:255',
+            'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
+            // 'nama_perkuliahan' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'hari' => 'required|string|max:255',
             'jam_mulai' => 'required|date_format:H:i',
@@ -87,7 +87,7 @@ class JadwalController extends Controller
         // dd($request->all());
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
-            'nama_perkuliahan' => 'required|string|max:255',
+            'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
             'tanggal' => 'required|date',
             'hari' => 'required|string|max:255',
             'jam_mulai' => 'required|date_format:H:i',

@@ -10,7 +10,6 @@ class Jadwal extends Model
     protected $fillable = [
         'id_ruang',
         'id_matkul',
-        'nama_perkuliahan',
         'tanggal',
         'hari',
         'jam_mulai',
@@ -20,5 +19,10 @@ class Jadwal extends Model
     public function ruangan()
     {
         return $this->belongsTo(Ruangan::class, 'id_ruang', 'id_ruang');
+    }
+
+    public function matkul()
+    {
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id');
     }
 }

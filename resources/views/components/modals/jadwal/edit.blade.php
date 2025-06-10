@@ -46,12 +46,20 @@
                         </select>
                     </div>
                     <div>
-                        <label for="nama_perkuliahan" class="block mb-2 text-sm font-medium text-gray-900">Nama
-                            Perkuliahan</label>
-                        <input type="text" name="nama_perkuliahan" id="nama_perkuliahan"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan nama perkuliahan" required
-                            value="{{ old('nama_perkuliahan', $jadwal->nama_perkuliahan) }}" />
+                        <label for="id_matkul" class="block mb-2 text-sm font-medium text-gray-900">Mata Kuliah</label>
+                        <select id="id_matkul" name="id_matkul"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" disabled
+                                {{ old('id_matkul', $jadwal->id_matkul) == null ? 'selected' : '' }}>
+                                Pilih mata kuliah
+                            </option>
+                            @foreach ($matkul as $mk)
+                                <option value="{{ $mk->id }}"
+                                    {{ old('id_matkul', $jadwal->id_matkul) == $mk->id ? 'selected' : '' }}>
+                                    {{ $mk->mata_kuliah }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
                         <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
@@ -64,11 +72,13 @@
                         <label for="hari" class="block mb-2 text-sm font-medium text-gray-900">Hari</label>
                         <select id="hari" name="hari"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5">
-                            <option value="minggu" {{ old('hari', $jadwal->hari) == 'minggu' ? 'selected' : '' }}>Minggu
+                            <option value="minggu" {{ old('hari', $jadwal->hari) == 'minggu' ? 'selected' : '' }}>
+                                Minggu
                             </option>
                             <option value="senin" {{ old('hari', $jadwal->hari) == 'senin' ? 'selected' : '' }}>Senin
                             </option>
-                            <option value="selasa" {{ old('hari', $jadwal->hari) == 'selasa' ? 'selected' : '' }}>Selasa
+                            <option value="selasa" {{ old('hari', $jadwal->hari) == 'selasa' ? 'selected' : '' }}>
+                                Selasa
                             </option>
                             <option value="rabu" {{ old('hari', $jadwal->hari) == 'rabu' ? 'selected' : '' }}>Rabu
                             </option>
@@ -95,8 +105,7 @@
                         <input type="time" name="jam_selesai" id="jam_selesai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Masukkan lokasi" required
-                            value="{{ old('jam_selesai', \Carbon\Carbon::createFromFormat('H:i:s', $jadwal->jam_selesai)->format('H:i')) }}"
- />
+                            value="{{ old('jam_selesai', \Carbon\Carbon::createFromFormat('H:i:s', $jadwal->jam_selesai)->format('H:i')) }}" />
                     </div>
                     <button type="submit"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
