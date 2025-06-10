@@ -29,97 +29,71 @@
             @endif
 
             {{-- Data Table --}}
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left text-gray-700">
-                    <thead class="text-xs uppercase bg-gray-100 text-gray-700">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <table id="peminjam-table" class="w-full">
+                    <thead>
                         <tr>
-                            <th class="px-4 py-3">No</th>
-                            <th class="px-4 py-3">Nama Peminjam</th>
-                            <th class="px-4 py-3">Ruangan</th>
-                            <th class="px-4 py-3">Keperluan</th>
-                            <th class="px-4 py-3">Status Peminjaman</th>
-                            <th class="px-4 py-3">Tanggal</th>
-                            <th class="px-4 py-3">Mulai</th>
-                            <th class="px-4 py-3">Selesai</th>
-                            <th class="px-4 py-3">Persetujuan</th>
-                            <th class="px-4 py-3 text-center">Aksi</th>
+                            <th>No</th>
+                            <th>Nama Peminjam</th>
+                            <th>Ruangan</th>
+                            <th>Keperluan</th>
+                            <th>Tanggal</th>
+                            <th>Mulai</th>
+                            <th>Selesai</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($peminjam as $p)
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3">{{ $p->pengguna->nama }}</td>
-                                <td class="px-4 py-3">{{ $p->ruangan->nama_ruangan }} - {{ $p->ruangan->lokasi }}</td>
-                                <td class="px-4 py-3">{{ $p->keperluan }}</td>
-                                <td class="px-4 py-3">
-                                    <span
-                                        class="inline-block px-3 py-1 text-xs font-medium text-white rounded 
-                                        {{ $p->status_peminjaman === 'terencana' ? 'bg-green-600' : 'bg-indigo-600' }}">
-                                        {{ ucfirst($p->status_peminjaman) }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3">{{ $p->tanggal_pinjam }}</td>
-                                <td class="px-4 py-3">{{ $p->waktu_mulai }}</td>
-                                <td class="px-4 py-3">{{ $p->waktu_selesai }}</td>
-                                <td class="px-6 py-4">
-                                    @if ($p->status_persetujuan === 'pending')
-                                        <form action="{{ route('peminjam.persetujuan', $p->id) }}" method="POST"
-                                            class="flex gap-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <button name="status_persetujuan" value="disetujui"
-                                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                                                Setujui
-                                            </button>
-                                            <button name="status_persetujuan" value="ditolak"
-                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                                                Tolak
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span
-                                            class="inline-block px-3 py-1 text-xs font-medium text-white rounded {{ $p->status_persetujuan === 'disetujui' ? 'bg-green-500' : 'bg-red-500' }}">
-                                            {{ ucfirst($p->status_persetujuan) }}
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-3 text-center flex items-center justify-center gap-2">
-                                    {{-- Edit Button --}}
-                                    <button data-modal-target="edit-modal-{{ $p->id }}"
-                                        data-modal-toggle="edit-modal-{{ $p->id }}" data-modal-backdrop="static"
-                                        type="button"
-                                        class="bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded-lg transition">
-                                        <x-icons.edit-icon class="w-4 h-4" />
-                                    </button>
-
-                                    {{-- Delete Form --}}
-                                    <form method="POST" action="{{ route('peminjam.destroy', $p->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition">
-                                            <x-icons.hapus-icon class="w-4 h-4" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-
-                            {{-- Edit Modal --}}
-                            @include('components.modals.peminjam.edit', ['peminjam' => $p])
-                        @empty
-                            <tr>
-                                <td colspan="10" class="px-6 py-4 text-center text-gray-500">
-                                    Tidak ada data peminjaman.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
                 </table>
             </div>
 
             {{-- Tambah Modal --}}
             @include('components.modals.peminjam.tambah')
+            <!-- Dynamic edit modal container -->
+            <div id="dynamic-modal-container"></div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Shared DataTables Modal Handler -->
+    <script src="{{ asset('js/datatables-modal.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#peminjam-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('peminjam.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'nama_peminjam', name: 'pengguna.nama'},
+                    {data: 'nama_ruangan', name: 'ruangan.nama_ruangan'},
+                    {data: 'keperluan', name: 'keperluan'},
+                    {data: 'tanggal_pinjam', name: 'tanggal_pinjam'},
+                    {data: 'waktu_mulai', name: 'waktu_mulai'},
+                    {data: 'waktu_selesai', name: 'waktu_selesai'},
+                    {data: 'status_badge', name: 'status_persetujuan'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

@@ -17,62 +17,57 @@
                         </button>
                     </div>
                 </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <table id="akun-table" class="w-full">
+                        <thead>
                             <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Email
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Nama
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    No. Telepon
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Action
-                                </th>
+                                <th>No</th>
+                                <th>Email</th>
+                                <th>Nama</th>
+                                <th>No. Telepon</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($akun as $a)
-                                <tr class="bg-white">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ $loop->iteration }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $a->user->email }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $a->nama }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $a->no_telp }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <form method="POST" action="{{ route('akun.destroy', $a->user->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                                <x-icons.hapus-icon class="w-4 h-4" />
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
                     </table>
-                    {{-- <div class="m-8">
-                        {{ $users->links('pagination::tailwind') }}
-                    </div> --}}
                 </div>
                 @include('components.modals.akun.tambah')
             </div>
         </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#akun-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('akun.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'email', name: 'user.email'},
+                    {data: 'nama', name: 'nama'},
+                    {data: 'no_telp', name: 'no_telp'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    // Reinitialize Flowbite modals after DataTables draws
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
     </x-app-layout>

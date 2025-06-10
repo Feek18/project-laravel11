@@ -17,82 +17,64 @@
                     </button>
                 </div>
             </div>
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <table id="pengguna-table" class="w-full">
+                    <thead>
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                No
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Alamat
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Gender
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                No. Telepon
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Action
-                            </th>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Gender</th>
+                            <th>No. Telepon</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {{-- @php dd($users); @endphp --}}
-                        @foreach ($users as $u)
-                            <tr class="bg-white">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    {{ $loop->iteration }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $u->nama }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $u->alamat }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $u->gender }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $u->no_telp }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2">
-                                        <!-- Tombol Edit -->
-                                        <button type="button" data-modal-target="edit-modal-{{ $u->id }}"
-                                            data-modal-toggle="edit-modal-{{ $u->id }}"
-                                            data-modal-backdrop="static"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
-                                            <x-icons.edit-icon class="w-4 h-4" />
-                                        </button>
-
-                                        <!-- Tombol Hapus -->
-                                        <form method="POST" action="{{ route('pengguna.destroy', $u->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                                <x-icons.hapus-icon class="w-4 h-4" />
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            @include('components.modals.pengguna.edit', ['user' => $u])
-                        @endforeach
-                    </tbody>
                 </table>
-                <div class="m-8">
-                    {{ $users->links('pagination::tailwind') }}
-                </div>
             </div>
             @include('components.modals.pengguna.tambah')
+            <!-- Dynamic edit modal container -->
+            <div id="dynamic-modal-container"></div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Shared DataTables Modal Handler -->
+    <script src="{{ asset('js/datatables-modal.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#pengguna-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('pengguna.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'nama', name: 'nama'},
+                    {data: 'alamat', name: 'alamat'},
+                    {data: 'gender', name: 'gender'},
+                    {data: 'no_telp', name: 'no_telp'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    // Reinitialize Flowbite modals after DataTables draws
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

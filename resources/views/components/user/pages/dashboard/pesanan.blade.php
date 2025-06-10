@@ -11,89 +11,60 @@
                 <div class="px-4 sm:px-6 lg:px-0 text-3xl font-semibold text-gray-900 mb-8">
                     {{ __('History Pesanan') }}
                 </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <table id="pesanan-table" class="w-full">
+                        <thead>
                             <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Nama Peminjam
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Nama Ruangan
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Tanggal Pinjam
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Waktu Mulai
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Waktu Selesai
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Keperluan
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Action
-                                </th>
+                                <th>No</th>
+                                <th>Nama Ruangan</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Waktu Mulai</th>
+                                <th>Waktu Selesai</th>
+                                <th>Keperluan</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {{-- @php dd($users); @endphp --}}
-                            {{-- @foreach ($users as $u)
-                                <tr class="bg-white">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                        {{ $loop->iteration }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $u->nama }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $u->alamat }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $u->gender }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $u->no_telp }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-2">
-                                            <!-- Tombol Edit -->
-                                            <button type="button" data-modal-target="edit-modal-{{ $u->id }}"
-                                                data-modal-toggle="edit-modal-{{ $u->id }}"
-                                                data-modal-backdrop="static"
-                                                class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
-                                                <x-icons.edit-icon class="w-4 h-4" />
-                                            </button>
-    
-                                            <!-- Tombol Hapus -->
-                                            <form method="POST" action="{{ route('pengguna.destroy', $u->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                                    <x-icons.hapus-icon class="w-4 h-4" />
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-    
-                                </tr>
-                                @include('components.modals.pengguna.edit', ['user' => $u])
-                            @endforeach --}}
-                        </tbody>
                     </table>
-                    {{-- <div class="m-8">
-                        {{ $users->links('pagination::tailwind') }}
-                    </div> --}}
                 </div>
-                {{-- @include('components.modals.pengguna.tambah') --}}
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#pesanan-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('pesanRuangan.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'nama_ruangan', name: 'ruangan.nama_ruangan'},
+                    {data: 'tanggal_pinjam', name: 'tanggal_pinjam'},
+                    {data: 'waktu_mulai', name: 'waktu_mulai'},
+                    {data: 'waktu_selesai', name: 'waktu_selesai'},
+                    {data: 'keperluan', name: 'keperluan'},
+                    {data: 'status_badge', name: 'status_persetujuan'},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-user.layouts.app>

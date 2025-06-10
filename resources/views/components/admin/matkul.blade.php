@@ -17,69 +17,62 @@
                 </div>
             </div>
 
-            <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <table id="matkul-table" class="w-full">
+                    <thead>
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                No
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Kode MataKuliah
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama MataKuliah
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Semester
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Action
-                            </th>
+                            <th>No</th>
+                            <th>Kode MataKuliah</th>
+                            <th>Nama MataKuliah</th>
+                            <th>Semester</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($matakuliah as $mk)
-                            <tr class="bg-white">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    {{ $loop->iteration }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $mk->kode_matkul }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $mk->mata_kuliah }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $mk->semester }}
-                                </td>
-                                <td class="flex items-center gap-2 px-6 py-4">
-                                    <button data-modal-target="matkul-edit-modal-{{ $mk->id }}"
-                                        data-modal-toggle="matkul-edit-modal-{{ $mk->id }}"
-                                        data-modal-backdrop="static" type="button"
-                                        class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
-                                        <x-icons.edit-icon class="w-4 h-4" />
-                                    </button>
-
-                                    <form method="POST" action="{{ route('matkul.destroy', $mk->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150">
-                                            <x-icons.hapus-icon class="w-4 h-4" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @include('components.modals.matakuliah.edit', ['matakuliah' => $mk])
-                        @endforeach
-                    </tbody>
                 </table>
-                <div class="m-8">
-                    {{ $matakuliah->links('pagination::tailwind') }}
-                </div>
             </div>
             @include('components.modals.matakuliah.tambah')
+            <!-- Dynamic edit modal container -->
+            <div id="dynamic-modal-container"></div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Shared DataTables Modal Handler -->
+    <script src="{{ asset('js/datatables-modal.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#matkul-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('matkul.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'kode_matkul', name: 'kode_matkul'},
+                    {data: 'mata_kuliah', name: 'mata_kuliah'},
+                    {data: 'semester', name: 'semester'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    // Reinitialize Flowbite modals after DataTables draws
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

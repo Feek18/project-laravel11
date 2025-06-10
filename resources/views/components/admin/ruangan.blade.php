@@ -16,62 +16,80 @@
                         Ruangan</button>
                 </div>
             </div>
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-black uppercase bg-gray-50">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <table id="ruangan-table" class="w-full">
+                    <thead>
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                No
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama Ruangan
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Lokasi
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Action</span>
-                            </th>
+                            <th>No</th>
+                            <th>Nama Ruangan</th>
+                            <th>Lokasi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($ruangan as $r)
-                            <tr class="bg-white border-b border-gray-200">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ $loop->iteration }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $r->nama_ruangan }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $r->lokasi }}
-                                </td>
-                                <td class="flex items-center gap-2 px-6 py-4">
-                                    <button data-modal-target="edit-modal-{{ $r->id_ruang }}"
-                                        data-modal-toggle="edit-modal-{{ $r->id_ruang }}" data-modal-backdrop="static"
-                                        type="button"
-                                        class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
-                                        <x-icons.edit-icon class="w-4 h-4" />
-                                    </button>
-                                    <form method="POST" action="{{ route('ruangan.destroy', $r->id_ruang) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150">
-                                            <x-icons.hapus-icon class="w-4 h-4" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @include('components.modals.ruangan.edit', ['ruangan' => $r])
-                        @endforeach
-                    </tbody>
                 </table>
-                <div class="m-8">
-                    {{ $ruangan->links('pagination::tailwind') }}
-                </div>
             </div>
             @include('components.modals.ruangan.tambah')
+            <!-- Dynamic edit modal container -->
+            <div id="dynamic-modal-container"></div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Flowbite JS for modals -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    
+    <!-- DataTables Modal Handler -->
+    <script src="{{ asset('js/datatables-modal.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#ruangan-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('ruangan.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '5%'},
+                    {data: 'nama_ruangan', name: 'nama_ruangan', width: '35%'},
+                    {data: 'lokasi', name: 'lokasi', width: '40%'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, width: '20%'},
+                ],
+                responsive: true,
+                language: {
+                    "sProcessing": "Sedang memproses...",
+                    "sLengthMenu": "Tampilkan _MENU_ entri",
+                    "sZeroRecords": "Tidak ditemukan data yang sesuai",
+                    "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                    "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Cari:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "Pertama",
+                        "sPrevious": "Sebelumnya",
+                        "sNext": "Selanjutnya",
+                        "sLast": "Terakhir"
+                    }
+                },
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+                dom: 'lfrtip',
+                drawCallback: function() {
+                    // Reinitialize Flowbite modals after DataTables draws
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

@@ -17,88 +17,68 @@
                 </div>
             </div>
 
-            <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <table id="jadwal-table" class="w-full">
+                    <thead>
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                No
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama Ruangan
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama Perkuliahan
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Tanggal
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Hari
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Jam Mulai
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Jam Selesai
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Action
-                            </th>
+                            <th>No</th>
+                            <th>Nama Ruangan</th>
+                            <th>Nama Perkuliahan</th>
+                            <th>Tanggal</th>
+                            <th>Hari</th>
+                            <th>Jam Mulai</th>
+                            <th>Jam Selesai</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($jadwals as $j)
-                            <tr class="bg-white">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    {{ $loop->iteration }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $j->ruangan->nama_ruangan }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $j->nama_perkuliahan }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $j->tanggal }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $j->hari }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $j->jam_mulai }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $j->jam_selesai }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    ongoing
-                                </td>
-                                <td class="flex items-center gap-2 px-6 py-4">
-                                    <button data-modal-target="edit-jadwal-modal" data-modal-toggle="edit-jadwal-modal"
-                                        data-modal-backdrop="static" type="button"
-                                        class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
-                                        <x-icons.edit-icon class="w-4 h-4" />
-                                    </button>
-                                    <form method="POST" action="{{ route('jadwal.destroy', $j->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition duration-150">
-                                            <x-icons.hapus-icon class="w-4 h-4" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @include('components.modals.jadwal.edit', ['jadwal' => $j])
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
             @include('components.modals.jadwal.tambah')
+            <!-- Dynamic edit modal container -->
+            <div id="dynamic-modal-container"></div>
         </div>
     </div>
+
+    @push('scripts')
+    <!-- DataTables Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datatables-custom.css') }}">
+    
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Shared DataTables Modal Handler -->
+    <script src="{{ asset('js/datatables-modal.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#jadwal-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('jadwal.index') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'ruangan_nama', name: 'ruangan.nama_ruangan'},
+                    {data: 'nama_perkuliahan', name: 'nama_perkuliahan'},
+                    {data: 'tanggal', name: 'tanggal'},
+                    {data: 'hari', name: 'hari'},
+                    {data: 'jam_mulai', name: 'jam_mulai'},
+                    {data: 'jam_selesai', name: 'jam_selesai'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+                },
+                drawCallback: function() {
+                    // Reinitialize Flowbite modals after DataTables draws
+                    if (typeof window.initFlowbite === 'function') {
+                        window.initFlowbite();
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

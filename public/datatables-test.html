@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables Styling Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="css/datatables-custom.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">DataTables Styling Test</h1>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <table id="test-table" class="w-full">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>john@example.com</td>
+                        <td><span class="status-badge status-approved">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit">Edit</button>
+                                <button class="btn-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>jane@example.com</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit">Edit</button>
+                                <button class="btn-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bob Johnson</td>
+                        <td>bob@example.com</td>
+                        <td><span class="status-badge status-rejected">Inactive</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit">Edit</button>
+                                <button class="btn-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+            <h2 class="text-lg font-semibold text-blue-900 mb-2">Styling Features Tested:</h2>
+            <ul class="list-disc list-inside text-blue-800 space-y-1">
+                <li>✅ Custom table wrapper with proper shadows and borders</li>
+                <li>✅ Enhanced header styling with gradients</li>
+                <li>✅ Hover effects with smooth animations</li>
+                <li>✅ Status badges with proper coloring</li>
+                <li>✅ Action buttons with enhanced styling</li>
+                <li>✅ Responsive design elements</li>
+                <li>✅ Proper integration with Tailwind CSS</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#test-table').DataTable({
+                pageLength: 5,
+                language: {
+                    "sProcessing": "Sedang memproses...",
+                    "sLengthMenu": "Tampilkan _MENU_ entri",
+                    "sZeroRecords": "Tidak ditemukan data yang sesuai",
+                    "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                    "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                    "sSearch": "Cari:",
+                    "oPaginate": {
+                        "sFirst": "Pertama",
+                        "sPrevious": "Sebelumnya",
+                        "sNext": "Selanjutnya",
+                        "sLast": "Terakhir"
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
