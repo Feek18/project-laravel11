@@ -4,7 +4,7 @@
                 {{ __('Akun') }}
             </h2>
         </x-slot>
-
+        {{-- test --}}
         <div class="py-12">
             <div class="bg-white max-w-7xl mx-auto sm:p-6 lg:p-8 rounded-lg">
                 <div class="px-4 sm:px-6 lg:px-0 text-3xl font-semibold text-gray-900 mb-8">
