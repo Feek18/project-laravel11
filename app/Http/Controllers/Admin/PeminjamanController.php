@@ -17,15 +17,15 @@ class PeminjamanController extends Controller
             $data = Peminjaman::with(['pengguna', 'ruangan'])->select('peminjaman.*');
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('nama_peminjam', function($row){
+                ->addColumn('nama_peminjam', function ($row) {
                     return $row->pengguna->nama ?? '-';
                 })
-                ->addColumn('nama_ruangan', function($row){
+                ->addColumn('nama_ruangan', function ($row) {
                     return $row->ruangan->nama_ruangan ?? '-';
                 })
-                ->addColumn('status_badge', function($row){
+                ->addColumn('status_badge', function ($row) {
                     $color = '';
-                    switch($row->status_persetujuan) {
+                    switch ($row->status_persetujuan) {
                         case 'disetujui':
                             $color = 'bg-green-100 text-green-800';
                             break;
@@ -35,20 +35,20 @@ class PeminjamanController extends Controller
                         default:
                             $color = 'bg-yellow-100 text-yellow-800';
                     }
-                    return '<span class="px-2 py-1 text-xs font-medium rounded-full '.$color.'">'.$row->status_persetujuan.'</span>';
+                    return '<span class="px-2 py-1 text-xs font-medium rounded-full ' . $color . '">' . $row->status_persetujuan . '</span>';
                 })
-                ->addColumn('action', function($row){
-                    $editBtn = '<button onclick="loadEditModal(\'peminjam\', '.$row->id.')" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
+                ->addColumn('action', function ($row) {
+                    $editBtn = '<button onclick="loadEditModal(\'peminjam\', ' . $row->id . ')" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                         </svg>
                     </button>';
-                    
+
                     $approveBtn = '';
-                    if($row->status_persetujuan == 'pending') {
-                        $approveBtn = ' <form method="POST" action="'.route('peminjam.persetujuan', $row->id).'" style="display: inline;">
-                            '.csrf_field().'
-                            '.method_field('PUT').'
+                    if ($row->status_persetujuan == 'pending') {
+                        $approveBtn = ' <form method="POST" action="' . route('peminjam.persetujuan', $row->id) . '" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('PUT') . '
                             <input type="hidden" name="status" value="disetujui">
                             <button type="submit" class="bg-green-500 hover:bg-green-600 text-white p-2 rounded transition duration-150" title="Setujui">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -57,7 +57,7 @@ class PeminjamanController extends Controller
                             </button>
                         </form>';
                     }
-                    return '<div class="action-buttons">'.$editBtn.$approveBtn.'</div>';
+                    return '<div class="action-buttons">' . $editBtn . $approveBtn . '</div>';
                 })
                 ->rawColumns(['status_badge', 'action'])
                 ->make(true);
@@ -91,14 +91,14 @@ class PeminjamanController extends Controller
     public function edit($id)
     {
         $peminjam = Peminjaman::findOrFail($id);
-        $pengguna = \App\Models\Pengguna::all();
-        $ruangan = \App\Models\Ruangan::all();
-        
+        $pengguna = Pengguna::all();
+        $ruangan = Ruangan::all();
+
         // If this is an AJAX request, return the modal HTML
         if (request()->ajax()) {
             return view('components.modals.peminjam.edit', compact('peminjam', 'pengguna', 'ruangan'))->render();
         }
-        
+
         return view('components.modals.peminjam.edit', compact('peminjam', 'pengguna', 'ruangan'));
     }
 
@@ -140,7 +140,7 @@ class PeminjamanController extends Controller
         $peminjam = Peminjaman::findOrFail($id);
         $peminjam->status_persetujuan = $request->status_persetujuan;
         $peminjam->save();
-        
+
         return redirect()->route('peminjam.index')->with('success', 'Status persetujuan berhasil diubah.');
     }
 }
