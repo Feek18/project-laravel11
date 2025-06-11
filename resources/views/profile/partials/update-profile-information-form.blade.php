@@ -21,13 +21,20 @@
 
         <div>
             <x-input-label for="gambar" :value="__('Pilih Gambar')" />
-            <input id="gambar" name="gambar" type="file"
-                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:text-blue-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500"
-                accept="image/*" />
-            <x-input-error class="mt-2" :messages="$errors->get('gambar')" />
-        </div>
 
+            <input id="gambar" name="gambar" type="file" accept="image/*"
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:text-blue-700
+               focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value="{{ old('gambar', optional($user->pengguna)->gambar) }}" onchange="previewImage(event)" />
+
+            <x-input-error class="mt-2" :messages="$errors->get('gambar')" />
+
+            <!-- Gambar Preview -->
+            <div class="mt-4">
+                <img id="preview" src="#" alt="Preview Gambar"
+                    class="hidden w-64 h-40 object-cover rounded-lg shadow" />
+            </div>
+        </div>
 
         <div>
             <x-input-label for="nama" :value="__('Nama')" />
@@ -81,3 +88,24 @@
         </div>
     </form>
 </section>
+
+<!-- Script untuk preview -->
+@push('scripts')
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+@endpush

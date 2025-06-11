@@ -51,13 +51,12 @@
 
                         </select>
                     </div>
-                    <div>
-                        <label for="no_telp" class="block mb-2 text-sm font-medium text-gray-900">No.
-                            Telepon</label>
-                        <input type="number" name="no_telp" id="no_telp"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan nomor telepon anda" required
-                            value="{{ old('no_telp', $user->no_telp) }}" />
+                    <div class="mb-4">
+                        <label for="no_telp" class="block text-sm font-medium text-gray-700">No. Telepon</label>
+                        <input type="text" name="no_telp" id="no_telp"
+                            value="{{ old('no_telp', $user->no_telp) }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            maxlength="20">
                     </div>
                     <button type="submit"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>

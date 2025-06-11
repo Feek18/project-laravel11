@@ -19,25 +19,31 @@ class PesananController extends Controller
             $data = Peminjaman::with(['ruangan'])
                 ->where('id_pengguna', Auth::user()->pengguna->id)
                 ->select('peminjaman.*');
-            
+
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('nama_ruangan', function($row){
+                ->addColumn('nama_ruangan', function ($row) {
                     return $row->ruangan->nama_ruangan ?? '-';
                 })
-                ->addColumn('status_badge', function($row){
+                ->addColumn('status_badge', function ($row) {
                     $color = '';
-                    switch($row->status_persetujuan) {
+
+                    switch ($row->status_persetujuan) {
                         case 'disetujui':
-                            $color = 'bg-green-100 text-green-800';
+                            $color = 'bg-green-100 text-green-700';
                             break;
                         case 'ditolak':
-                            $color = 'bg-red-100 text-red-800';
+                            $color = 'bg-red-100 text-red-700';
                             break;
+                        case 'pending':
                         default:
-                            $color = 'bg-yellow-100 text-yellow-800';
+                            $color = 'bg-yellow-100 text-yellow-700';
+                            break;
                     }
-                    return '<span class="px-2 py-1 text-xs font-medium rounded-full '.$color.'">'.$row->status_persetujuan.'</span>';
+
+                    return '<span class="px-3 py-1 text-xs font-semibold capitalize rounded-full ' . $color . ' shadow-sm">'
+                        . $row->status_persetujuan .
+                        '</span>';
                 })
                 ->rawColumns(['status_badge'])
                 ->make(true);

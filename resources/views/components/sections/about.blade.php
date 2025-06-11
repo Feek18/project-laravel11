@@ -1,5 +1,5 @@
-<section style="background-image: url('{{ asset('img/about-bg.png') }}')"
-    class="h-[550px] lg:h-[1140px] bg-cover bg-center">
+<section class="bg-cover bg-center bg-no-repeat min-h-[600px] lg:min-h-[1140px]"
+    style="background-image: url('{{ asset('img/about-bg.png') }}')">
     <div class="mt-10 font-poppins">
         <div class="container lg:px-14">
             <div class="flex flex-col lg:flex-row justify-between items-center p-8">

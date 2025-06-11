@@ -42,6 +42,23 @@ class PemesananController extends Controller
             'keperluan' => 'required|string|max:255',
         ]);
         // $id_ruang = $request->input('id_ruang');
+        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dan status masih pending
+        $conflict = Peminjaman::where('id_ruang', $request->id_ruang)
+            ->where('tanggal_pinjam', $request->tanggal_pinjam)
+            ->where('status_persetujuan', 'pending')
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('waktu_mulai', [$request->waktu_mulai, $request->waktu_selesai])
+                    ->orWhereBetween('waktu_selesai', [$request->waktu_mulai, $request->waktu_selesai])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('waktu_mulai', '<=', $request->waktu_mulai)
+                            ->where('waktu_selesai', '>=', $request->waktu_selesai);
+                    });
+            })
+            ->exists();
+
+        if ($conflict) {
+            return redirect()->back()->withInput()->with('warning', 'Ruangan sedang dalam proses peminjaman lain pada waktu tersebut (masih menunggu persetujuan).');
+        }
 
         Peminjaman::create([
             'id_pengguna' => Auth::user()->pengguna->id,

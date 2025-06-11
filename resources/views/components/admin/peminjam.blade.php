@@ -41,7 +41,7 @@
                             <th>Mulai</th>
                             <th>Selesai</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
