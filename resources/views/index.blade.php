@@ -27,6 +27,35 @@
     @endif
     <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
     <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+    
+    <style>
+        /* Fix calendar popup positioning using correct classes */
+        .toastui-calendar-floating-layer {
+            position: fixed !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 9998 !important;
+            pointer-events: auto !important;
+        }
+        
+        .toastui-calendar-see-more-container {
+            width: 280px !important;
+            max-height: 300px !important;
+            overflow-y: auto !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure calendar container positioning */
+        #calendar {
+            position: relative;
+        }
+        
+        /* Fix pointer events */
+        .toastui-calendar-floating-layer * {
+            pointer-events: auto !important;
+        }
+    </style>
 </head>
 
 <body class="font-poppins">
