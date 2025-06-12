@@ -126,16 +126,17 @@ class LiveConflictChecker {
         if (this.isChecking) return;
 
         this.isChecking = true;
-        this.showCheckingStatus();
-
-        try {
+        this.showCheckingStatus();        try {
             const formData = this.getFormData();
+            console.log('Sending conflict check data:', formData);
             const response = await this.makeRequest(this.options.checkUrl, 'POST', formData);
             
             if (response.ok) {
                 const data = await response.json();
+                console.log('Conflict check response:', data);
                 this.displayResults(data);
             } else {
+                console.error('Conflict check failed with status:', response.status);
                 this.showError('Failed to check conflicts. Please try again.');
             }
         } catch (error) {
@@ -249,17 +250,15 @@ class LiveConflictChecker {
                 </div>
             </div>
         `;
-    }
-
-    displayResults(data) {
+    }    displayResults(data) {
         if (!this.statusContainer) return;
 
         if (data.has_conflicts) {
-            this.showConflicts(data);
+            this.displayConflicts(data);
         } else {
             this.showAvailable(data);
         }
-    }    showConflicts(data) {
+    }showConflicts(data) {
         // Get current form values for overlap calculation
         const currentStart = this.fields.waktu_mulai?.value || this.fields.jam_mulai?.value;
         const currentEnd = this.fields.waktu_selesai?.value || this.fields.jam_selesai?.value;
@@ -351,10 +350,8 @@ class LiveConflictChecker {
 
         // Disable submit button
         this.toggleSubmitButton(false);
-    }
-
-    displayConflicts(data) {
-        if (!this.conflictContainer) return;
+    }    displayConflicts(data) {
+        if (!this.statusContainer) return;
 
         // Check if we have conflicts in the new format (for jadwal) or old format (for peminjaman)
         const hasJadwalConflicts = data.jadwal_conflicts && data.jadwal_conflicts.length > 0;
@@ -380,7 +377,7 @@ class LiveConflictChecker {
                     <h3 class="text-red-800 font-semibold">Time Conflict Detected!</h3>
                 </div>
                 
-                <div class="bg-white border border-red-200 rounded p-3">
+                <div class="bg-red-100 border border-red-200 rounded p-3">
                     <div class="text-sm text-red-700 mb-2">
                         <strong>Your requested time:</strong> <span class="font-mono">${currentStart} - ${currentEnd}</span>
                     </div>
@@ -405,7 +402,7 @@ class LiveConflictChecker {
                                 <div class="text-sm text-red-600">Time: ${conflict.jam_mulai} - ${conflict.jam_selesai}</div>
                                 ${overlapInfo ? `<div class="text-xs text-red-600 mt-1">Overlap: ${overlapInfo}</div>` : ''}
                             </div>
-                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded">Recurring</span>
+                            <span class="bg-red-500 text-black text-xs px-2 py-1 rounded">Recurring</span>
                         </div>
                     </div>
                 `;
@@ -434,7 +431,7 @@ class LiveConflictChecker {
                                 <div class="text-sm text-red-600">Booked by: ${conflict.pengguna?.nama || 'Unknown'}</div>
                                 ${overlapInfo ? `<div class="text-xs text-red-600 mt-1">Overlap: ${overlapInfo}</div>` : ''}
                             </div>
-                            <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded">${conflict.status_persetujuan}</span>
+                            <span class="bg-orange-500 text-black text-xs px-2 py-1 rounded">${conflict.status_persetujuan}</span>
                         </div>
                     </div>
                 `;
@@ -487,12 +484,12 @@ class LiveConflictChecker {
                 </div>
                 
                 <div class="text-sm text-red-600">
-                    💡 <strong>Suggestion:</strong> Please choose a different time slot to avoid conflicts.
                 </div>
             </div>
-        `;
+        `;        this.statusContainer.innerHTML = conflictsHtml;
 
-        this.conflictContainer.innerHTML = conflictsHtml;
+        // Disable submit button
+        this.toggleSubmitButton(false);
     }
 
     calculateOverlap(start1, end1, start2, end2) {
@@ -638,6 +635,38 @@ class LiveConflictChecker {
             this.statusContainer.innerHTML = '';
         }
         this.toggleSubmitButton(true);
+    }
+
+    displayNoConflicts() {
+        if (!this.statusContainer) return;
+        
+        this.statusContainer.innerHTML = `
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-green-800 font-semibold">No Conflicts Detected</h3>
+                </div>
+                <p class="text-green-700 text-sm mt-2">The selected time slot is available for booking.</p>
+            </div>
+        `;
+
+        // Enable submit button
+        this.toggleSubmitButton(true);
+    }
+
+    timeToMinutes(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+    }
+
+    minutesToTime(minutes) {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
     }
 
     // Public methods for manual control

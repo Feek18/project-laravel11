@@ -67,11 +67,19 @@ class RoomConflictService
                 $exclude_id,
                 null
             );
-        }
-
-        if ($conflictData['has_conflicts']) {
+        }        if ($conflictData['has_conflicts']) {
             $result['valid'] = false;
-            $result['conflicts'] = $conflictData;
+            
+            // For jadwal, structure the conflicts properly
+            if ($type === 'jadwal') {
+                $result['conflicts'] = [
+                    'jadwal_conflicts' => $conflictData['jadwal_conflicts'],
+                    'peminjaman_conflicts' => $conflictData['peminjaman_conflicts']
+                ];
+            } else {
+                $result['conflicts'] = $conflictData;
+            }
+            
             $result['messages'] = $conflictData['messages'];
             
             // Generate suggestions for alternative times
