@@ -16,9 +16,15 @@ class RoomController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $editBtn = '<button onclick="loadEditModal(\'ruangan\', '.$row->id_ruang.')" type="button" class="btn-edit bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
+                    $editBtn = '<button onclick="loadEditModal(\'ruangan\', '.$row->id_ruang.')" type="button" class="btn-edit bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150 mr-1">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                        </svg>
+                    </button>';
+                    
+                    $qrBtn = '<button onclick="generateRoomQR('.$row->id_ruang.')" type="button" class="btn-qr bg-green-500 hover:bg-green-600 text-white p-2 rounded transition duration-150 mr-1" title="Generate QR Code">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm2 2V5h1v1h-1zM11 4a1 1 0 100-2 1 1 0 000 2zM11 7a1 1 0 100-2 1 1 0 000 2zM11 10a1 1 0 100-2 1 1 0 000 2zM11 13a1 1 0 100-2 1 1 0 000 2zM11 16a1 1 0 100-2 1 1 0 000 2zM11 19a1 1 0 100-2 1 1 0 000 2zM14 16a1 1 0 100-2 1 1 0 000 2zM14 19a1 1 0 100-2 1 1 0 000 2zM17 13a1 1 0 100-2 1 1 0 000 2zM17 16a1 1 0 100-2 1 1 0 000 2zM17 19a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
                         </svg>
                     </button>';
                     
@@ -32,7 +38,7 @@ class RoomController extends Controller
                         </button>
                     </form>';
                     
-                    return '<div class="action-buttons">'.$editBtn.' '.$deleteBtn.'</div>';
+                    return '<div class="action-buttons">'.$editBtn.' '.$qrBtn.' '.$deleteBtn.'</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);

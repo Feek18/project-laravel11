@@ -18,6 +18,8 @@ class Peminjaman extends Model
         'tanggal_pinjam',
         'waktu_mulai',
         'waktu_selesai',
+        'qr_code',
+        'qr_token',
     ];
 
     public function pengguna()

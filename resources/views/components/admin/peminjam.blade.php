@@ -41,6 +41,7 @@
                             <th>Mulai</th>
                             <th>Selesai</th>
                             <th>Status</th>
+                            <th>QR Code</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -81,6 +82,7 @@
                     {data: 'waktu_mulai', name: 'waktu_mulai'},
                     {data: 'waktu_selesai', name: 'waktu_selesai'},
                     {data: 'status_badge', name: 'status_persetujuan'},
+                    {data: 'qr_code_status', name: 'qr_token', orderable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
                 responsive: true,

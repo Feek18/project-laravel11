@@ -30,6 +30,15 @@
                         class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Tentang</a>
                 </li>
                 <li>
+                    <a href="{{ route('qr.test') }}" target="_blank"
+                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm2 2V5h1v1h-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        QR Test
+                    </a>
+                </li>
+                <li>
                     <a href="#"
                         class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Kontak</a>
                 </li>
@@ -48,7 +57,7 @@
                             src="{{ auth()->user()->pengguna && auth()->user()->pengguna->gambar ? asset('storage/' . auth()->user()->pengguna->gambar) : asset('images/default-avatar.png') }}" 
                             alt="User dropdown">
                         <div class="hidden md:block text-left">
-                            <h3>{{ Auth::user()->pengguna->nama ?? '' }}</h3>
+                            <h3>{{ Auth::user()->pengguna?->nama ?? Auth::user()->name ?? Auth::user()->email }}</h3>
                             <p class="text-xs font-normal opacity-75">{{ Auth::user()->email }} </p>
                         </div>
                     </button>

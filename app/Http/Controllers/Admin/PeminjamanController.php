@@ -85,8 +85,16 @@ class PeminjamanController extends Controller
 
                     return '<div class="flex gap-1">' . $editBtn . $deleteBtn . '</div>';
                 })
+                ->addColumn('qr_code_status', function ($row) {
+                    if ($row->qr_token && $row->status_peminjaman === 'insidental') {
+                        return '<span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">QR Generated</span>';
+                    } else if ($row->status_peminjaman === 'terencana') {
+                        return '<span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Regular</span>';
+                    }
+                    return '<span class="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">No QR</span>';
+                })
 
-                ->rawColumns(['status_badge', 'action'])
+                ->rawColumns(['status_badge', 'action', 'qr_code_status'])
                 ->make(true);
         }
 

@@ -41,6 +41,24 @@
                     <div class="w-full lg:w-[400px] bg-white shadow-md rounded-2xl p-6">
                         <h3 class="text-xl font-semibold">Form Peminjaman Ruangan</h3>
                         <p class="text-sm text-gray-600 mb-4">Silakan isi form peminjaman ruangan di bawah ini</p>
+                        
+                        <!-- QR Code Instant Borrowing Section -->
+                        {{-- <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <h4 class="font-medium text-green-800 mb-2">Peminjaman Instant dengan QR Code</h4>
+                            <p class="text-sm text-green-600 mb-3">Pinjam ruangan langsung dengan QR Code (Auto approve untuk 2 jam)</p>
+                            <button type="button" onclick="generateInstantQR()" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition duration-300 mb-2">
+                                <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm2 2V5h1v1h-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Generate QR Code Instant
+                            </button>
+                            <input type="text" id="instant_keperluan" placeholder="Keperluan singkat..." class="w-full border border-gray-300 rounded px-3 py-2 text-sm" required>
+                        </div> --}}
+
+                        <div class="border-t pt-4">
+                            <h4 class="font-medium text-gray-800 mb-3">Atau Peminjaman Terjadwal</h4>
+                        </div>
+
                         <form action="{{ route('pemesanan.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}">
@@ -106,6 +124,79 @@
     </section>
 
     @include('components.toast')
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full">
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold mb-4">QR Code Peminjaman Instant</h3>
+                    <div id="qrCodeContainer" class="mb-4"></div>
+                    <p class="text-sm text-gray-600 mb-4">Scan QR code ini untuk konfirmasi peminjaman ruangan</p>
+                    <button onclick="closeQRModal()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateInstantQR() {
+            const keperluan = document.getElementById('instant_keperluan').value;
+            if (!keperluan.trim()) {
+                alert('Mohon isi keperluan terlebih dahulu');
+                return;
+            }
+
+            // Show loading
+            const modal = document.getElementById('qrModal');
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = '<div class="text-center">Generating QR Code...</div>';
+            modal.classList.remove('hidden');
+
+            // Send request to generate QR
+            fetch('{{ route("qr.generate.instant") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id_ruang: {{ $ruangan->id_ruang }},
+                    keperluan: keperluan
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    container.innerHTML = `
+                        <img src="${data.qr_code_url}" alt="QR Code" class="mx-auto mb-2" style="max-width: 200px;">
+                        <p class="text-xs text-gray-500">Token: ${data.token}</p>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="text-red-500">${data.message || 'Error generating QR code'}</div>`;
+                    if (data.redirect) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 2000);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                container.innerHTML = '<div class="text-red-500">Error: ' + error.message + '</div>';
+            });
+        }
+
+        function closeQRModal() {
+            document.getElementById('qrModal').classList.add('hidden');
+            document.getElementById('instant_keperluan').value = '';
+        }
+    </script>
 
 </body>
 

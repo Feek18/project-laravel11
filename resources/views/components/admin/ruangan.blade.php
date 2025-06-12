@@ -90,6 +90,33 @@
                 }
             });
         });
+
+        // Function to generate QR code for room
+        function generateRoomQR(ruanganId) {
+            // Create form and submit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("qr.generate.room") }}';
+            form.target = '_blank'; // Open in new tab
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+            
+            // Add room ID
+            const roomInput = document.createElement('input');
+            roomInput.type = 'hidden';
+            roomInput.name = 'ruangan_id';
+            roomInput.value = ruanganId;
+            form.appendChild(roomInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }
     </script>
     @endpush
 </x-app-layout>
