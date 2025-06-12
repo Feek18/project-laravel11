@@ -26,6 +26,8 @@
                 <form action="{{ route('peminjam.update', $peminjam->id) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="booking_type" value="peminjaman">
+                    <input type="hidden" name="id" value="{{ $peminjam->id }}">
 
                     {{-- <input type="hidden" name="debug" value="test123"> --}}
 
@@ -153,10 +155,15 @@
                             required>{{ old('keperluan', $peminjam->keperluan ?? '') }}</textarea>
                     </div>
 
+                    <!-- Live Conflict Check Results will be inserted here -->
+                    <div id="peminjaman-conflict-status" class="mt-4"></div>
+
                     <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">Submit</button>
+                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/live-conflict-checker.js') }}"></script>

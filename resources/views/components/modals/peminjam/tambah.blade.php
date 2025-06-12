@@ -25,6 +25,7 @@
             <div class="p-4 md:p-5">
                 <form id="room-booking-form" action="{{ route('peminjam.store') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="booking_type" value="peminjaman">
                     {{-- <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}"> --}}
                     {{-- <input type="hidden" name="id_pengguna" value="{{ auth()->user()->pengguna->id }}"> --}}
                     <div class="mb-4">
@@ -85,15 +86,19 @@
                         <label for="keperluan" class="block text-sm font-medium text-gray-700">Keperluan
                             Pinjam</label>
                         <textarea id="keperluan" name="keperluan" rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500
-                                    placeholder="Masukkan
-                            keperluan anda"></textarea>
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Masukkan keperluan anda"></textarea>
                     </div>
 
+                    <!-- Live Conflict Check Results will be inserted here -->
+                    <div id="peminjaman-conflict-status" class="mt-4"></div>
+
                     <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">Submit</button>
+                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/live-conflict-checker.js') }}"></script>

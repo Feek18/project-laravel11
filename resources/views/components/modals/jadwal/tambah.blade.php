@@ -25,6 +25,8 @@
             <div class="p-4 md:p-5">
                 <form class="space-y-4" method="POST" action="{{ route('jadwal.store') }}">
                     @csrf
+                    <input type="hidden" name="booking_type" value="jadwal">
+                    
                     <div>
                         <label for="id_ruang" class="block mb-2 text-sm font-medium text-gray-900">Nama
                             Ruangan</label>
@@ -56,12 +58,6 @@
                             placeholder="Masukkan nama perkuliahan" required /> --}}
                     </div>
                     <div>
-                        <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan lokasi" required />
-                    </div>
-                    <div>
                         <label for="hari" class="block mb-2 text-sm font-medium text-gray-900">Hari</label>
                         <select id="hari" name="hari"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -88,10 +84,98 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Masukkan lokasi" required />
                     </div>
-                    <button type="submit"
+                    
+                    <!-- Live Conflict Check Results will be inserted here -->
+                    <div id="jadwal-conflict-status" class="mt-4"></div>
+                    
+<button id="jadwal-submit-btn" type="submit"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
-                </form>
+                    </form>
             </div>
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/live-conflict-checker.js') }}"></script>
+<script>
+// Initialize conflict checker when modal is shown
+let jadwalConflictChecker = null;
+
+function initializeJadwalConflictChecker() {
+    console.log('Initializing jadwal conflict checker...');
+    
+    // Destroy existing instance if any
+    if (jadwalConflictChecker) {
+        jadwalConflictChecker.reset();
+        jadwalConflictChecker = null;
+    }
+    
+    // Wait a bit to ensure DOM is ready
+    setTimeout(() => {
+        // Check if required elements exist
+        const form = document.querySelector('#jadwal-modal form');
+        const idRuang = document.querySelector('#jadwal-modal [name="id_ruang"]');
+        const hari = document.querySelector('#jadwal-modal [name="hari"]');
+        const jamMulai = document.querySelector('#jadwal-modal [name="jam_mulai"]');
+        const jamSelesai = document.querySelector('#jadwal-modal [name="jam_selesai"]');
+        
+        console.log('Form elements found:', {
+            form: !!form,
+            idRuang: !!idRuang,
+            hari: !!hari,
+            jamMulai: !!jamMulai,
+            jamSelesai: !!jamSelesai
+        });
+        
+        if (form && idRuang && hari && jamMulai && jamSelesai) {
+            // Create new instance for this modal
+            jadwalConflictChecker = new LiveConflictChecker({
+                autoCheck: true,
+                showSuggestions: true,
+                debounceMs: 800
+            });
+            
+            console.log('Jadwal conflict checker initialized successfully');
+        } else {
+            console.error('Required form elements not found for conflict checker');
+        }
+    }, 200);
+}
+
+// Listen for modal show events
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('jadwal-modal');
+    if (modal) {
+        console.log('Setting up modal observer for jadwal-modal');
+        
+        // Initialize when modal becomes visible
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const isVisible = !modal.classList.contains('hidden');
+                    console.log('Modal visibility changed:', isVisible);
+                    
+                    if (isVisible && !jadwalConflictChecker) {
+                        initializeJadwalConflictChecker();
+                    } else if (!isVisible && jadwalConflictChecker) {
+                        // Clean up when modal is hidden
+                        jadwalConflictChecker.reset();
+                        jadwalConflictChecker = null;
+                        console.log('Conflict checker cleaned up');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(modal, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        
+        // Also listen for flowbite modal events if available
+        modal.addEventListener('show.bs.modal', initializeJadwalConflictChecker);
+    } else {
+        console.error('jadwal-modal not found');
+    }
+});
+</script>

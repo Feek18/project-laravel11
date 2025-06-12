@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
 use App\Models\MataKuliah;
 use App\Models\Ruangan;
+use App\Services\RoomConflictService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -58,12 +59,21 @@ class JadwalController extends Controller
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
             'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
-            // 'nama_perkuliahan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'hari' => 'required|string|max:255',
+            'hari' => 'required|string|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
+
+        // Use the conflict service to validate the booking
+        $conflictService = new RoomConflictService();
+        $validation = $conflictService->validateBooking($validatedData, 'jadwal');
+
+        if (!$validation['valid']) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', implode(' ', $validation['messages']))
+                ->with('conflict_details', $conflictService->formatConflictDetails($validation['conflicts']));
+        }
 
         Jadwal::create($validatedData);
 
@@ -92,18 +102,27 @@ class JadwalController extends Controller
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
             'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
-            'tanggal' => 'required|date',
-            'hari' => 'required|string|max:255',
+            'hari' => 'required|string|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
 
-        // Ubah ke format H:i:s
+        // Use the conflict service to validate the booking update
+        $conflictService = new RoomConflictService();
+        $validation = $conflictService->validateBooking($validatedData, 'jadwal', $id);
+
+        if (!$validation['valid']) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', implode(' ', $validation['messages']))
+                ->with('conflict_details', $conflictService->formatConflictDetails($validation['conflicts']));
+        }
+
+        // Convert time format for database storage
         $validatedData['jam_mulai'] = $validatedData['jam_mulai'] . ':00';
         $validatedData['jam_selesai'] = $validatedData['jam_selesai'] . ':00';
 
         $jadwal->update($validatedData);
-        // dd($jadwal);
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate.');
     }
 

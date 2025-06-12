@@ -26,6 +26,8 @@
                 <form class="space-y-4" method="POST" action="{{ route('jadwal.update', $jadwal->id) }}">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="booking_type" value="jadwal">
+                    <input type="hidden" name="id" value="{{ $jadwal->id }}">
                     {{-- @php
                         dd($jadwal);
                     @endphp --}}
@@ -62,16 +64,9 @@
                         </select>
                     </div>
                     <div>
-                        <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan lokasi" required
-                            value="{{ old('tanggal', \Illuminate\Support\Carbon::parse($jadwal->tanggal)->format('Y-m-d')) }}" />
-                    </div>
-                    <div>
                         <label for="hari" class="block mb-2 text-sm font-medium text-gray-900">Hari</label>
                         <select id="hari" name="hari"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value="minggu" {{ old('hari', $jadwal->hari) == 'minggu' ? 'selected' : '' }}>
                                 Minggu
                             </option>
@@ -107,10 +102,22 @@
                             placeholder="Masukkan lokasi" required
                             value="{{ old('jam_selesai', \Carbon\Carbon::createFromFormat('H:i:s', $jadwal->jam_selesai)->format('H:i')) }}" />
                     </div>
-                    <button type="submit"
+                    
+                    <!-- Live Conflict Check Results will be inserted here -->
+                    
+                    <button id="jadwal-submit-btn" type="submit"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
+
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/live-conflict-checker.js') }}"></script>
+<script>
+// Initialize conflict checker for edit form
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Edit modal script loaded - day-based jadwal');
+});
+</script>

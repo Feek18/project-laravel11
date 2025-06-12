@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="">
+    <title>Test Live Conflict Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Test Live Conflict Checker</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <form class="space-y-4">
+                <input type="hidden" name="booking_type" value="jadwal">
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Ruangan:</label>
+                    <select name="id_ruang" class="w-full border rounded px-3 py-2">
+                        <option value="">Pilih ruangan...</option>
+                        <option value="1">Ruangan 1</option>
+                        <option value="2">Ruangan 2</option>
+                        <option value="3">Ruangan 3</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Tanggal:</label>
+                    <input type="date" name="tanggal" value="2025-06-12" class="w-full border rounded px-3 py-2">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Jam Mulai:</label>
+                        <input type="time" name="jam_mulai" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Jam Selesai:</label>
+                        <input type="time" name="jam_selesai" class="w-full border rounded px-3 py-2">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Mata Kuliah:</label>
+                    <select name="id_matkul" class="w-full border rounded px-3 py-2">
+                        <option value="">Pilih mata kuliah...</option>
+                        <option value="1">Test Mata Kuliah</option>
+                    </select>
+                </div>
+                
+                <!-- Live Conflict Check Results will be inserted here -->
+                
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                    Add Jadwal
+                </button>
+            </form>
+        </div>
+        
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded p-4">
+            <h3 class="font-medium text-blue-800 mb-2">Test Instructions:</h3>
+            <ol class="list-decimal list-inside text-sm text-blue-700 space-y-1">
+                <li>Select "Ruangan 1"</li>
+                <li>Set date to "2025-06-12" (today)</li>
+                <li>Set time from "08:30" to "10:30" (should conflict with existing booking 09:00-11:00)</li>
+                <li>Watch for conflict detection to appear</li>
+            </ol>
+        </div>
+        
+        <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded p-4">
+            <h3 class="font-medium text-yellow-800 mb-2">Expected Behavior:</h3>
+            <ul class="list-disc list-inside text-sm text-yellow-700 space-y-1">
+                <li>Conflict should be detected when times overlap with existing bookings</li>
+                <li>Submit button should be disabled when conflicts exist</li>
+                <li>Alternative time suggestions should be provided</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/js/live-conflict-checker.js"></script>
+    
+    <script>
+        // Set CSRF token
+        fetch('/sanctum/csrf-cookie')
+            .then(() => {
+                // CSRF token should now be available
+                console.log('CSRF cookie set');
+            })
+            .catch(err => console.error('CSRF setup failed:', err));
+            
+        // Prevent actual form submission for testing
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submission prevented for testing. Check the conflict detection above!');
+        });
+    </script>
+</body>
+</html>

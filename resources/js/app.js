@@ -26,8 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
     const showEventDetailModal = (event) => {
+        const raw = event.raw || {};
+        
         document.getElementById('eventDetailTitle').textContent = event.title || '';
-        document.getElementById('eventDetailBody').textContent = event.body || '';
+        
+        // Create different content based on event type
+        let bodyContent = '';
+        if (raw.type === 'jadwal') {
+            bodyContent = `
+                <div style="margin-bottom: 8px;"><strong>Mata Kuliah:</strong> ${raw.mata_kuliah || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Semester:</strong> ${raw.semester || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Ruangan:</strong> ${raw.ruangan || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Hari:</strong> ${raw.hari || 'N/A'}</div>
+                <div style="margin-bottom: 8px; color: #3B82F6;"><strong>Type:</strong> Jadwal Perkuliahan (Recurring)</div>
+            `;
+        } else {
+            bodyContent = `
+                <div style="margin-bottom: 8px;"><strong>Keperluan:</strong> ${event.body || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Peminjam:</strong> ${raw.pengguna || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Ruangan:</strong> ${raw.ruangan || 'N/A'}</div>
+                <div style="margin-bottom: 8px; color: #10B981;"><strong>Type:</strong> Peminjaman Ruangan</div>
+            `;
+        }
+        
+        document.getElementById('eventDetailBody').innerHTML = bodyContent;
         
         // Format dates in 24H format
         const formatDate = (date) => {
@@ -44,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         
         // Add status information to the modal
-        const statusPersetujuan = event && event.raw.status ? event.raw.status : 'Belum diketahui';
+        const statusInfo = raw.type === 'jadwal' ? 'Active Schedule' : (raw.status || 'Belum diketahui');
         
         document.getElementById('eventDetailTime').innerHTML = `
             <div>Start: ${formatDate(event.start)}</div>
             <div>End: ${formatDate(event.end)}</div>
-            <div style="margin-top:8px; font-weight:bold;">Status: ${statusPersetujuan}</div>
+            <div style="margin-top:8px; font-weight:bold;">Status: ${statusInfo}</div>
         `;
         document.getElementById('eventDetailModal').style.display = 'flex';
     };
@@ -71,6 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     backgroundColor: '#10B981',
                     borderColor: '#10B981',
                     dragBackgroundColor: '#10B981',
+                },
+                {
+                    id: 'jadwal',
+                    name: 'Jadwal Perkuliahan',
+                    backgroundColor: '#3B82F6',
+                    borderColor: '#2563EB',
+                    dragBackgroundColor: '#3B82F6',
                 }
             ],
             // Disable built-in more popup and handle manually
@@ -84,23 +113,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Load peminjaman data if available
-        if (typeof window.peminjamanData !== 'undefined') {
-            console.log('Loading peminjaman data:', window.peminjamanData);
-            const events = window.peminjamanData.map(peminjaman => {
+        // Load combined event data (peminjaman + jadwal) if available
+        // Check for both variable names to support different views
+        const eventData = window.allEventsData || window.peminjamanData;
+        if (eventData) {
+            console.log('Loading combined events data:', eventData);
+            const events = eventData.map(eventData => {
+                // Determine calendar ID based on event type
+                const calendarId = eventData.type === 'jadwal' ? 'jadwal' : 'peminjaman';
+                
+                // Create appropriate title based on event type
+                let title, body;
+                if (eventData.type === 'jadwal') {
+                    title = `${eventData.matkul || 'Mata Kuliah'} - ${eventData.ruangan}`;
+                    body = `Jadwal Perkuliahan: ${eventData.matkul || 'Mata Kuliah'}\nRuangan: ${eventData.ruangan}\nHari: ${eventData.hari}`;
+                } else {
+                    title = `${eventData.ruangan} - ${eventData.pengguna}`;
+                    body = eventData.description;
+                }
+                
                 return {
-                    id: peminjaman.id.toString(),
-                    calendarId: 'peminjaman',
-                    title: `${peminjaman.ruangan} - ${peminjaman.pengguna}`,
-                    body: peminjaman.description,
+                    id: eventData.id.toString(),
+                    calendarId: calendarId,
+                    title: title,
+                    body: body,
                     category: 'time',
-                    start: new Date(peminjaman.start),
-                    end: new Date(peminjaman.end),
-                    backgroundColor: peminjaman.backgroundColor,
-                    borderColor: peminjaman.borderColor,
+                    start: new Date(eventData.start),
+                    end: new Date(eventData.end),
+                    backgroundColor: eventData.backgroundColor,
+                    borderColor: eventData.borderColor,
                     color: '#FFFFFF',
                     raw: {
-                        status: peminjaman.status || 'Belum diketahui',
+                        status: eventData.status || 'Belum diketahui',
+                        type: eventData.type,
+                        pengguna: eventData.pengguna,
+                        ruangan: eventData.ruangan,
+                        recurring: eventData.is_recurring || false,
+                        hari: eventData.hari || null,
+                        mata_kuliah: eventData.matkul || null,
+                        semester: eventData.semester || null
                     },
                 };
             });

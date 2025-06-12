@@ -62,6 +62,7 @@
                         <form id="room-booking-form" action="{{ route('pemesanan.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}">
+                            <input type="hidden" name="booking_type" value="peminjaman">
                             {{-- <div class="mb-4">
                                 <label for="nama_pengguna" class="block text-sm font-medium text-gray-700">Nama
                                     Pengguna</label>
@@ -113,6 +114,8 @@
                                     placeholder="Masukkan
                                     keperluan anda"></textarea>
                             </div>
+
+                            <!-- Live Conflict Check Results will be inserted here -->
 
                             <button type="submit"
                                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">Submit</button>
@@ -246,6 +249,7 @@
 
     <!-- Real-time Room Availability Checker -->
     <script src="{{ asset('js/room-availability-checker.js') }}"></script>
+    <script src="{{ asset('js/live-conflict-checker.js') }}"></script>
 
 </body>
 
