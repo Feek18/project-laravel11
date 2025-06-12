@@ -145,32 +145,61 @@ class LiveConflictChecker {
         } finally {
             this.isChecking = false;
         }
-    }
-
-    validateFields() {
-        const required = ['id_ruang', 'tanggal', 'waktu_mulai', 'waktu_selesai'];
-        
-        for (let fieldName of required) {
-            const field = this.fields[fieldName];
-            if (!field || !field.value.trim()) {
+    }    validateFields() {
+        // For jadwal, we don't need tanggal - only hari (day) matters
+        if (this.bookingType === 'jadwal') {
+            const required = ['id_ruang', 'waktu_mulai', 'waktu_selesai'];
+            
+            for (let fieldName of required) {
+                const field = this.fields[fieldName];
+                if (!field || !field.value.trim()) {
+                    return false;
+                }
+            }
+            
+            // For jadwal, check if hari field exists and has value
+            const hariField = document.querySelector('[name="hari"]');
+            if (!hariField || !hariField.value.trim()) {
                 return false;
+            }
+        } else {
+            // For peminjaman, we still need tanggal
+            const required = ['id_ruang', 'tanggal', 'waktu_mulai', 'waktu_selesai'];
+            
+            for (let fieldName of required) {
+                const field = this.fields[fieldName];
+                if (!field || !field.value.trim()) {
+                    return false;
+                }
             }
         }
 
         return true;
-    }
-
-    getFormData() {
+    }    getFormData() {
         const excludeId = this.getExcludeId();
         
-        return {
-            id_ruang: this.fields.id_ruang.value,
-            tanggal: this.fields.tanggal.value,
-            waktu_mulai: this.fields.waktu_mulai.value,
-            waktu_selesai: this.fields.waktu_selesai.value,
-            type: this.bookingType,
-            exclude_id: excludeId
-        };
+        if (this.bookingType === 'jadwal') {
+            // For jadwal, we use hari instead of tanggal
+            const hariField = document.querySelector('[name="hari"]');
+            return {
+                id_ruang: this.fields.id_ruang.value,
+                hari: hariField ? hariField.value : null,
+                waktu_mulai: this.fields.waktu_mulai.value,
+                waktu_selesai: this.fields.waktu_selesai.value,
+                type: this.bookingType,
+                exclude_id: excludeId
+            };
+        } else {
+            // For peminjaman, we use tanggal
+            return {
+                id_ruang: this.fields.id_ruang.value,
+                tanggal: this.fields.tanggal.value,
+                waktu_mulai: this.fields.waktu_mulai.value,
+                waktu_selesai: this.fields.waktu_selesai.value,
+                type: this.bookingType,
+                exclude_id: excludeId
+            };
+        }
     }
 
     getExcludeId() {

@@ -135,6 +135,68 @@ function updateHariFromTanggalEdit() {
         // Set the hari dropdown to match the selected date
         if (hariSelect.querySelector(`option[value="${dayName}"]`)) {
             hariSelect.value = dayName;
+            
+            // Trigger conflict check after updating hari
+            if (window.liveChecker) {
+                window.liveChecker.scheduleCheck();
+            }
+        }
+    }
+}
+
+// Auto-update tanggal field based on hari (find next occurrence)
+function updateTanggalFromHariEdit() {
+    const tanggalInput = document.querySelector('[name="tanggal"]');
+    const hariSelect = document.querySelector('[name="hari"]');
+    
+    if (tanggalInput && hariSelect && hariSelect.value && hariSelect.value !== 'Pilih hari') {
+        const dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        const targetDay = dayNames.indexOf(hariSelect.value);
+        
+        if (targetDay !== -1) {
+            // Find the next occurrence of this day
+            const today = new Date();
+            const currentDay = today.getDay();
+            let daysToAdd = targetDay - currentDay;
+            
+            if (daysToAdd < 0) {
+                daysToAdd += 7; // Next week
+            } else if (daysToAdd === 0) {
+                daysToAdd = 0; // Today if it's the same day
+            }
+            
+            const nextDate = new Date(today);
+            nextDate.setDate(today.getDate() + daysToAdd);
+            
+            // Format as YYYY-MM-DD
+            const formattedDate = nextDate.toISOString().split('T')[0];
+            tanggalInput.value = formattedDate;
+        }
+    }
+}
+
+// Initialize conflict checker for edit form
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalInput = document.querySelector('[name="tanggal"]');
+    const hariSelect = document.querySelector('[name="hari"]');
+    
+    if (tanggalInput) {
+        tanggalInput.addEventListener('change', updateHariFromTanggalEdit);
+        // Update on initial load if value exists
+        updateHariFromTanggalEdit();
+    }
+    
+    if (hariSelect) {
+        hariSelect.addEventListener('change', updateTanggalFromHariEdit);
+    }
+});
+</script>
+        const dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        const dayName = dayNames[date.getDay()];
+        
+        // Set the hari dropdown to match the selected date
+        if (hariSelect.querySelector(`option[value="${dayName}"]`)) {
+            hariSelect.value = dayName;
         }
     }
 }

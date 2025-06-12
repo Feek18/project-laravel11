@@ -14,28 +14,48 @@ class ConflictCheckController extends Controller
     public function __construct(RoomConflictService $conflictService)
     {
         $this->conflictService = $conflictService;
-    }
-
-    /**
+    }    /**
      * Check for conflicts in real-time
      */
     public function checkConflicts(Request $request)
     {
-        $request->validate([
-            'id_ruang' => 'required|exists:ruangan_kelas,id_ruang',
-            'tanggal' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
-            'type' => 'required|in:jadwal,peminjaman',
-            'exclude_id' => 'nullable|integer'
-        ]);
+        // Validate based on booking type
+        if ($request->type === 'jadwal') {
+            $request->validate([
+                'id_ruang' => 'required|exists:ruangan_kelas,id_ruang',
+                'hari' => 'required|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
+                'waktu_mulai' => 'required|date_format:H:i',
+                'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+                'type' => 'required|in:jadwal,peminjaman',
+                'exclude_id' => 'nullable|integer'
+            ]);
+        } else {
+            $request->validate([
+                'id_ruang' => 'required|exists:ruangan_kelas,id_ruang',
+                'tanggal' => 'required|date',
+                'waktu_mulai' => 'required|date_format:H:i',
+                'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+                'type' => 'required|in:jadwal,peminjaman',
+                'exclude_id' => 'nullable|integer'
+            ]);
+        }
 
-        $data = [
-            'id_ruang' => $request->id_ruang,
-            'tanggal' => $request->tanggal,
-            'waktu_mulai' => $request->waktu_mulai,
-            'waktu_selesai' => $request->waktu_selesai
-        ];
+        // Prepare data for validation
+        if ($request->type === 'jadwal') {
+            $data = [
+                'id_ruang' => $request->id_ruang,
+                'hari' => $request->hari,
+                'waktu_mulai' => $request->waktu_mulai,
+                'waktu_selesai' => $request->waktu_selesai
+            ];
+        } else {
+            $data = [
+                'id_ruang' => $request->id_ruang,
+                'tanggal' => $request->tanggal,
+                'waktu_mulai' => $request->waktu_mulai,
+                'waktu_selesai' => $request->waktu_selesai
+            ];
+        }
 
         $validation = $this->conflictService->validateBooking(
             $data, 
@@ -49,15 +69,26 @@ class ConflictCheckController extends Controller
             'messages' => $validation['messages'],
             'suggestions' => $validation['suggestions'] ?? [],
             'room_schedule' => []
-        ];        if (!$validation['valid']) {
+        ];
+
+        if (!$validation['valid']) {
             $response['conflicts'] = $this->conflictService->formatConflictDetails($validation['conflicts']);
         }
 
-        // Get room schedule for the date
-        $response['room_schedule'] = $this->conflictService->getRoomScheduleSummary(
-            $request->id_ruang, 
-            $request->tanggal
-        );
+        // Get room schedule
+        if ($request->type === 'jadwal') {
+            // For jadwal, show schedule for this day of week
+            $response['room_schedule'] = $this->conflictService->getRoomScheduleByDay(
+                $request->id_ruang, 
+                $request->hari
+            );
+        } else {
+            // For peminjaman, show schedule for specific date
+            $response['room_schedule'] = $this->conflictService->getRoomScheduleSummary(
+                $request->id_ruang, 
+                $request->tanggal
+            );
+        }
 
         return response()->json($response);
     }
