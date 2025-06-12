@@ -66,6 +66,10 @@ class JadwalController extends Controller
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
 
+        // Auto-set the hari field based on the tanggal if not set correctly
+        $dayOfWeek = Jadwal::getDayOfWeekFromDate($validatedData['tanggal']);
+        $validatedData['hari'] = $dayOfWeek;
+
         // Use the conflict service to validate the booking
         $conflictService = new RoomConflictService();
         $validation = $conflictService->validateBooking($validatedData, 'jadwal');
@@ -109,6 +113,10 @@ class JadwalController extends Controller
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
+
+        // Auto-set the hari field based on the tanggal if not set correctly
+        $dayOfWeek = Jadwal::getDayOfWeekFromDate($validatedData['tanggal']);
+        $validatedData['hari'] = $dayOfWeek;
 
         // Use the conflict service to validate the booking update
         $conflictService = new RoomConflictService();

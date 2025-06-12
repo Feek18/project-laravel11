@@ -120,9 +120,7 @@ class RoomConflictService
     {
         $timestamp = strtotime($time) + ($minutes * 60);
         return date('H:i', $timestamp);
-    }
-
-    /**
+    }    /**
      * Get available time slots for a room on a specific date
      */
     public function getAvailableTimeSlots($id_ruang, $tanggal)
@@ -133,19 +131,23 @@ class RoomConflictService
 
         $bookedSlots = [];
 
-        // Add jadwal slots
+        // Add jadwal slots (recurring by day)
         foreach ($jadwalSchedule as $jadwal) {
             $bookedSlots[] = [
                 'start' => $jadwal->jam_mulai,
-                'end' => $jadwal->jam_selesai
+                'end' => $jadwal->jam_selesai,
+                'type' => 'jadwal',
+                'recurring' => true
             ];
         }
 
-        // Add peminjaman slots
+        // Add peminjaman slots (specific date)
         foreach ($peminjamanSchedule as $peminjaman) {
             $bookedSlots[] = [
                 'start' => $peminjaman->waktu_mulai,
-                'end' => $peminjaman->waktu_selesai
+                'end' => $peminjaman->waktu_selesai,
+                'type' => 'peminjaman',
+                'recurring' => false
             ];
         }
 
@@ -181,9 +183,7 @@ class RoomConflictService
         }
 
         return $availableSlots;
-    }
-
-    /**
+    }/**
      * Get room schedule summary for a specific date
      */
     public function getRoomScheduleSummary($id_ruang, $tanggal)
@@ -193,7 +193,7 @@ class RoomConflictService
 
         $schedule = [];
 
-        // Add jadwal to schedule
+        // Add jadwal to schedule (based on day of week)
         foreach ($jadwalSchedule as $jadwal) {
             $schedule[] = [
                 'type' => 'Jadwal Perkuliahan',
@@ -201,11 +201,13 @@ class RoomConflictService
                 'start_time' => substr($jadwal->jam_mulai, 0, 5),
                 'end_time' => substr($jadwal->jam_selesai, 0, 5),
                 'status' => 'Confirmed',
-                'details' => 'Kode: ' . ($jadwal->matkul->kode_matkul ?? 'N/A')
+                'details' => 'Kode: ' . ($jadwal->matkul->kode_matkul ?? 'N/A') . ' | Setiap ' . ucfirst($jadwal->hari),
+                'is_recurring' => true, // Mark jadwal as recurring
+                'day' => $jadwal->hari
             ];
         }
 
-        // Add peminjaman to schedule
+        // Add peminjaman to schedule (specific date)
         foreach ($peminjamanSchedule as $peminjaman) {
             $schedule[] = [
                 'type' => 'Peminjaman',
@@ -213,7 +215,9 @@ class RoomConflictService
                 'start_time' => substr($peminjaman->waktu_mulai, 0, 5),
                 'end_time' => substr($peminjaman->waktu_selesai, 0, 5),
                 'status' => ucfirst($peminjaman->status_persetujuan),
-                'details' => 'Peminjam: ' . ($peminjaman->pengguna->nama ?? 'N/A')
+                'details' => 'Peminjam: ' . ($peminjaman->pengguna->nama ?? 'N/A'),
+                'is_recurring' => false, // Peminjaman is one-time
+                'date' => $peminjaman->tanggal_pinjam
             ];
         }
 
@@ -223,14 +227,12 @@ class RoomConflictService
         });
 
         return $schedule;
-    }    /**
+    }/**
      * Format conflict details for user display
      */
     public function formatConflictDetails($conflicts)
     {
-        $details = [];
-
-        if (!empty($conflicts['jadwal'])) {
+        $details = [];        if (!empty($conflicts['jadwal'])) {
             foreach ($conflicts['jadwal'] as $jadwal) {
                 $details[] = [
                     'type' => 'Jadwal Perkuliahan',
@@ -238,9 +240,11 @@ class RoomConflictService
                     'time' => substr($jadwal->jam_mulai, 0, 5) . ' - ' . substr($jadwal->jam_selesai, 0, 5),
                     'room' => $jadwal->ruangan->nama_ruangan ?? 'Ruangan',
                     'status' => 'Confirmed',
-                    'details' => 'Kode MK: ' . ($jadwal->matkul->kode_matkul ?? 'N/A') . ' | Hari: ' . ucfirst($jadwal->hari),
+                    'details' => 'Kode MK: ' . ($jadwal->matkul->kode_matkul ?? 'N/A') . ' | Setiap ' . ucfirst($jadwal->hari),
                     'conflict_source' => 'jadwal_perkuliahan',
-                    'id' => $jadwal->id
+                    'id' => $jadwal->id,
+                    'recurring' => true, // Jadwal is recurring by day
+                    'day' => $jadwal->hari
                 ];
             }
         }

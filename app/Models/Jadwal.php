@@ -38,8 +38,11 @@ class Jadwal extends Model
      */
     public static function hasJadwalConflict($id_ruang, $tanggal, $jam_mulai, $jam_selesai, $exclude_id = null)
     {
+        // For jadwal, we check by day of the week instead of specific date
+        $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
+        
         $query = self::where('id_ruang', $id_ruang)
-            ->where('tanggal', $tanggal)
+            ->where('hari', $dayOfWeek)
             ->where(function ($query) use ($jam_mulai, $jam_selesai) {
                 $query->whereBetween('jam_mulai', [$jam_mulai, $jam_selesai])
                     ->orWhereBetween('jam_selesai', [$jam_mulai, $jam_selesai])
@@ -54,6 +57,28 @@ class Jadwal extends Model
         }
 
         return $query->exists();
+    }
+
+    /**
+     * Convert date to Indonesian day name (for jadwal conflicts by day)
+     * 
+     * @param string $tanggal
+     * @return string
+     */
+    public static function getDayOfWeekFromDate($tanggal)
+    {
+        $dayMap = [
+            'Sunday' => 'minggu',
+            'Monday' => 'senin',
+            'Tuesday' => 'selasa',
+            'Wednesday' => 'rabu',
+            'Thursday' => 'kamis',
+            'Friday' => 'jumat',
+            'Saturday' => 'sabtu'
+        ];
+        
+        $englishDay = date('l', strtotime($tanggal));
+        return $dayMap[$englishDay] ?? 'senin';
     }
 
     /**
@@ -102,9 +127,12 @@ class Jadwal extends Model
      */
     public static function getConflictingJadwal($id_ruang, $tanggal, $jam_mulai, $jam_selesai, $exclude_id = null)
     {
+        // For jadwal, we check by day of the week instead of specific date
+        $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
+        
         $query = self::with(['ruangan', 'matkul'])
             ->where('id_ruang', $id_ruang)
-            ->where('tanggal', $tanggal)
+            ->where('hari', $dayOfWeek)
             ->where(function ($query) use ($jam_mulai, $jam_selesai) {
                 $query->whereBetween('jam_mulai', [$jam_mulai, $jam_selesai])
                     ->orWhereBetween('jam_selesai', [$jam_mulai, $jam_selesai])
@@ -126,9 +154,12 @@ class Jadwal extends Model
      */
     public static function getRoomSchedule($id_ruang, $tanggal)
     {
+        // For room schedule display, show jadwal by day of the week
+        $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
+        
         return self::with(['matkul'])
             ->where('id_ruang', $id_ruang)
-            ->where('tanggal', $tanggal)
+            ->where('hari', $dayOfWeek)
             ->orderBy('jam_mulai')
             ->get();
     }

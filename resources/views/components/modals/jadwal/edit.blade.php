@@ -121,3 +121,31 @@
 </div>
 
 <script src="{{ asset('js/live-conflict-checker.js') }}"></script>
+<script>
+// Auto-update hari field based on tanggal for edit modal
+function updateHariFromTanggalEdit() {
+    const tanggalInput = document.querySelector('[name="tanggal"]');
+    const hariSelect = document.querySelector('[name="hari"]');
+    
+    if (tanggalInput && hariSelect && tanggalInput.value) {
+        const date = new Date(tanggalInput.value);
+        const dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        const dayName = dayNames[date.getDay()];
+        
+        // Set the hari dropdown to match the selected date
+        if (hariSelect.querySelector(`option[value="${dayName}"]`)) {
+            hariSelect.value = dayName;
+        }
+    }
+}
+
+// Set up event listener when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalInput = document.querySelector('[name="tanggal"]');
+    if (tanggalInput) {
+        tanggalInput.addEventListener('change', updateHariFromTanggalEdit);
+        // Update on initial load if value exists
+        updateHariFromTanggalEdit();
+    }
+});
+</script>

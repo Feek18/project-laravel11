@@ -107,6 +107,23 @@
 // Initialize conflict checker when modal is shown
 let jadwalConflictChecker = null;
 
+// Auto-update hari field based on tanggal
+function updateHariFromTanggal() {
+    const tanggalInput = document.querySelector('#jadwal-modal [name="tanggal"]');
+    const hariSelect = document.querySelector('#jadwal-modal [name="hari"]');
+    
+    if (tanggalInput && hariSelect && tanggalInput.value) {
+        const date = new Date(tanggalInput.value);
+        const dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        const dayName = dayNames[date.getDay()];
+        
+        // Set the hari dropdown to match the selected date
+        if (hariSelect.querySelector(`option[value="${dayName}"]`)) {
+            hariSelect.value = dayName;
+        }
+    }
+}
+
 function initializeJadwalConflictChecker() {
     console.log('Initializing jadwal conflict checker...');
     
@@ -118,6 +135,14 @@ function initializeJadwalConflictChecker() {
     
     // Wait a bit to ensure DOM is ready
     setTimeout(() => {
+        // Set up auto-update of hari field
+        const tanggalInput = document.querySelector('#jadwal-modal [name="tanggal"]');
+        if (tanggalInput) {
+            tanggalInput.addEventListener('change', updateHariFromTanggal);
+            // Update on initial load if value exists
+            updateHariFromTanggal();
+        }
+        
         // Check if required elements exist
         const form = document.querySelector('#jadwal-modal form');
         const idRuang = document.querySelector('#jadwal-modal [name="id_ruang"]');

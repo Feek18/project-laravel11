@@ -241,6 +241,13 @@ class LiveConflictChecker {
             // Calculate exact overlap period
             const overlapInfo = this.calculateOverlap(currentStart, currentEnd, conflict.time);
             
+            // For jadwal conflicts, show recurring information
+            const recurringInfo = conflict.recurring ? 
+                `<div class="mt-2 p-2 bg-orange-50 border border-orange-200 rounded">
+                    <div class="text-xs text-orange-700 font-medium mb-1">🔄 Recurring Schedule:</div>
+                    <div class="text-xs text-orange-600">This is a permanent class schedule that occurs every <strong>${conflict.day}</strong></div>
+                </div>` : '';
+            
             return `
                 <div class="bg-red-50 border border-red-200 rounded p-3 mb-3">
                     <div class="flex items-start">
@@ -279,6 +286,8 @@ class LiveConflictChecker {
                                     ` : ''}
                                 </div>
                                 
+                                ${recurringInfo}
+                                
                                 ${conflict.details ? `
                                     <div class="text-xs text-red-600">
                                         <span class="font-medium">Details:</span> ${conflict.details}
@@ -289,7 +298,7 @@ class LiveConflictChecker {
                     </div>
                 </div>
             `;
-        }).join('');        const suggestionsHtml = this.options.showSuggestions && data.suggestions && data.suggestions.length > 0 
+        }).join('');const suggestionsHtml = this.options.showSuggestions && data.suggestions && data.suggestions.length > 0 
             ? this.createSuggestionsHtml(data.suggestions)
             : '';
 
@@ -305,11 +314,11 @@ class LiveConflictChecker {
                         <h3 class="font-bold text-red-800 text-lg">⚠️ Konflik Terdeteksi</h3>
                         <p class="text-red-600 text-sm mt-1">Waktu yang dipilih bertabrakan dengan ${data.conflicts.length} pemesanan yang sudah ada${data.conflicts.length > 1 ? 's' : ''}:</p>
                     </div>
-                </div>
-
-                <div class="space-y-3 mb-4">
+                </div>                <div class="space-y-3 mb-4">
                     ${conflictsList}
                 </div>
+                
+                ${suggestionsHtml}
             </div>
         `;
 
@@ -369,13 +378,13 @@ class LiveConflictChecker {
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="font-medium text-green-800">✅ No Conflicts Found</h3>
-                        <p class="text-green-600 text-sm mt-1">The selected time is available for booking.</p>
+                        <h3 class="font-medium text-green-800">✅ Tidak Ada Konflik</h3>
+                        <p class="text-green-600 text-sm mt-1">Waktu yang dipilih tersedia untuk pemesanan.</p>
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <h4 class="font-medium text-gray-800 mb-2">Current Schedule:</h4>
+                    <h4 class="font-medium text-gray-800 mb-2">Jadwal Saat Ini:</h4>
                     ${scheduleHtml}
                 </div>
             </div>
@@ -407,18 +416,18 @@ class LiveConflictChecker {
                 <p class="text-xs text-red-600 mt-2">Click on a suggestion to apply it automatically.</p>
             </div>
         `;
-    }
-
-    createScheduleHtml(schedule) {
+    }    createScheduleHtml(schedule) {
         const scheduleList = schedule.map(item => `
             <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded border">
                 <div>
                     <span class="font-medium text-gray-800">${item.title}</span>
                     <span class="text-sm text-gray-600 ml-2">(${item.type})</span>
+                    ${item.is_recurring ? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded ml-1">Recurring</span>' : ''}
                 </div>
                 <div class="text-right">
                     <div class="text-sm font-medium text-gray-800">${item.start_time} - ${item.end_time}</div>
                     <div class="text-xs text-gray-500">${item.status}</div>
+                    ${item.is_recurring ? `<div class="text-xs text-blue-600">Every ${item.day}</div>` : ''}
                 </div>
             </div>
         `).join('');
