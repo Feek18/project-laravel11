@@ -55,7 +55,7 @@ class ProfileController extends Controller
         $user->pengguna->gambar = $path;
         $user->pengguna->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('success', 'Profile berhasil diupdate');
     }
 
     /**
