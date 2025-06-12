@@ -1,5 +1,43 @@
 /* DataTables Custom Styling for Laravel Project */
 
+/* Room Availability Checker Styles */
+.room-availability-disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    background-color: #9CA3AF !important;
+    border-color: #9CA3AF !important;
+}
+
+.room-availability-disabled:hover {
+    background-color: #9CA3AF !important;
+    border-color: #9CA3AF !important;
+}
+
+.conflict-warning {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
 /* Remove default DataTables styling */
 table.dataTable {
     border-collapse: collapse !important;

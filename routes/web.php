@@ -87,8 +87,8 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// API Routes for room availability checking
-Route::prefix('api')->middleware('auth')->group(function () {
+// API Routes for room availability checking - accessible to all users without CSRF
+Route::prefix('api')->group(function () {
     Route::post('/check-room-availability', [RoomAvailabilityController::class, 'checkAvailability'])
         ->name('api.room.check-availability');
     Route::get('/room-schedule', [RoomAvailabilityController::class, 'getRoomSchedule'])
