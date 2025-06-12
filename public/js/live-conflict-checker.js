@@ -14,10 +14,10 @@ class LiveConflictChecker {
             showSuggestions: true,
             ...options
         };
-        
-        this.isChecking = false;
+          this.isChecking = false;
         this.lastCheck = null;
         this.debounceTimer = null;
+        this.hasConflicts = false; // Track conflict state
         
         this.init();
     }
@@ -44,6 +44,21 @@ class LiveConflictChecker {
             type: document.querySelector('[name="booking_type"]'), // Hidden field to specify type
             hari: document.querySelector('[name="hari"]') // For jadwal only
         };
+
+        // Find the form
+        this.form = document.querySelector('form');
+        
+        // Add form submission prevention
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => {
+                if (this.hasConflicts) {
+                    e.preventDefault();
+                    console.warn('Form submission prevented due to conflicts');
+                    this.showError('Cannot submit form while there are conflicts. Please resolve them first.');
+                    return false;
+                }
+            });
+        }
 
         // Bind change events
         Object.values(this.fields).forEach(field => {
@@ -254,8 +269,10 @@ class LiveConflictChecker {
         if (!this.statusContainer) return;
 
         if (data.has_conflicts) {
+            this.hasConflicts = true;
             this.displayConflicts(data);
         } else {
+            this.hasConflicts = false;
             this.showAvailable(data);
         }
     }showConflicts(data) {
@@ -345,11 +362,13 @@ class LiveConflictChecker {
                 </div>
                 
                 ${suggestionsHtml}
-            </div>
-        `;
+            </div>        `;
 
-        // Disable submit button
-        this.toggleSubmitButton(false);
+        // Disable submit button with conflict data
+        console.log('Legacy conflicts detected, disabling submit button');
+        this.toggleSubmitButton(false, data);
+        
+        // Remove the fallback button disabling code since we now only target specific ID
     }    displayConflicts(data) {
         if (!this.statusContainer) return;
 
@@ -451,8 +470,11 @@ class LiveConflictChecker {
             </div>
         `;        this.statusContainer.innerHTML = conflictsHtml;
 
-        // Disable submit button
-        this.toggleSubmitButton(false);
+        // Disable submit button - make sure this happens
+        console.log('Conflicts detected, disabling submit button');
+        this.toggleSubmitButton(false, data);
+        
+        // Remove the fallback button disabling code since we now only target specific ID
     }
 
     calculateOverlap(start1, end1, start2, end2) {
@@ -560,19 +582,91 @@ class LiveConflictChecker {
 
         // Re-check conflicts
         setTimeout(() => this.checkConflicts(), 100);
-    }
-
-    toggleSubmitButton(enabled) {
-        const submitButton = document.querySelector('button[type="submit"]');
+    }    toggleSubmitButton(enabled, conflictData = null) {
+        // Only target specific button by ID
+        let submitButton = document.getElementById('jadwal-submit-btn');
+        
+        console.log('Submit button search result:', {
+            found: !!submitButton,
+            id: submitButton?.id || 'no-id',
+            element: submitButton,
+            enabled: enabled,
+            conflictData: !!conflictData
+        });
+        
         if (submitButton) {
-            submitButton.disabled = !enabled;
             if (enabled) {
-                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                submitButton.classList.add('hover:bg-blue-800');
+                // Enable button
+                submitButton.disabled = false;
+                submitButton.classList.remove('room-availability-disabled', 'opacity-50', 'cursor-not-allowed');
+                submitButton.classList.add('bg-blue-700', 'hover:bg-blue-800');
+                
+                // Restore original text if it was stored
+                if (submitButton.dataset.originalText && submitButton.tagName === 'BUTTON') {
+                    console.log('Restoring original text:', submitButton.dataset.originalText);
+                    submitButton.textContent = submitButton.dataset.originalText;
+                }
             } else {
-                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                submitButton.classList.remove('hover:bg-blue-800');
+                // Disable button
+                console.log('Disabling submit button:', {
+                    id: submitButton.id,
+                    currentText: submitButton.textContent,
+                    tagName: submitButton.tagName,
+                    hasOriginalText: !!submitButton.dataset.originalText
+                });
+                
+                // Store original text if not already stored
+                if (!submitButton.dataset.originalText && submitButton.tagName === 'BUTTON') {
+                    submitButton.dataset.originalText = submitButton.textContent.trim();
+                    console.log('Stored original text:', submitButton.dataset.originalText);
+                }
+
+                submitButton.disabled = true;
+                
+                // Remove all possible background colors and add disabled class
+                submitButton.classList.remove('bg-blue-600', 'bg-blue-700', 'hover:bg-blue-700', 'hover:bg-blue-800', 'bg-green-600', 'hover:bg-green-700');
+                submitButton.classList.add('room-availability-disabled', 'opacity-50', 'cursor-not-allowed');
+                
+                // Update button text based on conflict type
+                if (submitButton.tagName === 'BUTTON') {
+                    let newText = '❌ Ruangan Tidak Tersedia';
+                    
+                    // Check for specific conflict types if data is provided
+                    if (conflictData) {
+                        if (conflictData.jadwal_conflicts && conflictData.jadwal_conflicts.length > 0) {
+                            newText = '❌ Konflik dengan Jadwal Kuliah';
+                        } else if (conflictData.peminjaman_conflicts && conflictData.peminjaman_conflicts.length > 0) {
+                            newText = '⚠️ Ada Konflik Peminjaman';
+                        } else if (conflictData.conflicts && conflictData.conflicts.length > 0) {
+                            // Legacy format
+                            const hasApproved = conflictData.conflicts.some(c => c.status === 'Disetujui' || c.status === 'approved');
+                            const hasPending = conflictData.conflicts.some(c => c.status === 'Menunggu' || c.status === 'pending');
+                            
+                            if (hasApproved) {
+                                newText = '❌ Ruangan Tidak Tersedia';
+                            } else if (hasPending) {
+                                newText = '⚠️ Ada Konflik Pending';
+                            }
+                        }
+                    }
+                    
+                    console.log('Changing button text from "' + submitButton.textContent + '" to "' + newText + '"');
+                    submitButton.textContent = newText;
+                    
+                    // Force a reflow to ensure changes are applied
+                    submitButton.offsetHeight;
+                }
+                
+                // Double-check the button state
+                console.log('Button state after disable:', {
+                    id: submitButton.id,
+                    disabled: submitButton.disabled,
+                    text: submitButton.textContent,
+                    classes: submitButton.className
+                });
             }
+        } else {
+            console.warn('Submit button with ID "jadwal-submit-btn" not found for conflict checker');
         }
     }
 
@@ -591,12 +685,11 @@ class LiveConflictChecker {
                 </div>
             </div>
         `;
-    }
-
-    clearStatus() {
+    }    clearStatus() {
         if (this.statusContainer) {
             this.statusContainer.innerHTML = '';
         }
+        this.hasConflicts = false;
         this.toggleSubmitButton(true);
     }
 
@@ -647,18 +740,47 @@ class LiveConflictChecker {
 
 // Auto-initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Only initialize on forms that have room booking fields
+    initializeLiveChecker();
+});
+
+// Also initialize when modals are shown (for dynamic content)
+document.addEventListener('click', function(e) {
+    // Check if a modal trigger was clicked
+    if (e.target.matches('[data-modal-target], [data-modal-show]')) {
+        // Wait for modal to be shown, then initialize
+        setTimeout(() => {
+            initializeLiveChecker();
+        }, 100);
+    }
+});
+
+// Flowbite modal events (if available)
+if (typeof window.Modal !== 'undefined') {
+    document.addEventListener('modal-show', function() {
+        setTimeout(() => {
+            initializeLiveChecker();
+        }, 100);
+    });
+}
+
+function initializeLiveChecker() {
+    // Only initialize on forms that have room booking fields and don't already have a checker
     const hasRoomField = document.querySelector('[name="id_ruang"]');
     const hasTimeFields = document.querySelector('[name="waktu_mulai"], [name="jam_mulai"]');
     
-    if (hasRoomField && hasTimeFields) {
+    if (hasRoomField && hasTimeFields && !window.liveChecker) {
+        console.log('Initializing Live Conflict Checker');
         window.liveChecker = new LiveConflictChecker({
             autoCheck: true,
             showSuggestions: true,
             debounceMs: 800 // Slightly longer delay to avoid too many requests
         });
+    } else if (hasRoomField && hasTimeFields && window.liveChecker) {
+        // Re-initialize if the form changed (e.g., different modal)
+        console.log('Re-initializing Live Conflict Checker for new form');
+        window.liveChecker.init();
     }
-});
+}
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {

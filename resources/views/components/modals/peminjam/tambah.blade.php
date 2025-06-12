@@ -86,9 +86,8 @@
                         <label for="keperluan" class="block text-sm font-medium text-gray-700">Keperluan
                             Pinjam</label>
                         <textarea id="keperluan" name="keperluan" rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500
-                                    placeholder="Masukkan
-                            keperluan anda"></textarea>
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Masukkan keperluan anda"></textarea>
                     </div>
 
                     <!-- Live Conflict Check Results will be inserted here -->
