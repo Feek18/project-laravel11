@@ -23,7 +23,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <form action="{{ route('peminjam.store') }}" method="POST">
+                <form id="room-booking-form" action="{{ route('peminjam.store') }}" method="POST">
                     @csrf
                     {{-- <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}"> --}}
                     {{-- <input type="hidden" name="id_pengguna" value="{{ auth()->user()->pengguna->id }}"> --}}

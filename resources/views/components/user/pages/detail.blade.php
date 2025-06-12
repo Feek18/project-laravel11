@@ -59,7 +59,7 @@
                             <h4 class="font-medium text-gray-800 mb-3">Atau Peminjaman Terjadwal</h4>
                         </div>
 
-                        <form action="{{ route('pemesanan.store') }}" method="POST">
+                        <form id="room-booking-form" action="{{ route('pemesanan.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id_ruang" value="{{ $ruangan->id_ruang }}">
                             {{-- <div class="mb-4">
@@ -197,6 +197,9 @@
             document.getElementById('instant_keperluan').value = '';
         }
     </script>
+
+    <!-- Real-time Room Availability Checker -->
+    <script src="{{ asset('js/room-availability-checker.js') }}"></script>
 
 </body>
 

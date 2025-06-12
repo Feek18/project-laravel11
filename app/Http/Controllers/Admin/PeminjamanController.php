@@ -118,6 +118,20 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
+        // Check for conflicts with existing bookings (pending or approved)
+        $conflicts = Peminjaman::hasTimeConflict(
+            $validatedData['id_ruang'],
+            $validatedData['tanggal_pinjam'],
+            $validatedData['waktu_mulai'],
+            $validatedData['waktu_selesai']
+        );
+
+        if ($conflicts) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.');
+        }
+
         Peminjaman::create($validatedData);
 
         return redirect()->route('peminjam.index')->with('success', 'Peminjaman berhasil ditambahkan.');
@@ -154,6 +168,21 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
+        // Check for conflicts with other bookings (excluding current booking)
+        $conflicts = Peminjaman::hasTimeConflict(
+            $validated['id_ruang'],
+            $validated['tanggal_pinjam'],
+            $validated['waktu_mulai'],
+            $validated['waktu_selesai'],
+            $id
+        );
+
+        if ($conflicts) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.');
+        }
+
         $peminjam->update($validated);
 
         return redirect()->route('peminjam.index')->with('success', 'Peminjaman berhasil diupdate.');
@@ -173,9 +202,30 @@ class PeminjamanController extends Controller
         ]);
 
         $peminjam = Peminjaman::findOrFail($id);
+        
+        // If approving the booking, check for conflicts with already approved bookings
+        if ($request->status_persetujuan === 'disetujui') {
+            $conflicts = Peminjaman::hasApprovedConflict(
+                $peminjam->id_ruang,
+                $peminjam->tanggal_pinjam,
+                $peminjam->waktu_mulai,
+                $peminjam->waktu_selesai,
+                $id
+            );
+
+            if ($conflicts) {
+                return redirect()->back()
+                    ->with('error', 'Tidak dapat menyetujui peminjaman ini karena terdapat konflik waktu dengan peminjaman lain yang sudah disetujui.');
+            }
+        }
+
         $peminjam->status_persetujuan = $request->status_persetujuan;
         $peminjam->save();
 
-        return redirect()->route('peminjam.index')->with('success', 'Status persetujuan berhasil diubah.');
+        $message = $request->status_persetujuan === 'disetujui' 
+            ? 'Peminjaman berhasil disetujui.' 
+            : 'Peminjaman berhasil ditolak.';
+
+        return redirect()->route('peminjam.index')->with('success', $message);
     }
 }

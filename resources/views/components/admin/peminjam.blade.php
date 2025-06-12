@@ -97,5 +97,8 @@
             });
         });
     </script>
+    
+    <!-- Real-time Room Availability Checker -->
+    <script src="{{ asset('js/room-availability-checker.js') }}"></script>
     @endpush
 </x-app-layout>

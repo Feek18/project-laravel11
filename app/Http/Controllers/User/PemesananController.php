@@ -41,25 +41,31 @@ class PemesananController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'keperluan' => 'required|string|max:255',
         ]);
-        // $id_ruang = $request->input('id_ruang');
-        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dan status masih pending
-        $conflict = Peminjaman::where('id_ruang', $request->id_ruang)
-            ->where('tanggal_pinjam', $request->tanggal_pinjam)
-            ->where('status_persetujuan', 'pending')
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('waktu_mulai', [$request->waktu_mulai, $request->waktu_selesai])
-                    ->orWhereBetween('waktu_selesai', [$request->waktu_mulai, $request->waktu_selesai])
-                    ->orWhere(function ($query) use ($request) {
-                        $query->where('waktu_mulai', '<=', $request->waktu_mulai)
-                            ->where('waktu_selesai', '>=', $request->waktu_selesai);
-                    });
-            })
-            ->exists();
+        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dengan status pending atau disetujui
+        $pendingConflict = Peminjaman::hasPendingConflict(
+            $request->id_ruang,
+            $request->tanggal_pinjam,
+            $request->waktu_mulai,
+            $request->waktu_selesai
+        );
 
-        if ($conflict) {
+        $approvedConflict = Peminjaman::hasApprovedConflict(
+            $request->id_ruang,
+            $request->tanggal_pinjam,
+            $request->waktu_mulai,
+            $request->waktu_selesai
+        );
+
+        if ($pendingConflict) {
             return redirect()->back()
                 ->withInput()
                 ->with('warning', 'Ruangan sedang dalam proses peminjaman lain pada waktu tersebut (masih menunggu persetujuan).');
+        }
+
+        if ($approvedConflict) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Ruangan sudah dikonfirmasi untuk peminjaman lain pada waktu tersebut. Silakan pilih waktu lain.');
         }
 
         Peminjaman::create([

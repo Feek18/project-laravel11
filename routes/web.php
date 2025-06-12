@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MatkulController;
 use App\Http\Controllers\Admin\PeminjamanController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Api\RoomAvailabilityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QRCodeController;
@@ -84,4 +85,12 @@ Route::middleware('auth')->group(function () {
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+});
+
+// API Routes for room availability checking
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::post('/check-room-availability', [RoomAvailabilityController::class, 'checkAvailability'])
+        ->name('api.room.check-availability');
+    Route::get('/room-schedule', [RoomAvailabilityController::class, 'getRoomSchedule'])
+        ->name('api.room.schedule');
 });

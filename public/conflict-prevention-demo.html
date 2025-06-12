@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Booking Conflict Prevention - Demonstration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .demo-card {
+            transition: all 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">🛡️ Enhanced Room Booking Conflict Prevention</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                This demonstration shows how the new conflict prevention system works to prevent overlapping bookings 
+                between pending and approved room reservations.
+            </p>
+        </div>
+
+        <!-- Status Overview -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="demo-card bg-green-50 border border-green-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-green-800 ml-3">Available</h3>
+                </div>
+                <p class="text-green-700">Room is completely available for booking at the selected time.</p>
+            </div>
+
+            <div class="demo-card bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-yellow-800 ml-3">Pending Conflict</h3>
+                </div>
+                <p class="text-yellow-700">Room has pending booking(s) that may conflict. Booking allowed with warning.</p>
+            </div>
+
+            <div class="demo-card bg-red-50 border border-red-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-red-800 ml-3">Approved Conflict</h3>
+                </div>
+                <p class="text-red-700">Room has approved booking(s) that conflict. Booking blocked completely.</p>
+            </div>
+        </div>
+
+        <!-- Conflict Scenarios -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-900">📋 Conflict Prevention Scenarios</h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-6">
+                    <!-- Scenario 1 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-3">📊 Scenario 1: Pending vs New Booking</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-yellow-50 border border-yellow-200 rounded p-4">
+                                <h4 class="font-medium text-yellow-800 mb-2">Existing Booking (Pending)</h4>
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 09:00 - 11:00<br>
+                                    <strong>Status:</strong> Pending
+                                </p>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded p-4">
+                                <h4 class="font-medium text-blue-800 mb-2">New Booking Attempt</h4>
+                                <p class="text-sm text-blue-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 10:00 - 12:00<br>
+                                    <strong>Result:</strong> ⚠️ Warning shown, booking allowed
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-3">🚫 Scenario 2: Approved vs New Booking</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-green-50 border border-green-200 rounded p-4">
+                                <h4 class="font-medium text-green-800 mb-2">Existing Booking (Approved)</h4>
+                                <p class="text-sm text-green-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 09:00 - 11:00<br>
+                                    <strong>Status:</strong> Approved (disetujui)
+                                </p>
+                            </div>
+                            <div class="bg-red-50 border border-red-200 rounded p-4">
+                                <h4 class="font-medium text-red-800 mb-2">New Booking Attempt</h4>
+                                <p class="text-sm text-red-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 10:00 - 12:00<br>
+                                    <strong>Result:</strong> ❌ Error shown, booking blocked
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-3">🛑 Scenario 3: Admin Approval Prevention</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-green-50 border border-green-200 rounded p-4">
+                                <h4 class="font-medium text-green-800 mb-2">Existing Approved Booking</h4>
+                                <p class="text-sm text-green-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 09:00 - 11:00<br>
+                                    <strong>Status:</strong> Approved
+                                </p>
+                            </div>
+                            <div class="bg-red-50 border border-red-200 rounded p-4">
+                                <h4 class="font-medium text-red-800 mb-2">Pending Booking (Can't Approve)</h4>
+                                <p class="text-sm text-red-700">
+                                    <strong>Room:</strong> Conference Room A<br>
+                                    <strong>Date:</strong> June 15, 2025<br>
+                                    <strong>Time:</strong> 10:00 - 12:00<br>
+                                    <strong>Result:</strong> ❌ Admin can't approve due to conflict
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-900">🔗 API Endpoints</h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-900 mb-2">Check Room Availability</h3>
+                        <p class="text-sm text-gray-600 mb-2">
+                            <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-mono">POST</span>
+                            <span class="ml-2 font-mono">/api/check-room-availability</span>
+                        </p>
+                        <div class="bg-white border border-gray-200 rounded p-3 text-sm">
+                            <pre class="text-gray-800">{
+  "id_ruang": 1,
+  "tanggal_pinjam": "2025-06-15",
+  "waktu_mulai": "09:00",
+  "waktu_selesai": "11:00",
+  "exclude_id": null
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-900 mb-2">Get Room Schedule</h3>
+                        <p class="text-sm text-gray-600 mb-2">
+                            <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-mono">GET</span>
+                            <span class="ml-2 font-mono">/api/room-schedule?id_ruang=1&tanggal_pinjam=2025-06-15</span>
+                        </p>
+                        <div class="bg-white border border-gray-200 rounded p-3 text-sm">
+                            <pre class="text-gray-800">Returns: Complete schedule for the room on specified date</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-900">⚡ Key Features</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="font-medium text-gray-900">🔒 Conflict Prevention</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Blocks overlapping approved bookings
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Warns about pending conflicts
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Prevents conflicting approvals
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Multi-layer validation
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="font-medium text-gray-900">🚀 Real-time Features</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Live availability checking
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Debounced AJAX requests
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Visual feedback messages
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Room schedule viewing
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 pt-8 border-t border-gray-200">
+            <p class="text-gray-600">
+                <strong>Enhanced Room Booking Conflict Prevention System</strong><br>
+                Implemented on June 12, 2025 | Laravel 11 Application
+            </p>
+        </div>
+    </div>
+</body>
+</html>
