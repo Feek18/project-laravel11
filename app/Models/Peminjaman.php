@@ -106,6 +106,47 @@ class Peminjaman extends Model
     }
 
     /**
+     * Check for conflicts with jadwal schedules
+     * 
+     * @param int $id_ruang
+     * @param string $tanggal_pinjam
+     * @param string $waktu_mulai
+     * @param string $waktu_selesai
+     * @return bool
+     */
+    public static function hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai)
+    {
+        return Jadwal::hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai);
+    }
+
+    /**
+     * Check for any conflicts (both peminjaman and jadwal)
+     * 
+     * @param int $id_ruang
+     * @param string $tanggal_pinjam
+     * @param string $waktu_mulai
+     * @param string $waktu_selesai
+     * @param int|null $exclude_id
+     * @return array
+     */
+    public static function checkAllConflicts($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai, $exclude_id = null)
+    {
+        $conflicts = [];
+
+        // Check peminjaman conflicts
+        if (self::hasTimeConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai, $exclude_id)) {
+            $conflicts['peminjaman'] = self::getConflictingBookings($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai, $exclude_id);
+        }
+
+        // Check jadwal conflicts
+        if (self::hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai)) {
+            $conflicts['jadwal'] = Jadwal::getConflictingJadwal($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai);
+        }
+
+        return $conflicts;
+    }
+
+    /**
      * Get all bookings for a specific room and date
      */
     public static function getRoomSchedule($id_ruang, $tanggal_pinjam)

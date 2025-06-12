@@ -41,7 +41,15 @@ class PemesananController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'keperluan' => 'required|string|max:255',
         ]);
-        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dengan status pending atau disetujui
+        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dengan peminjaman dan jadwal
+        $conflicts = Peminjaman::checkAllConflicts(
+            $request->id_ruang,
+            $request->tanggal_pinjam,
+            $request->waktu_mulai,
+            $request->waktu_selesai
+        );
+
+        // Check for pending peminjaman conflicts
         $pendingConflict = Peminjaman::hasPendingConflict(
             $request->id_ruang,
             $request->tanggal_pinjam,
@@ -49,12 +57,22 @@ class PemesananController extends Controller
             $request->waktu_selesai
         );
 
+        // Check for approved peminjaman conflicts
         $approvedConflict = Peminjaman::hasApprovedConflict(
             $request->id_ruang,
             $request->tanggal_pinjam,
             $request->waktu_mulai,
             $request->waktu_selesai
         );
+
+        // Check for jadwal conflicts
+        $jadwalConflict = isset($conflicts['jadwal']) && !empty($conflicts['jadwal']);
+
+        if ($jadwalConflict) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Ruangan sudah dijadwalkan untuk perkuliahan pada waktu tersebut. Silakan pilih waktu lain.');
+        }
 
         if ($pendingConflict) {
             return redirect()->back()

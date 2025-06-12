@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\RoomAvailabilityController;
+use App\Http\Controllers\Api\ConflictCheckController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,11 @@ Route::post('/check-room-availability', [RoomAvailabilityController::class, 'che
     ->name('api.room.check-availability');
 Route::get('/room-schedule', [RoomAvailabilityController::class, 'getRoomSchedule'])
     ->name('api.room.schedule');
+
+// Live conflict checking routes
+Route::post('/check-conflicts', [ConflictCheckController::class, 'checkConflicts'])
+    ->name('api.conflicts.check');
+Route::get('/room-schedule-detailed', [ConflictCheckController::class, 'getRoomSchedule'])
+    ->name('api.room.schedule-detailed');
+Route::post('/available-slots', [ConflictCheckController::class, 'getAvailableSlots'])
+    ->name('api.room.available-slots');

@@ -118,18 +118,28 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // Check for conflicts with existing bookings (pending or approved)
-        $conflicts = Peminjaman::hasTimeConflict(
+        // Check for conflicts with existing bookings (pending or approved) and jadwal
+        $conflicts = Peminjaman::checkAllConflicts(
             $validatedData['id_ruang'],
             $validatedData['tanggal_pinjam'],
             $validatedData['waktu_mulai'],
             $validatedData['waktu_selesai']
         );
 
-        if ($conflicts) {
+        if (!empty($conflicts)) {
+            $errorMessages = [];
+            
+            if (isset($conflicts['peminjaman'])) {
+                $errorMessages[] = 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.';
+            }
+            
+            if (isset($conflicts['jadwal'])) {
+                $errorMessages[] = 'Terdapat konflik dengan jadwal perkuliahan pada ruangan dan waktu yang sama.';
+            }
+            
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.');
+                ->with('error', implode(' ', $errorMessages));
         }
 
         Peminjaman::create($validatedData);
@@ -168,8 +178,8 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // Check for conflicts with other bookings (excluding current booking)
-        $conflicts = Peminjaman::hasTimeConflict(
+        // Check for conflicts with other bookings (excluding current booking) and jadwal
+        $conflicts = Peminjaman::checkAllConflicts(
             $validated['id_ruang'],
             $validated['tanggal_pinjam'],
             $validated['waktu_mulai'],
@@ -177,10 +187,20 @@ class PeminjamanController extends Controller
             $id
         );
 
-        if ($conflicts) {
+        if (!empty($conflicts)) {
+            $errorMessages = [];
+            
+            if (isset($conflicts['peminjaman'])) {
+                $errorMessages[] = 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.';
+            }
+            
+            if (isset($conflicts['jadwal'])) {
+                $errorMessages[] = 'Terdapat konflik dengan jadwal perkuliahan pada ruangan dan waktu yang sama.';
+            }
+            
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.');
+                ->with('error', implode(' ', $errorMessages));
         }
 
         $peminjam->update($validated);
