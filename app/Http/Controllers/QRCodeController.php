@@ -62,6 +62,50 @@ class QRCodeController extends Controller
         }
 
         try {
+            // Check for conflicts before generating QR code
+            $currentTime = now();
+            $endTime = $currentTime->copy()->addHours(2); // Default 2 hours for instant QR
+
+            $pendingConflict = Peminjaman::hasPendingConflict(
+                $request->id_ruang,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
+            );
+
+            $approvedConflict = Peminjaman::hasApprovedConflict(
+                $request->id_ruang,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
+            );
+
+            $conflictingBookings = Peminjaman::getConflictingBookings(
+                $request->id_ruang,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
+            );
+
+            // If there are approved conflicts, block QR generation completely
+            if ($approvedConflict) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'QR Code tidak dapat dibuat karena ruangan sudah dikonfirmasi untuk peminjaman lain',
+                    'has_approved_conflict' => true,
+                    'conflicting_bookings' => $conflictingBookings->map(function ($booking) {
+                        return [
+                            'id' => $booking->id,
+                            'pengguna' => $booking->pengguna->nama ?? 'Unknown',
+                            'waktu_mulai' => $booking->waktu_mulai,
+                            'waktu_selesai' => $booking->waktu_selesai,
+                            'status' => $booking->status_persetujuan,
+                            'keperluan' => $booking->keperluan,
+                        ];
+                    })
+                ], 422);
+            }
+
             // Generate unique token
             $token = Str::random(32);
             
@@ -97,13 +141,31 @@ class QRCodeController extends Controller
             // Update peminjaman record with QR code path
             $peminjaman->update(['qr_code' => $fileName]);
 
-            return response()->json([
+            $responseData = [
                 'success' => true,
                 'message' => 'QR Code berhasil digenerate',
                 'qr_code_url' => Storage::url($fileName),
                 'peminjaman_id' => $peminjaman->id,
                 'token' => $token
-            ]);
+            ];
+
+            // Add conflict information if there are pending conflicts
+            if ($pendingConflict) {
+                $responseData['has_pending_conflict'] = true;
+                $responseData['conflict_warning'] = 'Perhatian: Ada peminjaman pending yang mungkin bertabrakan dengan waktu ini';
+                $responseData['conflicting_bookings'] = $conflictingBookings->map(function ($booking) {
+                    return [
+                        'id' => $booking->id,
+                        'pengguna' => $booking->pengguna->nama ?? 'Unknown',
+                        'waktu_mulai' => $booking->waktu_mulai,
+                        'waktu_selesai' => $booking->waktu_selesai,
+                        'status' => $booking->status_persetujuan,
+                        'keperluan' => $booking->keperluan,
+                    ];
+                });
+            }
+
+            return response()->json($responseData);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -142,6 +204,35 @@ class QRCodeController extends Controller
 
         if (!$peminjaman) {
             return response()->json(['error' => 'Invalid QR token'], 404);
+        }
+
+        // Check for conflicts before approving
+        $approvedConflict = Peminjaman::hasApprovedConflict(
+            $peminjaman->id_ruang,
+            $peminjaman->tanggal_pinjam,
+            $peminjaman->waktu_mulai,
+            $peminjaman->waktu_selesai,
+            $peminjaman->id
+        );
+
+        if ($approvedConflict) {
+            $conflictingBookings = Peminjaman::getConflictingBookings(
+                $peminjaman->id_ruang,
+                $peminjaman->tanggal_pinjam,
+                $peminjaman->waktu_mulai,
+                $peminjaman->waktu_selesai,
+                $peminjaman->id
+            );
+
+            $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
+                ->map(function($booking) {
+                    return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
+                })->implode(', ');
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Peminjaman tidak dapat disetujui karena bertabrakan dengan peminjaman yang sudah dikonfirmasi: ' . $conflictDetails
+            ], 422);
         }
 
         $peminjaman->update([
@@ -209,21 +300,52 @@ class QRCodeController extends Controller
         $currentTime = now();
         $endTime = $currentTime->copy()->addHours((int) $request->duration);
         
-        $conflict = Peminjaman::where('id_ruang', $room_id)
-            ->where('tanggal_pinjam', $currentTime->format('Y-m-d'))
-            ->where('status_persetujuan', ['pending', 'disetujui'])
-            ->where(function($query) use ($currentTime, $endTime) {
-                $query->whereBetween('waktu_mulai', [$currentTime->format('H:i'), $endTime->format('H:i')])
-                    ->orWhereBetween('waktu_selesai', [$currentTime->format('H:i'), $endTime->format('H:i')])
-                    ->orWhere(function($query) use ($currentTime, $endTime) {
-                        $query->where('waktu_mulai', '<=', $currentTime->format('H:i'))
-                            ->where('waktu_selesai', '>=', $endTime->format('H:i'));
-                    });
-            })
-            ->exists();
+        // Use the same conflict checking system as the room availability checker
+        $pendingConflict = Peminjaman::hasPendingConflict(
+            $room_id,
+            $currentTime->format('Y-m-d'),
+            $currentTime->format('H:i'),
+            $endTime->format('H:i')
+        );
 
-        if ($conflict) {
-            return back()->with('error', 'Ruangan sedang digunakan pada waktu tersebut');
+        $approvedConflict = Peminjaman::hasApprovedConflict(
+            $room_id,
+            $currentTime->format('Y-m-d'),
+            $currentTime->format('H:i'),
+            $endTime->format('H:i')
+        );
+
+        $conflictingBookings = Peminjaman::getConflictingBookings(
+            $room_id,
+            $currentTime->format('Y-m-d'),
+            $currentTime->format('H:i'),
+            $endTime->format('H:i')
+        );
+
+        // Show detailed conflict information
+        if ($approvedConflict) {
+            $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
+                ->map(function($booking) {
+                    return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
+                })->implode(', ');
+            
+            return back()->with('error', 
+                'Ruangan tidak tersedia karena sudah dikonfirmasi untuk peminjaman lain. ' .
+                'Konflik dengan: ' . $conflictDetails
+            );
+        }
+
+        if ($pendingConflict) {
+            $conflictDetails = $conflictingBookings->where('status_persetujuan', 'pending')
+                ->map(function($booking) {
+                    return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
+                })->implode(', ');
+            
+            // Allow booking but show warning
+            session()->flash('warning', 
+                'Perhatian: Ada peminjaman pending yang mungkin bertabrakan. ' .
+                'Konflik dengan: ' . $conflictDetails
+            );
         }
 
         // Generate unique token
@@ -257,5 +379,13 @@ class QRCodeController extends Controller
         $peminjaman = Peminjaman::with(['ruangan', 'pengguna'])->findOrFail($id);
         
         return view('qr.success', compact('peminjaman'));
+    }
+
+    /**
+     * Show QR code test page
+     */
+    public function showTestPage()
+    {
+        return view('qr.test');
     }
 }

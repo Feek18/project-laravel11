@@ -12,9 +12,7 @@
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">Detail Peminjaman</h1>
                 <p class="text-gray-600">Informasi peminjaman ruangan</p>
-            </div>
-
-            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+            </div>            <div class="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 class="font-medium text-gray-800 mb-3">Informasi Peminjaman:</h3>
                 <div class="space-y-2 text-sm text-gray-600">
                     <div class="flex justify-between">
@@ -51,15 +49,68 @@
                         </span>
                     </div>
                 </div>
-            </div>
 
-            @if($peminjaman->status_persetujuan == 'pending')
+                @php
+                    // Check for current conflicts
+                    $currentConflicts = \App\Models\Peminjaman::getConflictingBookings(
+                        $peminjaman->id_ruang,
+                        $peminjaman->tanggal_pinjam,
+                        $peminjaman->waktu_mulai,
+                        $peminjaman->waktu_selesai,
+                        $peminjaman->id
+                    );
+                    $hasApprovedConflicts = $currentConflicts->where('status_persetujuan', 'disetujui')->count() > 0;
+                    $hasPendingConflicts = $currentConflicts->where('status_persetujuan', 'pending')->count() > 0;
+                @endphp
+
+                @if($currentConflicts->count() > 0)
+                    <div class="mt-4 p-3 rounded-lg border 
+                        @if($hasApprovedConflicts) bg-red-50 border-red-200 @else bg-yellow-50 border-yellow-200 @endif">
+                        <div class="flex items-center mb-2">
+                            <svg class="w-4 h-4 mr-2 @if($hasApprovedConflicts) text-red-600 @else text-yellow-600 @endif" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm font-medium @if($hasApprovedConflicts) text-red-800 @else text-yellow-800 @endif">
+                                @if($hasApprovedConflicts) Konflik Terdeteksi! @else Peringatan Konflik @endif
+                            </span>
+                        </div>
+                        <div class="text-xs @if($hasApprovedConflicts) text-red-700 @else text-yellow-700 @endif">
+                            <p class="font-medium mb-1">Konflik dengan peminjaman lain:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                @foreach($currentConflicts as $conflict)
+                                    <li>{{ $conflict->pengguna->nama ?? 'Unknown' }} ({{ $conflict->waktu_mulai }} - {{ $conflict->waktu_selesai }}) - 
+                                        <span class="font-medium">{{ ucfirst($conflict->status_persetujuan) }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            @if($hasApprovedConflicts)
+                                <p class="mt-2 font-medium text-red-800">⚠️ Peminjaman ini tidak dapat disetujui karena bertabrakan dengan peminjaman yang sudah dikonfirmasi.</p>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            </div>            @if($peminjaman->status_persetujuan == 'pending')
+                @php
+                    // Check if approval should be blocked due to conflicts
+                    $canApprove = !$hasApprovedConflicts;
+                @endphp
+                
                 <div class="space-y-3">
                     <button 
                         onclick="approveQR('{{ $peminjaman->qr_token }}')"
-                        class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition"
+                        @if(!$canApprove) disabled @endif
+                        class="w-full py-2 px-4 rounded-lg transition
+                            @if($canApprove) 
+                                bg-green-600 text-white hover:bg-green-700
+                            @else 
+                                bg-gray-300 text-gray-500 cursor-not-allowed
+                            @endif"
                     >
-                        Setujui Peminjaman
+                        @if($canApprove) 
+                            Setujui Peminjaman 
+                        @else 
+                            Tidak Dapat Disetujui (Ada Konflik)
+                        @endif
                     </button>
                     <button 
                         onclick="rejectQR('{{ $peminjaman->qr_token }}')"

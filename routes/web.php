@@ -79,13 +79,19 @@ Route::middleware('auth')->group(function () {
 
         // QR Code generation for users
         Route::post('/qr/generate-instant', [QRCodeController::class, 'generateInstantQR'])->name('qr.generate.instant');
-
-        // Profile
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    // Profile routes for all authenticated users
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// QR Code testing and demo routes (accessible to all)
+Route::get('/qr/test', [QRCodeController::class, 'showTestPage'])->name('qr.test');
+Route::get('/qr/conflict-demo', function() {
+    return view('qr.conflict-demo');
+})->name('qr.conflict.demo');
 
 // API Routes for room availability checking - accessible to all users without CSRF
 Route::prefix('api')->group(function () {

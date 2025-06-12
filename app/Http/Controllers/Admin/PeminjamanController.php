@@ -43,7 +43,7 @@ class PeminjamanController extends Controller
         ' . method_field('PUT') . '
         <input type="hidden" name="status_persetujuan" value="ditolak">
         <button type="submit"
-            class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-xs transition duration-150 shadow-sm"
+            style="background:red" class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-xs transition duration-150 shadow-sm"
             title="Tolak">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
