@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Ruangan;
+use App\Services\RoomConflictService;
 // use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -41,49 +42,24 @@ class PemesananController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'keperluan' => 'required|string|max:255',
         ]);
-        // Cek bentrok waktu pada ruangan yang sama, tanggal sama, dengan peminjaman dan jadwal
-        $conflicts = Peminjaman::checkAllConflicts(
-            $request->id_ruang,
-            $request->tanggal_pinjam,
-            $request->waktu_mulai,
-            $request->waktu_selesai
-        );
 
-        // Check for pending peminjaman conflicts
-        $pendingConflict = Peminjaman::hasPendingConflict(
-            $request->id_ruang,
-            $request->tanggal_pinjam,
-            $request->waktu_mulai,
-            $request->waktu_selesai
-        );
+        // Prepare data for validation
+        $validatedData = [
+            'id_ruang' => $request->id_ruang,
+            'tanggal_pinjam' => $request->tanggal_pinjam, 
+            'waktu_mulai' => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'keperluan' => $request->keperluan,
+        ];
 
-        // Check for approved peminjaman conflicts
-        $approvedConflict = Peminjaman::hasApprovedConflict(
-            $request->id_ruang,
-            $request->tanggal_pinjam,
-            $request->waktu_mulai,
-            $request->waktu_selesai
-        );
+        // Use RoomConflictService for comprehensive validation
+        $conflictService = new RoomConflictService();
+        $validation = $conflictService->validateBooking($validatedData, 'peminjaman');
 
-        // Check for jadwal conflicts
-        $jadwalConflict = isset($conflicts['jadwal']) && !empty($conflicts['jadwal']);
-
-        if ($jadwalConflict) {
+        if (!$validation['valid']) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Ruangan sudah dijadwalkan untuk perkuliahan pada waktu tersebut. Silakan pilih waktu lain.');
-        }
-
-        if ($pendingConflict) {
-            return redirect()->back()
-                ->withInput()
-                ->with('warning', 'Ruangan sedang dalam proses peminjaman lain pada waktu tersebut (masih menunggu persetujuan).');
-        }
-
-        if ($approvedConflict) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Ruangan sudah dikonfirmasi untuk peminjaman lain pada waktu tersebut. Silakan pilih waktu lain.');
+                ->with('error', implode(' ', $validation['messages']));
         }
 
         Peminjaman::create([

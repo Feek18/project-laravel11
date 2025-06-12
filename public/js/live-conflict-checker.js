@@ -441,44 +441,6 @@ class LiveConflictChecker {
         }
 
         // Handle legacy conflicts (for peminjaman using old format)
-        if (hasLegacyConflicts) {
-            conflictsHtml += `
-                <div class="mb-3">
-                    <h4 class="text-red-800 font-medium mb-2">⚠️ Conflicting Bookings:</h4>
-                    <div class="space-y-2">
-            `;
-            
-            data.conflicts.forEach(conflict => {
-                const overlapInfo = this.calculateOverlap(currentStart, currentEnd, conflict.start_time, conflict.end_time);
-                const recurringInfo = conflict.is_recurring ? 
-                    `<div class="bg-blue-100 border border-blue-300 rounded px-2 py-1 mt-1">
-                        <span class="text-blue-700 text-xs font-medium">🔄 Recurring schedule (Every ${conflict.day})</span>
-                    </div>` : '';
-
-                conflictsHtml += `
-                    <div class="flex items-start space-x-3 p-3 bg-white border border-red-200 rounded">
-                        <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                            <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex items-start justify-between mb-2">
-                                <div>
-                                    <h4 class="font-semibold text-red-800">${conflict.type}</h4>
-                                    <p class="text-sm font-medium text-red-700">${conflict.title}</p>
-                                </div>
-                                ${conflict.status ? `<span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-medium">${conflict.status}</span>` : ''}
-                            </div>
-                            ${recurringInfo}
-                            ${conflict.details ? `<div class="text-xs text-red-600"><span class="font-medium">Details:</span> ${conflict.details}</div>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            conflictsHtml += `</div></div>`;
-        }
 
         conflictsHtml += `
                 </div>

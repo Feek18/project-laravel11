@@ -69,15 +69,21 @@ class ConflictCheckController extends Controller
             'messages' => $validation['messages'],
             'suggestions' => $validation['suggestions'] ?? [],
             'room_schedule' => []
-        ];
-
-        if (!$validation['valid']) {
+        ];        if (!$validation['valid']) {
             // For jadwal type, return structured conflicts
             if ($request->type === 'jadwal' && isset($validation['conflicts'])) {
                 $response['jadwal_conflicts'] = $validation['conflicts']['jadwal_conflicts'] ?? [];
                 $response['peminjaman_conflicts'] = $validation['conflicts']['peminjaman_conflicts'] ?? [];
             } else {
-                // For peminjaman, use legacy format for now
+                // For peminjaman, structure the conflicts properly
+                if (isset($validation['conflicts']['jadwal'])) {
+                    $response['jadwal_conflicts'] = $validation['conflicts']['jadwal'];
+                }
+                if (isset($validation['conflicts']['peminjaman'])) {
+                    $response['peminjaman_conflicts'] = $validation['conflicts']['peminjaman'];
+                }
+                
+                // Also provide legacy format for backward compatibility
                 $response['conflicts'] = $this->conflictService->formatConflictDetails($validation['conflicts']);
             }
         }

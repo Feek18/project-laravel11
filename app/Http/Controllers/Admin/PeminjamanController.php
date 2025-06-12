@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Pengguna;
 use App\Models\Ruangan;
+use App\Services\RoomConflictService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -118,28 +119,15 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // Check for conflicts with existing bookings (pending or approved) and jadwal
-        $conflicts = Peminjaman::checkAllConflicts(
-            $validatedData['id_ruang'],
-            $validatedData['tanggal_pinjam'],
-            $validatedData['waktu_mulai'],
-            $validatedData['waktu_selesai']
-        );
+        // Use RoomConflictService for comprehensive validation
+        $conflictService = new RoomConflictService();
+        $validation = $conflictService->validateBooking($validatedData, 'peminjaman');
 
-        if (!empty($conflicts)) {
-            $errorMessages = [];
-            
-            if (isset($conflicts['peminjaman'])) {
-                $errorMessages[] = 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.';
-            }
-            
-            if (isset($conflicts['jadwal'])) {
-                $errorMessages[] = 'Terdapat konflik dengan jadwal perkuliahan pada ruangan dan waktu yang sama.';
-            }
-            
+        if (!$validation['valid']) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', implode(' ', $errorMessages));
+                ->with('error', implode(' ', $validation['messages']))
+                ->with('conflict_details', $conflictService->formatConflictDetails($validation['conflicts']));
         }
 
         Peminjaman::create($validatedData);
@@ -178,29 +166,15 @@ class PeminjamanController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
-        // Check for conflicts with other bookings (excluding current booking) and jadwal
-        $conflicts = Peminjaman::checkAllConflicts(
-            $validated['id_ruang'],
-            $validated['tanggal_pinjam'],
-            $validated['waktu_mulai'],
-            $validated['waktu_selesai'],
-            $id
-        );
+        // Use RoomConflictService for comprehensive validation
+        $conflictService = new RoomConflictService();
+        $validation = $conflictService->validateBooking($validated, 'peminjaman', $id);
 
-        if (!empty($conflicts)) {
-            $errorMessages = [];
-            
-            if (isset($conflicts['peminjaman'])) {
-                $errorMessages[] = 'Terdapat konflik waktu dengan peminjaman lain pada ruangan dan waktu yang sama.';
-            }
-            
-            if (isset($conflicts['jadwal'])) {
-                $errorMessages[] = 'Terdapat konflik dengan jadwal perkuliahan pada ruangan dan waktu yang sama.';
-            }
-            
+        if (!$validation['valid']) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', implode(' ', $errorMessages));
+                ->with('error', implode(' ', $validation['messages']))
+                ->with('conflict_details', $conflictService->formatConflictDetails($validation['conflicts']));
         }
 
         $peminjam->update($validated);
