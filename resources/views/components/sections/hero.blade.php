@@ -21,10 +21,14 @@
 <div class="relative -mt-12 md:-mt-16 lg:-mt-48">
     <div class="bg-white rounded-2xl border border-gray-200 p-6 mx-4 md:mx-16 lg:mx-32">
         <div class="flex justify-between items-center mb-3">
-            <h3 class="text-4xl font-semibold text-gray-900">Kalender Peminjaman Ruangan</h3>
+            <h3 class="text-4xl font-semibold text-gray-900">Kalender Ruangan & Jadwal</h3>
             <div class="flex items-center space-x-4">
                 {{-- Legend --}}
                 <div class="flex items-center space-x-4 text-sm">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-blue-500 rounded mr-2"></div>
+                        <span class="text-gray-600">Jadwal Kuliah</span>
+                    </div>
                     <div class="flex items-center">
                         <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
                         <span class="text-gray-600">Disetujui</span>
@@ -37,8 +41,7 @@
             </div>
         </div>
         <div class="mb-4 text-sm text-gray-500">
-            <p>📌 Klik pada event untuk melihat detail peminjaman. Kalender ini hanya untuk melihat jadwal peminjaman
-                ruangan.</p>
+            <p>📌 Klik pada event untuk melihat detail. Kalender menampilkan jadwal perkuliahan (biru) dan peminjaman ruangan (hijau/kuning).</p>
         </div>
         <div id="calendar" class="w-full h-[600px] bg-white rounded-lg shadow-lg"></div>
     </div>

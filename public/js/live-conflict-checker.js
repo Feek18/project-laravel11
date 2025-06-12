@@ -409,6 +409,7 @@ class LiveConflictChecker {
             });
             
             conflictsHtml += `</div></div>`;
+            this.toggleSubmitButton(false);
         }
 
         // Handle peminjaman conflicts
