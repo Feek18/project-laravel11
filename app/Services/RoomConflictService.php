@@ -27,23 +27,39 @@ class RoomConflictService
 
         // Standardize time format
         $waktu_mulai = $this->normalizeTime($data['waktu_mulai'] ?? $data['jam_mulai']);
-        $waktu_selesai = $this->normalizeTime($data['waktu_selesai'] ?? $data['jam_selesai']);
-
-        // Check conflicts based on booking type
+        $waktu_selesai = $this->normalizeTime($data['waktu_selesai'] ?? $data['jam_selesai']);        // Check conflicts based on booking type
         if ($type === 'jadwal') {
-            // For jadwal, use hari (day of week) directly
-            $conflicts = $this->checkRoomConflictsByDay(
+            // For jadwal, use hari (day of week) directly and check against both jadwal and peminjaman
+            $conflicts = Jadwal::checkAllConflictsForJadwal(
                 $data['id_ruang'],
                 $data['hari'],
                 $waktu_mulai,
                 $waktu_selesai,
-                null,
                 $exclude_id
             );
+            
+            // Format conflicts for response
+            $hasConflicts = !empty($conflicts);
+            $messages = [];
+            
+            if (isset($conflicts['jadwal']) && $conflicts['jadwal']->count() > 0) {
+                $messages[] = 'Terdapat konflik dengan jadwal perkuliahan lain pada hari dan waktu yang sama.';
+            }
+            
+            if (isset($conflicts['peminjaman']) && $conflicts['peminjaman']->count() > 0) {
+                $messages[] = 'Terdapat konflik dengan peminjaman ruangan pada hari dan waktu yang sama.';
+            }
+            
+            $conflictData = [
+                'has_conflicts' => $hasConflicts,
+                'messages' => $messages,
+                'jadwal_conflicts' => $conflicts['jadwal'] ?? collect(),
+                'peminjaman_conflicts' => $conflicts['peminjaman'] ?? collect(),
+            ];
         } else {
             // For peminjaman, use tanggal (specific date)
             $tanggal = $data['tanggal'] ?? $data['tanggal_pinjam'];
-            $conflicts = $this->checkRoomConflicts(
+            $conflictData = $this->checkRoomConflicts(
                 $data['id_ruang'],
                 $tanggal,
                 $waktu_mulai,
@@ -53,10 +69,10 @@ class RoomConflictService
             );
         }
 
-        if ($conflicts['has_conflicts']) {
+        if ($conflictData['has_conflicts']) {
             $result['valid'] = false;
-            $result['conflicts'] = $conflicts;
-            $result['messages'] = $conflicts['messages'];
+            $result['conflicts'] = $conflictData;
+            $result['messages'] = $conflictData['messages'];
             
             // Generate suggestions for alternative times
             if ($type === 'jadwal') {

@@ -34,7 +34,6 @@
                             <th>No</th>
                             <th>Nama Ruangan</th>
                             <th>Nama Perkuliahan</th>
-                            <th>Tanggal</th>
                             <th>Hari</th>
                             <th>Jam Mulai</th>
                             <th>Jam Selesai</th>
@@ -71,7 +70,6 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'ruangan_nama', name: 'ruangan.nama_ruangan'},
                     {data: 'nama_perkuliahan', name: 'nama_perkuliahan'},
-                    {data: 'tanggal', name: 'tanggal'},
                     {data: 'hari', name: 'hari'},
                     {data: 'jam_mulai', name: 'jam_mulai'},
                     {data: 'jam_selesai', name: 'jam_selesai'},

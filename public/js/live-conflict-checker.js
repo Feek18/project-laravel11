@@ -34,16 +34,15 @@ class LiveConflictChecker {
         if (token) {
             this.csrfToken = token.getAttribute('content');
         }
-    }
-
-    bindEvents() {
+    }    bindEvents() {
         // Find form fields
         this.fields = {
             id_ruang: document.querySelector('[name="id_ruang"]'),
             tanggal: document.querySelector('[name="tanggal"]') || document.querySelector('[name="tanggal_pinjam"]'),
             waktu_mulai: document.querySelector('[name="waktu_mulai"]') || document.querySelector('[name="jam_mulai"]'),
             waktu_selesai: document.querySelector('[name="waktu_selesai"]') || document.querySelector('[name="jam_selesai"]'),
-            type: document.querySelector('[name="booking_type"]') // Hidden field to specify type
+            type: document.querySelector('[name="booking_type"]'), // Hidden field to specify type
+            hari: document.querySelector('[name="hari"]') // For jadwal only
         };
 
         // Bind change events
@@ -158,8 +157,8 @@ class LiveConflictChecker {
             }
             
             // For jadwal, check if hari field exists and has value
-            const hariField = document.querySelector('[name="hari"]');
-            if (!hariField || !hariField.value.trim()) {
+            const hariField = this.fields.hari;
+            if (!hariField || !hariField.value.trim() || hariField.value === 'Pilih hari') {
                 return false;
             }
         } else {
@@ -173,17 +172,16 @@ class LiveConflictChecker {
                 }
             }
         }
-
+        
         return true;
     }    getFormData() {
         const excludeId = this.getExcludeId();
         
         if (this.bookingType === 'jadwal') {
             // For jadwal, we use hari instead of tanggal
-            const hariField = document.querySelector('[name="hari"]');
             return {
                 id_ruang: this.fields.id_ruang.value,
-                hari: hariField ? hariField.value : null,
+                hari: this.fields.hari.value,
                 waktu_mulai: this.fields.waktu_mulai.value,
                 waktu_selesai: this.fields.waktu_selesai.value,
                 type: this.bookingType,
@@ -355,15 +353,150 @@ class LiveConflictChecker {
         this.toggleSubmitButton(false);
     }
 
-    calculateOverlap(start1, end1, timeRange) {
-        if (!start1 || !end1 || !timeRange) return null;
+    displayConflicts(data) {
+        if (!this.conflictContainer) return;
+
+        // Check if we have conflicts in the new format (for jadwal) or old format (for peminjaman)
+        const hasJadwalConflicts = data.jadwal_conflicts && data.jadwal_conflicts.length > 0;
+        const hasPeminjamanConflicts = data.peminjaman_conflicts && data.peminjaman_conflicts.length > 0;
+        const hasLegacyConflicts = data.conflicts && data.conflicts.length > 0;
+
+        if (!hasJadwalConflicts && !hasPeminjamanConflicts && !hasLegacyConflicts) {
+            this.displayNoConflicts();
+            return;
+        }
+
+        const currentStart = this.fields.waktu_mulai.value;
+        const currentEnd = this.fields.waktu_selesai.value;
         
-        // Parse the existing booking time range (format: "HH:MM - HH:MM")
-        const timeMatch = timeRange.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
-        if (!timeMatch) return null;
-        
-        const start2 = timeMatch[1];
-        const end2 = timeMatch[2];
+        let conflictsHtml = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-red-800 font-semibold">Time Conflict Detected!</h3>
+                </div>
+                
+                <div class="bg-white border border-red-200 rounded p-3">
+                    <div class="text-sm text-red-700 mb-2">
+                        <strong>Your requested time:</strong> <span class="font-mono">${currentStart} - ${currentEnd}</span>
+                    </div>
+        `;
+
+        // Handle jadwal conflicts
+        if (hasJadwalConflicts) {
+            conflictsHtml += `
+                <div class="mb-3">
+                    <h4 class="text-red-800 font-medium mb-2">⚠️ Conflicting Class Schedules (Recurring):</h4>
+                    <div class="space-y-2">
+            `;
+            
+            data.jadwal_conflicts.forEach(conflict => {
+                const overlapInfo = this.calculateOverlap(currentStart, currentEnd, conflict.jam_mulai, conflict.jam_selesai);
+                conflictsHtml += `
+                    <div class="bg-red-100 border border-red-300 rounded p-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-medium text-red-800">${conflict.matkul?.mata_kuliah || 'Class Schedule'}</div>
+                                <div class="text-sm text-red-700">Every ${conflict.hari.charAt(0).toUpperCase() + conflict.hari.slice(1)}</div>
+                                <div class="text-sm text-red-600">Time: ${conflict.jam_mulai} - ${conflict.jam_selesai}</div>
+                                ${overlapInfo ? `<div class="text-xs text-red-600 mt-1">Overlap: ${overlapInfo}</div>` : ''}
+                            </div>
+                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded">Recurring</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            conflictsHtml += `</div></div>`;
+        }
+
+        // Handle peminjaman conflicts
+        if (hasPeminjamanConflicts) {
+            conflictsHtml += `
+                <div class="mb-3">
+                    <h4 class="text-red-800 font-medium mb-2">⚠️ Conflicting Room Bookings:</h4>
+                    <div class="space-y-2">
+            `;
+            
+            data.peminjaman_conflicts.forEach(conflict => {
+                const overlapInfo = this.calculateOverlap(currentStart, currentEnd, conflict.waktu_mulai, conflict.waktu_selesai);
+                conflictsHtml += `
+                    <div class="bg-red-100 border border-red-300 rounded p-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-medium text-red-800">${conflict.keperluan || 'Room Booking'}</div>
+                                <div class="text-sm text-red-700">Date: ${conflict.tanggal_pinjam}</div>
+                                <div class="text-sm text-red-600">Time: ${conflict.waktu_mulai} - ${conflict.waktu_selesai}</div>
+                                <div class="text-sm text-red-600">Booked by: ${conflict.pengguna?.nama || 'Unknown'}</div>
+                                ${overlapInfo ? `<div class="text-xs text-red-600 mt-1">Overlap: ${overlapInfo}</div>` : ''}
+                            </div>
+                            <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded">${conflict.status_persetujuan}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            conflictsHtml += `</div></div>`;
+        }
+
+        // Handle legacy conflicts (for peminjaman using old format)
+        if (hasLegacyConflicts) {
+            conflictsHtml += `
+                <div class="mb-3">
+                    <h4 class="text-red-800 font-medium mb-2">⚠️ Conflicting Bookings:</h4>
+                    <div class="space-y-2">
+            `;
+            
+            data.conflicts.forEach(conflict => {
+                const overlapInfo = this.calculateOverlap(currentStart, currentEnd, conflict.start_time, conflict.end_time);
+                const recurringInfo = conflict.is_recurring ? 
+                    `<div class="bg-blue-100 border border-blue-300 rounded px-2 py-1 mt-1">
+                        <span class="text-blue-700 text-xs font-medium">🔄 Recurring schedule (Every ${conflict.day})</span>
+                    </div>` : '';
+
+                conflictsHtml += `
+                    <div class="flex items-start space-x-3 p-3 bg-white border border-red-200 rounded">
+                        <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                            <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-2">
+                                <div>
+                                    <h4 class="font-semibold text-red-800">${conflict.type}</h4>
+                                    <p class="text-sm font-medium text-red-700">${conflict.title}</p>
+                                </div>
+                                ${conflict.status ? `<span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-medium">${conflict.status}</span>` : ''}
+                            </div>
+                            ${recurringInfo}
+                            ${conflict.details ? `<div class="text-xs text-red-600"><span class="font-medium">Details:</span> ${conflict.details}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            conflictsHtml += `</div></div>`;
+        }
+
+        conflictsHtml += `
+                </div>
+                
+                <div class="text-sm text-red-600">
+                    💡 <strong>Suggestion:</strong> Please choose a different time slot to avoid conflicts.
+                </div>
+            </div>
+        `;
+
+        this.conflictContainer.innerHTML = conflictsHtml;
+    }
+
+    calculateOverlap(start1, end1, start2, end2) {
+        if (!start1 || !end1 || !start2 || !end2) return null;
         
         // Convert times to minutes for comparison
         const start1Min = this.timeToMinutes(start1);
@@ -380,17 +513,6 @@ class LiveConflictChecker {
         }
         
         return null;
-    }
-
-    timeToMinutes(time) {
-        const [hours, minutes] = time.split(':').map(Number);
-        return hours * 60 + minutes;
-    }
-
-    minutesToTime(minutes) {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
     }
 
     showAvailable(data) {

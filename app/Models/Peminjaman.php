@@ -106,7 +106,7 @@ class Peminjaman extends Model
     }
 
     /**
-     * Check for conflicts with jadwal schedules
+     * Check for conflicts with jadwal schedules (day-based recurring schedules)
      * 
      * @param int $id_ruang
      * @param string $tanggal_pinjam
@@ -116,7 +116,27 @@ class Peminjaman extends Model
      */
     public static function hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai)
     {
-        return Jadwal::hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai);
+        // Convert date to day of week for jadwal checking
+        $dayOfWeek = Jadwal::getDayOfWeekFromDate($tanggal_pinjam);
+        
+        return Jadwal::hasJadwalConflictByDay($id_ruang, $dayOfWeek, $waktu_mulai, $waktu_selesai);
+    }
+
+    /**
+     * Get conflicting jadwal for a peminjaman booking
+     * 
+     * @param int $id_ruang
+     * @param string $tanggal_pinjam
+     * @param string $waktu_mulai
+     * @param string $waktu_selesai
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getConflictingJadwalForPeminjaman($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai)
+    {
+        // Convert date to day of week for jadwal checking
+        $dayOfWeek = Jadwal::getDayOfWeekFromDate($tanggal_pinjam);
+        
+        return Jadwal::getConflictingJadwalByDay($id_ruang, $dayOfWeek, $waktu_mulai, $waktu_selesai);
     }
 
     /**
@@ -140,7 +160,7 @@ class Peminjaman extends Model
 
         // Check jadwal conflicts
         if (self::hasJadwalConflict($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai)) {
-            $conflicts['jadwal'] = Jadwal::getConflictingJadwal($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai);
+            $conflicts['jadwal'] = self::getConflictingJadwalForPeminjaman($id_ruang, $tanggal_pinjam, $waktu_mulai, $waktu_selesai);
         }
 
         return $conflicts;

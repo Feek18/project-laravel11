@@ -59,16 +59,10 @@ class JadwalController extends Controller
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
             'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
-            // 'nama_perkuliahan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'hari' => 'required|string|max:255',
+            'hari' => 'required|string|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
-
-        // Auto-set the hari field based on the tanggal if not set correctly
-        $dayOfWeek = Jadwal::getDayOfWeekFromDate($validatedData['tanggal']);
-        $validatedData['hari'] = $dayOfWeek;
 
         // Use the conflict service to validate the booking
         $conflictService = new RoomConflictService();
@@ -108,15 +102,10 @@ class JadwalController extends Controller
         $validatedData = $request->validate([
             'id_ruang' => 'required|numeric|exists:ruangan_kelas,id_ruang',
             'id_matkul' => 'required|numeric|exists:mata_kuliah,id',
-            'tanggal' => 'required|date',
-            'hari' => 'required|string|max:255',
+            'hari' => 'required|string|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
-
-        // Auto-set the hari field based on the tanggal if not set correctly
-        $dayOfWeek = Jadwal::getDayOfWeekFromDate($validatedData['tanggal']);
-        $validatedData['hari'] = $dayOfWeek;
 
         // Use the conflict service to validate the booking update
         $conflictService = new RoomConflictService();

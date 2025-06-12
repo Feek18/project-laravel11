@@ -10,7 +10,6 @@ class Jadwal extends Model
     protected $fillable = [
         'id_ruang',
         'id_matkul',
-        'tanggal',
         'hari',
         'jam_mulai',
         'jam_selesai',
@@ -97,41 +96,67 @@ class Jadwal extends Model
     }
 
     /**
-     * Check for conflicts with room borrowing (peminjaman)
+     * Check for any conflicts with peminjaman when creating/updating jadwal
+     * Since jadwal is recurring (weekly), check against all future peminjaman on the same day
      * 
      * @param int $id_ruang
-     * @param string $tanggal
-     * @param string $jam_mulai
-     * @param string $jam_selesai
-     * @return bool
-     */
-    public static function hasPeminjamanConflict($id_ruang, $tanggal, $jam_mulai, $jam_selesai)
-    {
-        return Peminjaman::hasTimeConflict($id_ruang, $tanggal, $jam_mulai, $jam_selesai, null, ['pending', 'disetujui']);
-    }
-
-    /**
-     * Check for any conflicts (both jadwal and peminjaman)
-     * 
-     * @param int $id_ruang
-     * @param string $tanggal
+     * @param string $hari - day of the week (minggu, senin, etc.)
      * @param string $jam_mulai
      * @param string $jam_selesai
      * @param int|null $exclude_id
      * @return array
      */
-    public static function checkAllConflicts($id_ruang, $tanggal, $jam_mulai, $jam_selesai, $exclude_id = null)
+    public static function checkPeminjamanConflictsForJadwal($id_ruang, $hari, $jam_mulai, $jam_selesai, $exclude_id = null)
+    {
+        // Get all future peminjaman that fall on the same day of week as this jadwal
+        $dayMap = [
+            'minggu' => 0, 'senin' => 1, 'selasa' => 2, 'rabu' => 3,
+            'kamis' => 4, 'jumat' => 5, 'sabtu' => 6
+        ];
+        
+        $targetDayNumber = $dayMap[$hari] ?? 1;
+        
+        $conflictingPeminjaman = Peminjaman::with(['pengguna', 'ruangan'])
+            ->where('id_ruang', $id_ruang)
+            ->where('tanggal_pinjam', '>=', now()->toDateString()) // Only future bookings
+            ->whereIn('status_persetujuan', ['pending', 'disetujui'])
+            ->whereRaw('DAYOFWEEK(tanggal_pinjam) - 1 = ?', [$targetDayNumber]) // Same day of week
+            ->where(function ($query) use ($jam_mulai, $jam_selesai) {
+                $query->whereBetween('waktu_mulai', [$jam_mulai, $jam_selesai])
+                    ->orWhereBetween('waktu_selesai', [$jam_mulai, $jam_selesai])
+                    ->orWhere(function ($query) use ($jam_mulai, $jam_selesai) {
+                        $query->where('waktu_mulai', '<=', $jam_mulai)
+                            ->where('waktu_selesai', '>=', $jam_selesai);
+                    });
+            })
+            ->get();
+
+        return $conflictingPeminjaman;
+    }
+
+    /**
+     * Check for any conflicts (both jadwal and peminjaman) when creating/updating jadwal
+     * 
+     * @param int $id_ruang
+     * @param string $hari - day of the week (minggu, senin, etc.)
+     * @param string $jam_mulai
+     * @param string $jam_selesai
+     * @param int|null $exclude_id
+     * @return array
+     */
+    public static function checkAllConflictsForJadwal($id_ruang, $hari, $jam_mulai, $jam_selesai, $exclude_id = null)
     {
         $conflicts = [];
 
-        // Check jadwal conflicts
-        if (self::hasJadwalConflict($id_ruang, $tanggal, $jam_mulai, $jam_selesai, $exclude_id)) {
-            $conflicts['jadwal'] = self::getConflictingJadwal($id_ruang, $tanggal, $jam_mulai, $jam_selesai, $exclude_id);
+        // Check jadwal conflicts (other recurring schedules on same day)
+        if (self::hasJadwalConflictByDay($id_ruang, $hari, $jam_mulai, $jam_selesai, $exclude_id)) {
+            $conflicts['jadwal'] = self::getConflictingJadwalByDay($id_ruang, $hari, $jam_mulai, $jam_selesai, $exclude_id);
         }
 
-        // Check peminjaman conflicts
-        if (self::hasPeminjamanConflict($id_ruang, $tanggal, $jam_mulai, $jam_selesai)) {
-            $conflicts['peminjaman'] = Peminjaman::getConflictingBookings($id_ruang, $tanggal, $jam_mulai, $jam_selesai);
+        // Check peminjaman conflicts (future bookings on same day of week)
+        $conflictingPeminjaman = self::checkPeminjamanConflictsForJadwal($id_ruang, $hari, $jam_mulai, $jam_selesai, $exclude_id);
+        if ($conflictingPeminjaman->count() > 0) {
+            $conflicts['peminjaman'] = $conflictingPeminjaman;
         }
 
         return $conflicts;
