@@ -57,7 +57,9 @@ class PemesananController extends Controller
             ->exists();
 
         if ($conflict) {
-            return redirect()->back()->withInput()->with('warning', 'Ruangan sedang dalam proses peminjaman lain pada waktu tersebut (masih menunggu persetujuan).');
+            return redirect()->back()
+                ->withInput()
+                ->with('warning', 'Ruangan sedang dalam proses peminjaman lain pada waktu tersebut (masih menunggu persetujuan).');
         }
 
         Peminjaman::create([

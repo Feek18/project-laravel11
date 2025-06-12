@@ -80,7 +80,7 @@ class AkunController extends Controller
             }
         }
 
-        return redirect()->route('akun.index')->with('success', 'Pengguna berhasil ditambahkan.');
+        return redirect()->route('akun.index')->with('success', 'Akun berhasil ditambahkan.');
     }
 
     /**
@@ -119,6 +119,6 @@ class AkunController extends Controller
         }
 
         $user->delete();
-        return redirect()->route('akun.index')->with('success', 'Pengguna berhasil dihapus.');
+        return redirect()->route('akun.index')->with('success', 'Akun berhasil dihapus.');
     }
 }

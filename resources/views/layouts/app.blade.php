@@ -38,8 +38,10 @@
         </main>
     </div>
 
+    @include('components.toast')
+
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     @if (session('login_success'))
         <script>
             Toastify({
@@ -63,7 +65,7 @@
                 }
             }).showToast();
         </script>
-    @endif
+    @endif --}}
 
     @stack('scripts')
 

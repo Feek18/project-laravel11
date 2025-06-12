@@ -104,6 +104,9 @@
             </div>
         </div>
     </section>
+
+    @include('components.toast')
+
 </body>
 
 </html>

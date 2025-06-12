@@ -32,6 +32,10 @@ class AuthenticatedSessionController extends Controller
         // dd(Auth::user());
 
         $user = User::where('id', Auth::user()->id)->first();
+
+        // Flash pesan sukses login
+        session()->flash('success', 'Login berhasil! Selamat datang kembali.');
+
         if ($user->hasRole('admin')) {
             return redirect()->intended(route('dashboard', absolute: false));
         } else {
@@ -50,7 +54,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        session()->flash('logout_success', true);
+        session()->flash('success', 'Anda berhasil logout!');
 
         return redirect('/login');
     }

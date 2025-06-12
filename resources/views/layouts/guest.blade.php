@@ -28,24 +28,8 @@
             {{ $slot }}
         </div>
     </div>
-    
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    @if (session('logout_success'))
-        <script>
-            Toastify({
-                text: "✅ Berhasil logout!",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                stopOnFocus: true,
-                close: false,
-                style: {
-                    background: "#28a745",
-                    color: "#fff",
-                },
-            }).showToast();
-        </script>
-    @endif
+
+    @include('components.toast')
 </body>
 
 </html>

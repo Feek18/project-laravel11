@@ -67,7 +67,7 @@ class JadwalController extends Controller
 
         Jadwal::create($validatedData);
 
-        return redirect()->route('jadwal.index')->with('success', 'Ruangan berhasil ditambahkan.');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -104,13 +104,13 @@ class JadwalController extends Controller
 
         $jadwal->update($validatedData);
         // dd($jadwal);
-        return redirect()->route('jadwal.index')->with('success', 'Ruangan berhasil diupdate.');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate.');
     }
 
     public function destroy($id)
     {
         $jadwal = Jadwal::findOrFail($id);
         $jadwal->delete();
-        return redirect()->route('jadwal.index')->with('success', 'Ruangan berhasil dihapus.');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus.');
     }
 }
