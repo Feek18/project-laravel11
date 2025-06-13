@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Jadwal;
+use App\Models\Pengguna;
+use App\Models\Ruangan;
+use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -38,8 +42,112 @@ class DashboardController extends Controller
         // Combine both types of events
         $allEvents = $peminjamans->concat($jadwalEvents);
 
-        return view('components.admin.dashboard', compact('allEvents'));
-    }    private function getStatusColor($status)
+        // Get comprehensive dashboard statistics
+        $stats = $this->getDashboardStats();
+
+        return view('components.admin.dashboard', compact('allEvents', 'stats'));
+    }
+
+    private function getDashboardStats()
+    {
+        $today = Carbon::today();
+        $thisMonth = Carbon::now()->startOfMonth();
+        $lastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+
+        // Get current counts
+        $totalUsers = Pengguna::count();
+        $totalRooms = Ruangan::count();
+        $totalMataKuliah = MataKuliah::count();
+        $totalPeminjaman = Peminjaman::count();
+
+        // Get last month counts for percentage calculations
+        $lastMonthUsers = Pengguna::where('created_at', '<=', $lastMonthEnd)->count();
+        $lastMonthPeminjaman = Peminjaman::where('created_at', '<=', $lastMonthEnd)->count();
+        
+        // Calculate percentage changes
+        $userGrowth = $this->calculatePercentageChange($lastMonthUsers, $totalUsers);
+        $peminjamanGrowth = $this->calculatePercentageChange($lastMonthPeminjaman, $totalPeminjaman);
+
+        // Peminjaman statistics
+        $peminjamanStats = [
+            'pending' => Peminjaman::where('status_persetujuan', 'pending')->count(),
+            'disetujui' => Peminjaman::where('status_persetujuan', 'disetujui')->count(),
+            'ditolak' => Peminjaman::where('status_persetujuan', 'ditolak')->count(),
+            'today' => Peminjaman::whereDate('tanggal_pinjam', $today)->count(),
+            'thisMonth' => Peminjaman::where('created_at', '>=', $thisMonth)->count(),
+        ];        // Room utilization (rooms that have bookings today)
+        $activeRoomsToday = Peminjaman::whereDate('tanggal_pinjam', $today)
+            ->where('status_persetujuan', 'disetujui')
+            ->distinct('id_ruang')
+            ->count();
+        
+        $roomUtilization = $totalRooms > 0 ? round(($activeRoomsToday / $totalRooms) * 100, 2) : 0;
+
+        // Recent bookings for the activity feed
+        $recentBookings = Peminjaman::with(['pengguna', 'ruangan'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Monthly booking trend for charts (last 6 months)
+        $monthlyBookings = $this->getMonthlyBookingTrend();
+
+        // Status distribution for pie chart
+        $statusDistribution = [
+            'pending' => $peminjamanStats['pending'],
+            'disetujui' => $peminjamanStats['disetujui'],
+            'ditolak' => $peminjamanStats['ditolak'],
+        ];
+
+        // Most popular rooms
+        $popularRooms = Peminjaman::select('id_ruang', DB::raw('count(*) as total'))
+            ->with('ruangan')
+            ->groupBy('id_ruang')
+            ->orderBy('total', 'desc')
+            ->limit(5)
+            ->get();
+
+        return [
+            'totalUsers' => $totalUsers,
+            'totalRooms' => $totalRooms,
+            'totalMataKuliah' => $totalMataKuliah,
+            'totalPeminjaman' => $totalPeminjaman,
+            'userGrowth' => $userGrowth,
+            'peminjamanGrowth' => $peminjamanGrowth,
+            'peminjaman' => $peminjamanStats,
+            'roomUtilization' => $roomUtilization,
+            'recentBookings' => $recentBookings,
+            'monthlyBookings' => $monthlyBookings,
+            'statusDistribution' => $statusDistribution,
+            'popularRooms' => $popularRooms,
+        ];
+    }
+
+    private function calculatePercentageChange($oldValue, $newValue)
+    {
+        if ($oldValue == 0) {
+            return $newValue > 0 ? 100 : 0;
+        }
+        return round((($newValue - $oldValue) / $oldValue) * 100, 2);
+    }
+
+    private function getMonthlyBookingTrend()
+    {
+        $months = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $count = Peminjaman::whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count();
+            
+            $months[] = [
+                'month' => $month->format('M Y'),
+                'count' => $count
+            ];
+        }
+        return $months;
+    }private function getStatusColor($status)
     {
         switch ($status) {
             case 'disetujui':
