@@ -21,7 +21,10 @@ require __DIR__ . '/auth.php';
 
 // homepage
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/ruangan/{id}', [HomeController::class, 'show'])->name('ruangan.show');
+Route::get('/ruangan/{id}', [HomeController::class, 'show'])
+    ->name('ruangan.show')
+    ->middleware('auth')
+    ->middleware('role:pengguna'); // Only allow users with 'pengguna' role
 
 // QR Code routes (accessible without auth for scanning)
 Route::prefix('qr')->group(function () {
