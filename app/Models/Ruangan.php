@@ -21,4 +21,9 @@ class Ruangan extends Model
     {
         return $this->hasMany(Jadwal::class, 'id_ruang');
     }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_ruang', 'id_ruang');
+    }
 }

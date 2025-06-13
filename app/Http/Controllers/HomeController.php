@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Carbon\Carbon;
 
@@ -14,11 +15,68 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $ruangans = Ruangan::all(); // Show all rooms instead of just 4
+        $currentDate = now()->format('Y-m-d');
+        $currentTime = now()->format('H:i');
         
-        // Get peminjaman data
+        // Get all rooms with their current borrowed status and details
+        $ruangans = Ruangan::with(['jadwal', 'peminjaman' => function($query) use ($currentDate, $currentTime) {
+            $query->whereIn('status_persetujuan', ['pending', 'disetujui'])
+                  ->where('status_persetujuan', '!=', 'ditolak')
+                  ->where(function($q) use ($currentDate, $currentTime) {
+                      // Only include future dates or current date with future/ongoing times
+                      $q->where('tanggal_pinjam', '>', $currentDate)
+                        ->orWhere(function($subQ) use ($currentDate, $currentTime) {
+                            $subQ->where('tanggal_pinjam', '=', $currentDate)
+                                 ->where('waktu_selesai', '>=', $currentTime);
+                        });
+                  })
+                  ->with('pengguna')
+                  ->orderBy('tanggal_pinjam')
+                  ->orderBy('waktu_mulai');
+        }])->get()->map(function ($ruangan) {
+            $currentTime = now();
+            
+            // Check if room has any active or future approved bookings
+            $hasActiveBorrowing = $ruangan->peminjaman->filter(function ($peminjaman) use ($currentTime) {
+                $bookingDate = Carbon::parse($peminjaman->tanggal_pinjam);
+                $bookingStart = Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_mulai);
+                $bookingEnd = Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_selesai);
+                
+                // Room is occupied if:
+                // 1. There's an approved booking that is currently active
+                // 2. There's any approved/pending booking for today or future dates
+                return ($peminjaman->status_persetujuan === 'disetujui' && 
+                       ($currentTime->between($bookingStart, $bookingEnd) || $bookingDate->isToday() || $bookingDate->isFuture())) ||
+                       ($peminjaman->status_persetujuan === 'pending' && 
+                       ($bookingDate->isToday() || $bookingDate->isFuture()));
+            })->isNotEmpty();
+            
+            // Find current active booking
+            $currentBooking = $ruangan->peminjaman->filter(function ($peminjaman) use ($currentTime) {
+                $bookingStart = Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_mulai);
+                $bookingEnd = Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_selesai);
+                return $currentTime->between($bookingStart, $bookingEnd) && $peminjaman->status_persetujuan === 'disetujui';
+            })->first();
+
+            $ruangan->is_currently_used = $hasActiveBorrowing;
+            $ruangan->current_booking = $currentBooking;
+            $ruangan->upcoming_bookings = $ruangan->peminjaman->take(3);
+            
+            return $ruangan;
+        });
+        
+        // Get peminjaman data for calendar (filter out past bookings)
         $peminjamans = Peminjaman::with(['pengguna', 'ruangan'])
             ->whereIn('status_persetujuan', ['pending', 'disetujui'])
+            ->where('status_persetujuan', '!=', 'ditolak')
+            ->where(function($query) use ($currentDate, $currentTime) {
+                // Only include current and future bookings
+                $query->where('tanggal_pinjam', '>', $currentDate)
+                      ->orWhere(function($subQuery) use ($currentDate, $currentTime) {
+                          $subQuery->where('tanggal_pinjam', '=', $currentDate)
+                                   ->where('waktu_selesai', '>=', $currentTime);
+                      });
+            })
             ->get()
             ->map(function ($peminjaman) {
             return [
@@ -146,7 +204,49 @@ class HomeController extends Controller
     
     public function show($id)
     {
-        $ruangan = Ruangan::find($id);
+        $currentDate = now()->format('Y-m-d');
+        $currentTime = now()->format('H:i');
+        
+        $ruangan = Ruangan::with(['peminjaman' => function($query) use ($currentDate, $currentTime) {
+            $query->whereIn('status_persetujuan', ['pending', 'disetujui'])
+                  ->where(function($q) use ($currentDate, $currentTime) {
+                      // Only include future dates or current date with future/ongoing times
+                      $q->where('tanggal_pinjam', '>', $currentDate)
+                        ->orWhere(function($subQ) use ($currentDate, $currentTime) {
+                            $subQ->where('tanggal_pinjam', '=', $currentDate)
+                                 ->where('waktu_selesai', '>=', $currentTime);
+                        });
+                  })
+                  ->with('pengguna')
+                  ->orderBy('tanggal_pinjam')
+                  ->orderBy('waktu_mulai');
+        }])->findOrFail($id);
+
+        // Check if room is currently being used
+        $currentDateTime = now();
+        $currentBooking = $ruangan->peminjaman->filter(function ($peminjaman) use ($currentDateTime) {
+            $bookingStart = \Carbon\Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_mulai);
+            $bookingEnd = \Carbon\Carbon::parse($peminjaman->tanggal_pinjam . ' ' . $peminjaman->waktu_selesai);
+            return $currentDateTime->between($bookingStart, $bookingEnd) && $peminjaman->status_persetujuan === 'disetujui';
+        })->first();
+
+        // Add room status information
+        $ruangan->is_currently_used = $currentBooking !== null;
+        $ruangan->current_booking = $currentBooking;
+        
+        // Get upcoming bookings (future bookings only)
+        $ruangan->upcoming_bookings = $ruangan->peminjaman->filter(function($booking) use ($currentDateTime) {
+            $bookingStart = \Carbon\Carbon::parse($booking->tanggal_pinjam . ' ' . $booking->waktu_mulai);
+            return $bookingStart->isAfter($currentDateTime);
+        })->take(5);
+
+        // Get today's remaining bookings (for current date only)
+        $ruangan->todays_bookings = $ruangan->peminjaman->filter(function($booking) use ($currentDate, $currentDateTime) {
+            return $booking->tanggal_pinjam === $currentDate;
+        });
+
+        \Log::info("Room bookings for room $id:", $ruangan->peminjaman->pluck('status_persetujuan')->toArray());
+        
         return view('components.user.pages.detail', compact('ruangan'));
     }
 }

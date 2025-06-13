@@ -120,42 +120,6 @@
                 });
             }
             
-            // Toggle rooms visibility
-            const toggleBtn = document.getElementById('toggle-rooms-btn');
-            const additionalRooms = document.getElementById('additional-rooms');
-            const toggleText = document.getElementById('toggle-text');
-            const toggleIcon = document.getElementById('toggle-icon');
-            
-            if (toggleBtn && additionalRooms) {
-                toggleBtn.addEventListener('click', function() {
-                    const isHidden = additionalRooms.classList.contains('hidden');
-                    
-                    if (isHidden) {
-                        additionalRooms.classList.remove('hidden');
-                        toggleText.textContent = 'Sembunyikan';
-                        toggleIcon.style.transform = 'rotate(180deg)';
-                        
-                        // Smooth scroll to show the additional rooms
-                        setTimeout(() => {
-                            additionalRooms.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'nearest'
-                            });
-                        }, 100);
-                    } else {
-                        additionalRooms.classList.add('hidden');
-                        toggleText.textContent = 'Lihat Semua Ruangan';
-                        toggleIcon.style.transform = 'rotate(0deg)';
-                        
-                        // Scroll back to the rooms section
-                        document.getElementById('ruangan').scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            }
-            
             // Highlight active navigation item based on scroll position
             const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('nav a[href^="#"]');
