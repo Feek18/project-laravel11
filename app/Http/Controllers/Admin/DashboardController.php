@@ -16,11 +16,20 @@ use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Get all peminjaman data for the calendar
+        // Get filter parameters
+        $month = $request->get('month', date('m'));
+        $year = $request->get('year', date('Y'));
+        
+        // Calculate date range for the selected month/year
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        
+        // Get peminjaman data filtered by date range
         $peminjamans = Peminjaman::with(['pengguna', 'ruangan'])
             ->whereIn('status_persetujuan', ['pending', 'disetujui'])
+            ->whereBetween('tanggal_pinjam', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->get()
             ->map(function ($peminjaman) {
                 return [
@@ -38,8 +47,8 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Generate jadwal events for the next 3 months
-        $jadwalEvents = $this->generateJadwalEvents();
+        // Generate jadwal events for the selected month/year
+        $jadwalEvents = $this->generateJadwalEvents($startDate, $endDate);
         
         // Combine both types of events
         $allEvents = $peminjamans->concat($jadwalEvents);
@@ -47,7 +56,16 @@ class DashboardController extends Controller
         // Get comprehensive dashboard statistics
         $stats = $this->getDashboardStats();
 
-        return view('components.admin.dashboard', compact('allEvents', 'stats'));
+        // Generate months and years for filter dropdowns
+        $months = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+        
+        $years = range(date('Y') - 2, date('Y') + 1); // Previous 2 years to next year
+
+        return view('components.admin.dashboard', compact('allEvents', 'stats', 'months', 'years', 'month', 'year'));
     }
 
     private function getDashboardStats()
@@ -160,14 +178,18 @@ class DashboardController extends Controller
         }
     }
 
-    private function generateJadwalEvents()
+    private function generateJadwalEvents($startDate = null, $endDate = null)
     {
         $jadwals = Jadwal::with(['matkul', 'ruangan'])->get();
         $events = collect();
         
-        // Generate events for the next 3 months
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->addMonths(3)->endOfMonth();
+        // Use provided dates or default to next 3 months
+        if (!$startDate) {
+            $startDate = Carbon::now()->startOfMonth();
+        }
+        if (!$endDate) {
+            $endDate = Carbon::now()->addMonths(3)->endOfMonth();
+        }
         
         foreach ($jadwals as $jadwal) {
             $jadwalEvents = $this->generateJadwalOccurrences($jadwal, $startDate, $endDate);

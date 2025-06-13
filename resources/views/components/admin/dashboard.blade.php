@@ -106,25 +106,65 @@
                 {{-- Calendar Section --}}
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
                     <div class="p-6 border-b border-gray-200">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <div>
-                                <h2 class="text-xl font-semibold text-gray-900">Kalender Peminjaman & Jadwal</h2>
-                                <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap</p>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-900">Kalender Peminjaman & Jadwal</h2>
+                                    <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap</p>
+                                </div>
+                                {{-- Legend --}}
+                                <div class="flex flex-wrap items-center gap-4 text-sm">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+                                        <span class="text-gray-600">Jadwal Kuliah</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-green-500 rounded mr-2"></div>
+                                        <span class="text-gray-600">Disetujui</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-yellow-500 rounded mr-2"></div>
+                                        <span class="text-gray-600">Pending</span>
+                                    </div>
+                                </div>
                             </div>
-                            {{-- Legend --}}
-                            <div class="flex flex-wrap items-center gap-4 text-sm">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-blue-500 rounded mr-2"></div>
-                                    <span class="text-gray-600">Jadwal Kuliah</span>
+                            
+                            {{-- Date Filter Controls --}}
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                                <div class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Filter Tanggal:
                                 </div>
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-green-500 rounded mr-2"></div>
-                                    <span class="text-gray-600">Disetujui</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-yellow-500 rounded mr-2"></div>
-                                    <span class="text-gray-600">Pending</span>
-                                </div>
+                                <form method="GET" action="{{ route('dashboard') }}" class="flex items-center gap-3">
+                                    <div class="flex items-center gap-2">
+                                        <label for="month" class="text-sm text-gray-600">Bulan:</label>
+                                        <select name="month" id="month" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            @foreach($months as $monthNum => $monthName)
+                                                <option value="{{ $monthNum }}" {{ $month == $monthNum ? 'selected' : '' }}>
+                                                    {{ $monthName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <label for="year" class="text-sm text-gray-600">Tahun:</label>
+                                        <select name="year" id="year" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            @foreach($years as $yearOption)
+                                                <option value="{{ $yearOption }}" {{ $year == $yearOption ? 'selected' : '' }}>
+                                                    {{ $yearOption }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                                        Terapkan Filter
+                                    </button>
+                                    <a href="{{ route('dashboard') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                                        Reset
+                                    </a>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -771,6 +811,20 @@
             if (searchInput) {
                 searchInput.addEventListener('input', function(e) {
                     searchActivity(e.target.value);
+                });
+            }
+
+            // Auto-submit filter form when month or year changes
+            const monthSelect = document.getElementById('month');
+            const yearSelect = document.getElementById('year');
+            
+            if (monthSelect && yearSelect) {
+                monthSelect.addEventListener('change', function() {
+                    this.form.submit();
+                });
+                
+                yearSelect.addEventListener('change', function() {
+                    this.form.submit();
                 });
             }
         });
