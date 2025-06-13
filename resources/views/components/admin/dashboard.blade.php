@@ -17,146 +17,183 @@
                 </div>
             </div>
             
-            {{-- Main Layout: Left Sidebar + Right Calendar --}}
-            <div class="flex flex-col xl:flex-row gap-6">
-                {{-- Left Sidebar: Statistics and Monitoring --}}
-                <div class="xl:w-80 2xl:w-96 flex-shrink-0">
-                    <div class="space-y-6">
-                        {{-- Quick Stats Grid --}}
-                        <div class="grid grid-cols-2 xl:grid-cols-1 gap-4">
-                            {{-- Total Users --}}
-                            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                            <x-icons.group-icon class="text-blue-600 size-5" />
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-600">Total Pengguna</p>
-                                            <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalUsers']) }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                            {{ $stats['userGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $stats['userGrowth'] >= 0 ? '+' : '' }}{{ $stats['userGrowth'] }}%
-                                        </span>
-                                    </div>
+            {{-- Main Layout: Top to Bottom --}}
+            <div class="space-y-6">
+                {{-- Quick Stats Grid --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {{-- Total Users --}}
+                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <x-icons.group-icon class="text-blue-600 size-5" />
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Total Pengguna</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalUsers']) }}</p>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                    {{ $stats['userGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $stats['userGrowth'] >= 0 ? '+' : '' }}{{ $stats['userGrowth'] }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-                            {{-- Total Rooms --}}
-                            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                            <x-icons.ruangan-kuliah-icon class="text-green-600 size-5" />
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-600">Ruangan</p>
-                                            <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalRooms']) }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-xs text-gray-500">{{ $stats['roomUtilization'] }}% aktif</p>
-                                        <p class="text-xs text-gray-400">hari ini</p>
-                                    </div>
+                    {{-- Total Rooms --}}
+                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <x-icons.ruangan-kuliah-icon class="text-green-600 size-5" />
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Ruangan</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalRooms']) }}</p>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">{{ $stats['roomUtilization'] }}% aktif</p>
+                                <p class="text-xs text-gray-400">hari ini</p>
+                            </div>
+                        </div>
+                    </div>
 
-                            {{-- Total Bookings --}}
-                            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                            <x-icons.box-icon-line class="text-purple-600 size-5" />
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-600">Peminjaman</p>
-                                            <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalPeminjaman']) }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                            {{ $stats['peminjamanGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $stats['peminjamanGrowth'] >= 0 ? '+' : '' }}{{ $stats['peminjamanGrowth'] }}%
-                                        </span>
-                                    </div>
+                    {{-- Total Bookings --}}
+                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <x-icons.box-icon-line class="text-purple-600 size-5" />
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Peminjaman</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalPeminjaman']) }}</p>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                    {{ $stats['peminjamanGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $stats['peminjamanGrowth'] >= 0 ? '+' : '' }}{{ $stats['peminjamanGrowth'] }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-                            {{-- Pending Approvals --}}
-                            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    {{-- Pending Approvals --}}
+                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Pending</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['peminjaman']['pending']) }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">{{ $stats['peminjaman']['today'] }} hari ini</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Calendar Section --}}
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900">Kalender Peminjaman & Jadwal</h2>
+                                <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap</p>
+                            </div>
+                            {{-- Legend --}}
+                            <div class="flex flex-wrap items-center gap-4 text-sm">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+                                    <span class="text-gray-600">Jadwal Kuliah</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded mr-2"></div>
+                                    <span class="text-gray-600">Disetujui</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-yellow-500 rounded mr-2"></div>
+                                    <span class="text-gray-600">Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="calendar" style="height: 600px; min-height: 500px;" class="rounded-lg"></div>
+                    </div>
+                </div>
+
+                {{-- Charts and Activity Section --}}
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {{-- Charts Section --}}
+                    <div class="lg:col-span-1 space-y-6">
+                        {{-- Status Distribution Chart --}}
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Status Peminjaman</h3>
+                            <div style="height: 200px;">
+                                <canvas id="statusPieChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div style="display:none" class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Trend 6 Bulan</h3>
+                            <div style="height: 160px;">
+                                <canvas id="monthlyTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        {{-- Popular Rooms --}}
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruangan Teramai</h3>
+                            <div class="space-y-3">
+                                @forelse($stats['popularRooms']->take(5) as $index => $room)
+                                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 rounded-full bg-gradient-to-r 
+                                                @if($index === 0) from-yellow-400 to-orange-500
+                                                @elseif($index === 1) from-gray-300 to-gray-400
+                                                @elseif($index === 2) from-yellow-600 to-yellow-700
+                                                @else from-blue-400 to-blue-500 @endif
+                                                flex items-center justify-center text-white text-sm font-bold">
+                                                {{ $index + 1 }}
+                                            </div>
+                                            <div>
+                                                <p class="font-medium text-gray-900 text-sm truncate">
+                                                    {{ $room->ruangan->nama_ruangan ?? 'Unknown Room' }}
+                                                </p>
+                                                <p class="text-xs text-gray-500">{{ $room->total }} peminjaman</p>
+                                            </div>
+                                        </div>
+                                        @if($index === 0)
+                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                             </svg>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-600">Pending</p>
-                                            <p class="text-xl font-bold text-gray-900">{{ number_format($stats['peminjaman']['pending']) }}</p>
-                                        </div>
+                                        @endif
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-xs text-gray-500">{{ $stats['peminjaman']['today'] }} hari ini</p>
+                                @empty
+                                    <div class="text-center py-6 text-gray-500">
+                                        <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                        </svg>
+                                        <p class="text-sm">Belum ada data</p>
                                     </div>
-                                </div>
+                                @endforelse
                             </div>
                         </div>
+                    </div>
 
-                        <div class="flex-1 min-w-0">
-                            <div class="bg-white rounded-xl border border-gray-200 shadow-sm h-full">
-                                <div class="p-6 border-b border-gray-200">
-                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                        <div>
-                                            <h2 class="text-xl font-semibold text-gray-900">Kalender Peminjaman & Jadwal</h2>
-                                            <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap</p>
-                                        </div>
-                                        {{-- Legend --}}
-                                        <div class="flex flex-wrap items-center gap-4 text-sm">
-                                            <div class="flex items-center">
-                                                <div class="w-3 h-3 bg-blue-500 rounded mr-2"></div>
-                                                <span class="text-gray-600">Jadwal Kuliah</span>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <div class="w-3 h-3 bg-green-500 rounded mr-2"></div>
-                                                <span class="text-gray-600">Disetujui</span>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <div class="w-3 h-3 bg-yellow-500 rounded mr-2"></div>
-                                                <span class="text-gray-600">Pending</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-6">
-                                    <div id="calendar" style="height: calc(100vh - 300px); min-height: 600px;" class="rounded-lg"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Charts Section --}}
-                        <div class="space-y-4">
-                            {{-- Status Distribution Chart --}}
-                            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Status Peminjaman</h3>
-                                <div style="height: 200px;">
-                                    <canvas id="statusPieChart"></canvas>
-                                </div>
-                            </div>
-
-                            {{-- Monthly Trend Chart --}}
-                            <div style="display:none" class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Trend 6 Bulan</h3>
-                                <div style="height: 160px;">
-                                    <canvas id="monthlyTrendChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Recent Activity --}}
+                    {{-- Recent Activity --}}
+                    <div class="lg:col-span-2">
                         <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
@@ -297,51 +334,12 @@
                                 </div>
                             @endif
                         </div>
-
-                        {{-- Popular Rooms --}}
-                        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruangan Teramai</h3>
-                            <div class="space-y-3">
-                                @forelse($stats['popularRooms']->take(5) as $index => $room)
-                                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-8 h-8 rounded-full bg-gradient-to-r 
-                                                @if($index === 0) from-yellow-400 to-orange-500
-                                                @elseif($index === 1) from-gray-300 to-gray-400
-                                                @elseif($index === 2) from-yellow-600 to-yellow-700
-                                                @else from-blue-400 to-blue-500 @endif
-                                                flex items-center justify-center text-white text-sm font-bold">
-                                                {{ $index + 1 }}
-                                            </div>
-                                            <div>
-                                                <p class="font-medium text-gray-900 text-sm truncate">
-                                                    {{ $room->ruangan->nama_ruangan ?? 'Unknown Room' }}
-                                                </p>
-                                                <p class="text-xs text-gray-500">{{ $room->total }} peminjaman</p>
-                                            </div>
-                                        </div>
-                                        @if($index === 0)
-                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                            </svg>
-                                        @endif
-                                    </div>
-                                @empty
-                                    <div class="text-center py-6 text-gray-500">
-                                        <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                        </svg>
-                                        <p class="text-sm">Belum ada data</p>
-                                    </div>
-                                @endforelse
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    </div>
 
     {{-- Charts JavaScript --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -349,13 +347,13 @@
         // Pass data to JavaScript
         window.allEventsData = @json($allEvents);
         window.dashboardStats = @json($stats);
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             // Monthly Trend Chart
             const monthlyCtx = document.getElementById('monthlyTrendChart').getContext('2d');
             const monthlyLabels = window.dashboardStats.monthlyBookings.map(item => item.month.split(' ')[0]);
             const monthlyData = window.dashboardStats.monthlyBookings.map(item => item.count);
-            
+
             new Chart(monthlyCtx, {
                 type: 'line',
                 data: {
@@ -414,7 +412,7 @@
             // Status Distribution Pie Chart
             const statusCtx = document.getElementById('statusPieChart').getContext('2d');
             const statusData = window.dashboardStats.statusDistribution;
-            
+
             new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
@@ -424,7 +422,7 @@
                         backgroundColor: [
                             '#F59E0B', // yellow for pending
                             '#10B981', // green for approved
-                            '#EF4444'  // red for rejected
+                            '#EF4444' // red for rejected
                         ],
                         borderWidth: 2,
                         borderColor: '#fff',
@@ -475,12 +473,13 @@
             const buttons = bookingElement.querySelectorAll('button');
             buttons.forEach(btn => {
                 btn.disabled = true;
-                btn.innerHTML = '<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+                btn.innerHTML =
+                    '<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             });
 
             try {
                 console.log('Sending approval request for booking:', bookingId, 'with status:', status);
-                
+
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
                 if (!csrfToken) {
                     throw new Error('CSRF token not found');
@@ -515,7 +514,7 @@
                 if (response.ok && data.success) {
                     // Update the UI to reflect the new status
                     updateBookingStatus(bookingId, status);
-                    
+
                     // Show success message using SweetAlert
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
@@ -539,15 +538,15 @@
                 }
             } catch (error) {
                 console.error('Quick approval error:', error);
-                
+
                 let errorMessage = 'Terjadi kesalahan saat memproses permintaan';
-                
+
                 if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
                     errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
-                
+
                 // Show error message using SweetAlert
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
@@ -564,9 +563,11 @@
                 buttons.forEach((btn, index) => {
                     btn.disabled = false;
                     if (index === 0) {
-                        btn.innerHTML = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+                        btn.innerHTML =
+                            '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
                     } else {
-                        btn.innerHTML = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+                        btn.innerHTML =
+                            '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
                     }
                 });
             }
@@ -574,36 +575,38 @@
 
         function updateBookingStatus(bookingId, status) {
             const bookingElement = document.getElementById(`booking-${bookingId}`);
-            
+
             // Update border color
             bookingElement.className = bookingElement.className.replace(
-                /border-(yellow|green|red)-400/g, 
+                /border-(yellow|green|red)-400/g,
                 status === 'disetujui' ? 'border-green-400' : 'border-red-400'
             );
-            
+
             // Update icon background
             const iconDiv = bookingElement.querySelector('.w-8.h-8');
             iconDiv.className = iconDiv.className.replace(
-                /bg-(yellow|green|red)-100/g, 
+                /bg-(yellow|green|red)-100/g,
                 status === 'disetujui' ? 'bg-green-100' : 'bg-red-100'
             );
-            
+
             // Update icon
             const icon = iconDiv.querySelector('svg');
             if (status === 'disetujui') {
-                icon.outerHTML = '<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+                icon.outerHTML =
+                    '<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
             } else {
-                icon.outerHTML = '<svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+                icon.outerHTML =
+                    '<svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
             }
-            
+
             // Update status badge
             const statusBadge = bookingElement.querySelector('.inline-flex.items-center');
             statusBadge.className = statusBadge.className.replace(
-                /bg-(yellow|green|red)-100 text-(yellow|green|red)-800/g, 
+                /bg-(yellow|green|red)-100 text-(yellow|green|red)-800/g,
                 status === 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
             );
             statusBadge.textContent = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
-            
+
             // Remove buttons
             const buttonContainer = bookingElement.querySelector('.flex.space-x-1');
             if (buttonContainer) {
@@ -616,7 +619,7 @@
             const activityItems = document.querySelectorAll('.activity-item');
             const filterButtons = document.querySelectorAll('.filter-btn');
             const activityCount = document.getElementById('activity-count');
-            
+
             // Update button states
             filterButtons.forEach(btn => {
                 btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
@@ -626,7 +629,7 @@
                 } else {
                     // Reset to original color based on filter type
                     btn.classList.add(...baseClasses);
-                    switch(btn.dataset.filter) {
+                    switch (btn.dataset.filter) {
                         case 'pending':
                             btn.classList.add('bg-yellow-100', 'text-yellow-700', 'hover:bg-yellow-200');
                             break;
@@ -641,13 +644,13 @@
                     }
                 }
             });
-            
+
             let visibleCount = 0;
-            
+
             // Filter items using data attributes
             activityItems.forEach(item => {
                 const itemStatus = item.dataset.status;
-                
+
                 if (status === 'all' || itemStatus === status) {
                     item.style.display = 'flex';
                     item.classList.add('fade-in');
@@ -657,10 +660,10 @@
                     item.classList.remove('fade-in');
                 }
             });
-            
+
             // Update count
             activityCount.textContent = `${visibleCount} items`;
-            
+
             // Scroll to top of activity list
             const activityContainer = document.querySelector('.scrollbar-thin');
             if (activityContainer) {
@@ -673,19 +676,19 @@
             const activityItems = document.querySelectorAll('.activity-item');
             const activityCount = document.getElementById('activity-count');
             let visibleCount = 0;
-            
+
             const searchLower = searchTerm.toLowerCase().trim();
-            
+
             activityItems.forEach(item => {
                 const userName = item.dataset.user;
                 const roomName = item.dataset.room;
                 const purpose = item.dataset.purpose;
-                
-                const matchesSearch = searchLower === '' || 
-                    userName.includes(searchLower) || 
-                    roomName.includes(searchLower) || 
+
+                const matchesSearch = searchLower === '' ||
+                    userName.includes(searchLower) ||
+                    roomName.includes(searchLower) ||
                     purpose.includes(searchLower);
-                
+
                 if (matchesSearch) {
                     item.style.display = 'flex';
                     item.classList.add('fade-in');
@@ -695,9 +698,9 @@
                     item.classList.remove('fade-in');
                 }
             });
-            
+
             activityCount.textContent = `${visibleCount} items`;
-            
+
             // Highlight search terms if any
             if (searchTerm.trim()) {
                 highlightSearchTerm(searchTerm);
@@ -711,13 +714,15 @@
             removeHighlights();
             const visibleItems = document.querySelectorAll('.activity-item[style*="flex"]');
             const regex = new RegExp(`(${term})`, 'gi');
-            
+
             visibleItems.forEach(item => {
                 const textElements = item.querySelectorAll('.text-sm, .text-xs');
                 textElements.forEach(el => {
-                    if (el.classList.contains('text-gray-400') || el.classList.contains('rounded-full')) return;
+                    if (el.classList.contains('text-gray-400') || el.classList.contains('rounded-full'))
+                        return;
                     const originalText = el.textContent;
-                    const highlightedText = originalText.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
+                    const highlightedText = originalText.replace(regex,
+                        '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
                     if (highlightedText !== originalText) {
                         el.innerHTML = highlightedText;
                     }
@@ -737,6 +742,7 @@
 
         // Auto-refresh functionality
         let refreshInterval;
+
         function startAutoRefresh() {
             refreshInterval = setInterval(() => {
                 // Check if there are any pending approvals
@@ -756,10 +762,10 @@
         // Initialize auto-refresh on page load
         document.addEventListener('DOMContentLoaded', function() {
             startAutoRefresh();
-            
+
             // Stop refresh when page is about to unload
             window.addEventListener('beforeunload', stopAutoRefresh);
-            
+
             // Add search input event listener if exists
             const searchInput = document.getElementById('activity-search');
             if (searchInput) {
