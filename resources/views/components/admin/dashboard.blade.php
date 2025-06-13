@@ -85,8 +85,8 @@
                             <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                         </div>
@@ -154,19 +154,57 @@
 
                         {{-- Recent Activity --}}
                         <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Aktivitas Terbaru</h3>
-                            <div class="space-y-3 max-h-80 overflow-y-auto">
-                                @forelse($stats['recentBookings']->take(5) as $booking)
-                                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors border-l-4 
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex space-x-1">
+                                        <button onclick="filterActivity('all')" class="filter-btn active px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors" data-filter="all">
+                                            Semua
+                                        </button>
+                                        <button onclick="filterActivity('pending')" class="filter-btn px-2 py-1 text-xs rounded-md bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors" data-filter="pending">
+                                            Pending
+                                        </button>
+                                        <button onclick="filterActivity('disetujui')" class="filter-btn px-2 py-1 text-xs rounded-md bg-green-100 text-green-700 hover:bg-green-200 transition-colors" data-filter="disetujui">
+                                            Disetujui
+                                        </button>
+                                        <button onclick="filterActivity('ditolak')" class="filter-btn px-2 py-1 text-xs rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition-colors" data-filter="ditolak">
+                                            Ditolak
+                                        </button>
+                                    </div>
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full" id="activity-count">
+                                        {{ $stats['recentBookings']->count() }} items
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            {{-- Search Input --}}
+                            <div class="mb-3">
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        id="activity-search" 
+                                        placeholder="Cari berdasarkan nama pengguna atau ruangan..." 
+                                        class="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    >
+                                </div>
+                            </div>
+                            <div class="space-y-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2">
+                                @forelse($stats['recentBookings'] as $booking)
+                                    <div class="activity-item flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors border-l-4
                                         @if($booking->status_persetujuan === 'disetujui') border-green-400
                                         @elseif($booking->status_persetujuan === 'ditolak') border-red-400
-                                        @else border-amber-400 @endif" id="booking-{{ $booking->id }}">
+                                        @else border-yellow-400 @endif" 
+                                        id="booking-{{ $booking->id }}" 
+                                        data-status="{{ $booking->status_persetujuan }}"
+                                        data-user="{{ strtolower($booking->pengguna->nama ?? 'unknown') }}"
+                                        data-room="{{ strtolower($booking->ruangan->nama_ruangan ?? 'unknown') }}"
+                                        data-purpose="{{ strtolower($booking->keperluan) }}">
                                         
                                         <div class="flex-shrink-0">
                                             <div class="w-8 h-8 rounded-full flex items-center justify-center
                                                 @if($booking->status_persetujuan === 'disetujui') bg-green-100
                                                 @elseif($booking->status_persetujuan === 'ditolak') bg-red-100
-                                                @else bg-amber-100 @endif">
+                                                @else bg-yellow-100 @endif">
                                                 @if($booking->status_persetujuan === 'disetujui')
                                                     <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -176,7 +214,7 @@
                                                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                                     </svg>
                                                 @else
-                                                    <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                                     </svg>
                                                 @endif
@@ -205,7 +243,7 @@
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                                                         @if($booking->status_persetujuan === 'disetujui') bg-green-100 text-green-800
                                                         @elseif($booking->status_persetujuan === 'ditolak') bg-red-100 text-red-800
-                                                        @else bg-amber-100 text-amber-800 @endif">
+                                                        @else bg-yellow-100 text-yellow-800 @endif">
                                                         {{ ucfirst($booking->status_persetujuan) }}
                                                     </span>
                                                     
@@ -239,9 +277,21 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                         </svg>
                                         <p class="text-sm">Belum ada aktivitas terbaru</p>
+                                        <p class="text-xs text-gray-400 mt-1">Data peminjaman akan muncul di sini</p>
                                     </div>
                                 @endforelse
                             </div>
+                            
+                            @if($stats['recentBookings']->count() >= 50)
+                                <div class="mt-4 text-center">
+                                    <p class="text-xs text-gray-500">
+                                        Menampilkan 50 aktivitas terbaru • 
+                                        <a href="{{ route('peminjam.index') }}" class="text-blue-600 hover:text-blue-800 underline">
+                                            Lihat semua peminjaman →
+                                        </a>
+                                    </p>
+                                </div>
+                            @endif
                         </div>
 
                         {{-- Popular Rooms --}}
@@ -368,7 +418,7 @@
                     datasets: [{
                         data: [statusData.pending, statusData.disetujui, statusData.ditolak],
                         backgroundColor: [
-                            '#F59E0B', // amber for pending
+                            '#F59E0B', // yellow for pending
                             '#10B981', // green for approved
                             '#EF4444'  // red for rejected
                         ],
@@ -488,14 +538,14 @@
             
             // Update border color
             bookingElement.className = bookingElement.className.replace(
-                /border-(amber|green|red)-400/g, 
+                /border-(yellow|green|red)-400/g, 
                 status === 'disetujui' ? 'border-green-400' : 'border-red-400'
             );
             
             // Update icon background
             const iconDiv = bookingElement.querySelector('.w-8.h-8');
             iconDiv.className = iconDiv.className.replace(
-                /bg-(amber|green|red)-100/g, 
+                /bg-(yellow|green|red)-100/g, 
                 status === 'disetujui' ? 'bg-green-100' : 'bg-red-100'
             );
             
@@ -510,7 +560,7 @@
             // Update status badge
             const statusBadge = bookingElement.querySelector('.inline-flex.items-center');
             statusBadge.className = statusBadge.className.replace(
-                /bg-(amber|green|red)-100 text-(amber|green|red)-800/g, 
+                /bg-(yellow|green|red)-100 text-(yellow|green|red)-800/g, 
                 status === 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
             );
             statusBadge.textContent = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
@@ -521,5 +571,163 @@
                 buttonContainer.remove();
             }
         }
+
+        // Activity Filtering Function
+        function filterActivity(status) {
+            const activityItems = document.querySelectorAll('.activity-item');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const activityCount = document.getElementById('activity-count');
+            
+            // Update button states
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
+                const baseClasses = ['px-2', 'py-1', 'text-xs', 'rounded-md', 'transition-colors'];
+                if (btn.dataset.filter === status) {
+                    btn.classList.add('active', 'bg-blue-100', 'text-blue-700', ...baseClasses);
+                } else {
+                    // Reset to original color based on filter type
+                    btn.classList.add(...baseClasses);
+                    switch(btn.dataset.filter) {
+                        case 'pending':
+                            btn.classList.add('bg-yellow-100', 'text-yellow-700', 'hover:bg-yellow-200');
+                            break;
+                        case 'disetujui':
+                            btn.classList.add('bg-green-100', 'text-green-700', 'hover:bg-green-200');
+                            break;
+                        case 'ditolak':
+                            btn.classList.add('bg-red-100', 'text-red-700', 'hover:bg-red-200');
+                            break;
+                        default:
+                            btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+                    }
+                }
+            });
+            
+            let visibleCount = 0;
+            
+            // Filter items using data attributes
+            activityItems.forEach(item => {
+                const itemStatus = item.dataset.status;
+                
+                if (status === 'all' || itemStatus === status) {
+                    item.style.display = 'flex';
+                    item.classList.add('fade-in');
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('fade-in');
+                }
+            });
+            
+            // Update count
+            activityCount.textContent = `${visibleCount} items`;
+            
+            // Scroll to top of activity list
+            const activityContainer = document.querySelector('.scrollbar-thin');
+            if (activityContainer) {
+                activityContainer.scrollTop = 0;
+            }
+        }
+
+        // Enhanced search functionality
+        function searchActivity(searchTerm) {
+            const activityItems = document.querySelectorAll('.activity-item');
+            const activityCount = document.getElementById('activity-count');
+            let visibleCount = 0;
+            
+            const searchLower = searchTerm.toLowerCase().trim();
+            
+            activityItems.forEach(item => {
+                const userName = item.dataset.user;
+                const roomName = item.dataset.room;
+                const purpose = item.dataset.purpose;
+                
+                const matchesSearch = searchLower === '' || 
+                    userName.includes(searchLower) || 
+                    roomName.includes(searchLower) || 
+                    purpose.includes(searchLower);
+                
+                if (matchesSearch) {
+                    item.style.display = 'flex';
+                    item.classList.add('fade-in');
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('fade-in');
+                }
+            });
+            
+            activityCount.textContent = `${visibleCount} items`;
+            
+            // Highlight search terms if any
+            if (searchTerm.trim()) {
+                highlightSearchTerm(searchTerm);
+            } else {
+                removeHighlights();
+            }
+        }
+
+        // Highlight search terms in visible items
+        function highlightSearchTerm(term) {
+            removeHighlights();
+            const visibleItems = document.querySelectorAll('.activity-item[style*="flex"]');
+            const regex = new RegExp(`(${term})`, 'gi');
+            
+            visibleItems.forEach(item => {
+                const textElements = item.querySelectorAll('.text-sm, .text-xs');
+                textElements.forEach(el => {
+                    if (el.classList.contains('text-gray-400') || el.classList.contains('rounded-full')) return;
+                    const originalText = el.textContent;
+                    const highlightedText = originalText.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
+                    if (highlightedText !== originalText) {
+                        el.innerHTML = highlightedText;
+                    }
+                });
+            });
+        }
+
+        // Remove search highlights
+        function removeHighlights() {
+            const highlights = document.querySelectorAll('.activity-item mark');
+            highlights.forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();
+            });
+        }
+
+        // Auto-refresh functionality
+        let refreshInterval;
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                // Check if there are any pending approvals
+                const pendingItems = document.querySelectorAll('[data-status="pending"]');
+                if (pendingItems.length > 0) {
+                    console.log(`Monitoring ${pendingItems.length} pending approvals...`);
+                }
+            }, 30000); // Check every 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        }
+
+        // Initialize auto-refresh on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            startAutoRefresh();
+            
+            // Stop refresh when page is about to unload
+            window.addEventListener('beforeunload', stopAutoRefresh);
+            
+            // Add search input event listener if exists
+            const searchInput = document.getElementById('activity-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    searchActivity(e.target.value);
+                });
+            }
+        });
     </script>
 </x-app-layout>

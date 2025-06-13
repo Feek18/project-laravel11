@@ -18,6 +18,9 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert-custom.css') }}">
+    
+    <!-- Dashboard Custom Styles -->
+    <link rel="stylesheet" href="{{ asset('css/dashboard-custom.css') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])

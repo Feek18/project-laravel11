@@ -82,12 +82,10 @@ class DashboardController extends Controller
             ->distinct('id_ruang')
             ->count();
         
-        $roomUtilization = $totalRooms > 0 ? round(($activeRoomsToday / $totalRooms) * 100, 2) : 0;
-
-        // Recent bookings for the activity feed
+        $roomUtilization = $totalRooms > 0 ? round(($activeRoomsToday / $totalRooms) * 100, 2) : 0;        // Recent bookings for the activity feed (get more data for scrolling)
         $recentBookings = Peminjaman::with(['pengguna', 'ruangan'])
             ->orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(50)
             ->get();
 
         // Monthly booking trend for charts (last 6 months)
