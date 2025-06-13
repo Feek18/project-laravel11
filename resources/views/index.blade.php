@@ -27,7 +27,7 @@
     @endif
     <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
     <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
-    
+
     <style>
         /* Fix calendar popup positioning using correct classes */
         .toastui-calendar-floating-layer {
@@ -38,19 +38,19 @@
             z-index: 9998 !important;
             pointer-events: auto !important;
         }
-        
+
         .toastui-calendar-see-more-container {
             width: 280px !important;
             max-height: 300px !important;
             overflow-y: auto !important;
             pointer-events: auto !important;
         }
-        
+
         /* Ensure calendar container positioning */
         #calendar {
             position: relative;
         }
-        
+
         /* Fix pointer events */
         .toastui-calendar-floating-layer * {
             pointer-events: auto !important;
@@ -87,35 +87,35 @@
 
     {{-- footer --}}
     @include('layouts.footer')
-    
+
     <script>
         // Pass combined events data (peminjaman + jadwal) to JavaScript
         window.peminjamanData = @json($allEvents);
-        
+
         // Smooth scrolling and navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Auto-submit filter form when dropdown values change
             const monthSelect = document.getElementById('month_filter');
             const yearSelect = document.getElementById('year_filter');
             const filterForm = document.getElementById('filter-form');
-            
+
             if (monthSelect && yearSelect && filterForm) {
                 monthSelect.addEventListener('change', function() {
                     filterForm.submit();
                 });
-                
+
                 yearSelect.addEventListener('change', function() {
                     filterForm.submit();
                 });
             }
-            
+
             // Handle smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
+                anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     const targetId = this.getAttribute('href').substring(1);
                     const targetElement = document.getElementById(targetId);
-                    
+
                     if (targetElement) {
                         targetElement.scrollIntoView({
                             behavior: 'smooth',
@@ -124,21 +124,21 @@
                     }
                 });
             });
-            
+
             // Mobile hamburger menu toggle
             const menuToggle = document.querySelector('[data-collapse-toggle="navbar-hamburger"]');
             const navbar = document.getElementById('navbar-hamburger');
-            
+
             if (menuToggle && navbar) {
                 menuToggle.addEventListener('click', function() {
                     navbar.classList.toggle('hidden');
                 });
             }
-            
+
             // Highlight active navigation item based on scroll position
             const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('nav a[href^="#"]');
-            
+
             function updateActiveNav() {
                 let current = '';
                 sections.forEach(section => {
@@ -148,7 +148,7 @@
                         current = section.getAttribute('id');
                     }
                 });
-                
+
                 navLinks.forEach(link => {
                     link.classList.remove('text-blue-400', 'font-semibold');
                     if (link.getAttribute('href') === '#' + current) {
@@ -156,11 +156,19 @@
                     }
                 });
             }
-            
+
             window.addEventListener('scroll', updateActiveNav);
             updateActiveNav(); // Call once on page load
         });
     </script>
+    <script>
+        function confirmLogout(formId) {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                document.getElementById(formId).submit();
+            }
+        }
+    </script>
+
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
 </body>
 
