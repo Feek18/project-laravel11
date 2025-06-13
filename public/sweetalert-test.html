@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetAlert Delete Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="/css/sweetalert-custom.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">SweetAlert Delete Confirmation Test</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Test Delete Buttons</h2>
+            
+            <!-- Test delete buttons similar to DataTables -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 border rounded">
+                    <div>
+                        <h3 class="font-medium">Ruangan TI-101</h3>
+                        <p class="text-sm text-gray-600">Gedung Teknologi Informasi</p>
+                    </div>
+                    <form style="display: inline;">
+                        <button type="submit" class="btn-delete bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-150" data-item-name="ruangan TI-101">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Hapus Ruangan
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="flex items-center justify-between p-4 border rounded">
+                    <div>
+                        <h3 class="font-medium">John Doe</h3>
+                        <p class="text-sm text-gray-600">Pengguna Sistem</p>
+                    </div>
+                    <form style="display: inline;">
+                        <button type="submit" class="btn-delete bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-150" data-item-name="pengguna John Doe">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Hapus Pengguna
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="flex items-center justify-between p-4 border rounded">
+                    <div>
+                        <h3 class="font-medium">Pemrograman Web</h3>
+                        <p class="text-sm text-gray-600">Mata Kuliah Semester 3</p>
+                    </div>
+                    <form style="display: inline;">
+                        <button type="submit" class="btn-delete bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-150" data-item-name="mata kuliah Pemrograman Web">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Hapus Matkul
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Test Success/Error Messages</h2>
+            
+            <div class="space-x-4">
+                <button onclick="showDeleteSuccess('Data berhasil dihapus!')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                    Test Success Message
+                </button>
+                
+                <button onclick="showDeleteError('Terjadi kesalahan saat menghapus data!')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                    Test Error Message
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Test Logout Confirmation</h2>
+            
+            <form id="test-logout-form">
+                <button type="button" onclick="confirmLogout('test-logout-form')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    Test Logout Confirmation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/sweetalert-helper.js"></script>
+    
+    <script>
+        // Prevent actual form submission for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Form submission prevented for testing');
+                    // Simulate successful deletion
+                    setTimeout(() => {
+                        showDeleteSuccess('Test deletion completed successfully!');
+                    }, 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -62,12 +62,11 @@
                         </li>
                     </ul>
                     <div class="py-1">
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();"
+                                onclick="event.preventDefault(); confirmLogout('logout-form');"
                                 class="text-red-500 font-medium">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
@@ -125,12 +124,11 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile">
                     @csrf
 
                     <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                    this.closest('form').submit();">
+                        onclick="event.preventDefault(); confirmLogout('logout-form-mobile');">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>

@@ -15,6 +15,10 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{{ asset('css/sweetalert-custom.css') }}">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -41,31 +45,26 @@
     @include('components.toast')
 
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
-    {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    @if (session('login_success'))
-        <script>
-            Toastify({
-                text: "✅ Berhasil masuk!",
-                duration: 3500,
-                gravity: "top",
-                position: "right",
-                stopOnFocus: true,
-                close: false,
-                style: {
-                    background: "linear-gradient(135deg, #28a745, #218838)",
-                    color: "#fff",
-                    fontWeight: "500",
-                    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                    borderRadius: "18px",
-                    padding: "12px 20px",
-                    boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
-                },
-                onClick: function() {
-                    console.log("Toast clicked!");
-                }
-            }).showToast();
-        </script>
-    @endif --}}
+    
+    <!-- SweetAlert Helper -->
+    <script src="{{ asset('js/sweetalert-helper.js') }}"></script>
+    <script src="{{ asset('js/session-messages.js') }}"></script>
+    
+    <!-- Pass Laravel session messages to JavaScript -->
+    {{-- <script>
+        @if(session('success'))
+            window.sessionSuccess = @json(session('success'));
+        @endif
+        @if(session('error'))
+            window.sessionError = @json(session('error'));
+        @endif
+        @if(session('warning'))
+            window.sessionWarning = @json(session('warning'));
+        @endif
+        @if(session('info'))
+            window.sessionInfo = @json(session('info'));
+        @endif
+    </script> --}}
 
     @stack('scripts')
 

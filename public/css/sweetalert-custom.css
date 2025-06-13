@@ -1,0 +1,97 @@
+/* SweetAlert2 Custom Styles */
+.swal2-popup-custom {
+    font-family: 'Poppins', sans-serif !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal2-title-custom {
+    font-weight: 600 !important;
+    font-size: 1.4rem !important;
+    color: #2d3748 !important;
+}
+
+.swal2-content-custom {
+    font-size: 0.95rem !important;
+    color: #4a5568 !important;
+    line-height: 1.5 !important;
+}
+
+.swal2-confirm-custom {
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.swal2-cancel-custom {
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.swal2-confirm-custom:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal2-cancel-custom:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Loading animation customization */
+.swal2-loader {
+    border-color: #3085d6 transparent #3085d6 transparent !important;
+}
+
+/* Progress bar styling */
+.swal2-timer-progress-bar {
+    background: linear-gradient(to right, #28a745, #20c997) !important;
+}
+
+/* Icon styling */
+.swal2-icon.swal2-warning {
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+}
+
+.swal2-icon.swal2-success {
+    border-color: #28a745 !important;
+    color: #28a745 !important;
+}
+
+.swal2-icon.swal2-error {
+    border-color: #dc3545 !important;
+    color: #dc3545 !important;
+}
+
+.swal2-icon.swal2-info {
+    border-color: #17a2b8 !important;
+    color: #17a2b8 !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .swal2-popup-custom {
+        width: 90% !important;
+        margin: 0 5% !important;
+    }
+    
+    .swal2-title-custom {
+        font-size: 1.2rem !important;
+    }
+    
+    .swal2-content-custom {
+        font-size: 0.85rem !important;
+    }
+    
+    .swal2-confirm-custom,
+    .swal2-cancel-custom {
+        font-size: 0.8rem !important;
+        padding: 8px 16px !important;
+    }
+}

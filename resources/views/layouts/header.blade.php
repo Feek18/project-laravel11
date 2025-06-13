@@ -90,12 +90,11 @@
                             </li>
                         </ul>
                         <div class="py-1">
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form-header">
                                 @csrf
 
                                 <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();"
+                                    onclick="event.preventDefault(); confirmLogout('logout-form-header');"
                                     class="text-red-500 font-medium">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>

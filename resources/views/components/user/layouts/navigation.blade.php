@@ -55,12 +55,11 @@
                                     role="menuitem">Profile</a>
                             </li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" id="logout-form-user">
                                     @csrf
 
                                     <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                this.closest('form').submit();"
+                                        onclick="event.preventDefault(); confirmLogout('logout-form-user');"
                                         class="text-red-500 font-medium">
                                         {{ __('Log Out') }}
                                     </x-dropdown-link>
