@@ -39,6 +39,52 @@ function loadEditModal(type, id) {
                           modalContainer.querySelector('[id^="edit-jadwal-modal"]');
         
         if (modalElement) {
+            // Special handling for jadwal edit modals - initialize conflict checker
+            if (type === 'jadwal' && modalElement.id === 'edit-jadwal-modal') {
+                console.log('Initializing conflict checker for jadwal edit modal...');
+                setTimeout(() => {
+                    if (typeof LiveConflictChecker !== 'undefined') {
+                        // Debug: Check if required elements exist
+                        const form = modalElement.querySelector('form');
+                        const idRuang = modalElement.querySelector('[name="id_ruang"]');
+                        const hari = modalElement.querySelector('[name="hari"]');
+                        const statusContainer = modalElement.querySelector('#jadwal-conflict-status');
+                        
+                        console.log('Edit modal elements check:', {
+                            modal: !!modalElement,
+                            form: !!form,
+                            idRuang: !!idRuang,
+                            hari: !!hari,
+                            statusContainer: !!statusContainer
+                        });
+                        
+                        if (form && idRuang && hari && statusContainer) {
+                            window.editJadwalConflictChecker = new LiveConflictChecker({
+                                autoCheck: true,
+                                showSuggestions: true,
+                                debounceMs: 800,
+                                context: modalElement // Pass the modal element as context
+                            });
+                            console.log('Jadwal edit conflict checker initialized successfully');
+                            
+                            // Perform initial check
+                            setTimeout(() => {
+                                window.editJadwalConflictChecker.checkConflicts();
+                            }, 500);
+                        } else {
+                            console.error('Required elements missing for conflict checker:', {
+                                form: !!form,
+                                idRuang: !!idRuang,
+                                hari: !!hari,
+                                statusContainer: !!statusContainer
+                            });
+                        }
+                    } else {
+                        console.warn('LiveConflictChecker not available');
+                    }
+                }, 300);
+            }
+            
             // Import Flowbite Modal if available
             if (typeof Modal !== 'undefined') {
                 const modalInstance = new Modal(modalElement);
@@ -48,6 +94,11 @@ function loadEditModal(type, id) {
                 const closeButtons = modalElement.querySelectorAll('[data-modal-hide]');
                 closeButtons.forEach(button => {
                     button.addEventListener('click', function() {
+                        // Clean up conflict checker if it exists
+                        if (window.editJadwalConflictChecker) {
+                            window.editJadwalConflictChecker.reset();
+                            window.editJadwalConflictChecker = null;
+                        }
                         modalInstance.hide();
                         setTimeout(() => {
                             modalContainer.innerHTML = '';
@@ -58,6 +109,11 @@ function loadEditModal(type, id) {
                 // Close on backdrop click
                 modalElement.addEventListener('click', function(e) {
                     if (e.target === modalElement) {
+                        // Clean up conflict checker if it exists
+                        if (window.editJadwalConflictChecker) {
+                            window.editJadwalConflictChecker.reset();
+                            window.editJadwalConflictChecker = null;
+                        }
                         modalInstance.hide();
                         setTimeout(() => {
                             modalContainer.innerHTML = '';
@@ -74,6 +130,11 @@ function loadEditModal(type, id) {
                 const closeButtons = modalElement.querySelectorAll('[data-modal-hide], .modal-close');
                 closeButtons.forEach(button => {
                     button.addEventListener('click', function() {
+                        // Clean up conflict checker if it exists
+                        if (window.editJadwalConflictChecker) {
+                            window.editJadwalConflictChecker.reset();
+                            window.editJadwalConflictChecker = null;
+                        }
                         modalElement.classList.add('hidden');
                         modalElement.style.display = 'none';
                         setTimeout(() => {

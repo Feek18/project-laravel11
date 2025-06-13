@@ -60,6 +60,9 @@
     <!-- Shared DataTables Modal Handler -->
     <script src="{{ asset('js/datatables-modal.js') }}"></script>
     
+    <!-- Live Conflict Checker for jadwal modals -->
+    <script src="{{ asset('js/live-conflict-checker.js') }}"></script>
+    
     <script>
         $(document).ready(function() {
             $('#jadwal-table').DataTable({

@@ -12,6 +12,7 @@ class LiveConflictChecker {
             debounceMs: 500,
             autoCheck: true,
             showSuggestions: true,
+            context: null, // DOM element to search within (for scoped modals)
             ...options
         };
           this.isChecking = false;
@@ -35,18 +36,30 @@ class LiveConflictChecker {
             this.csrfToken = token.getAttribute('content');
         }
     }    bindEvents() {
-        // Find form fields
+        // Determine search context (scoped to a specific element or entire document)
+        const searchContext = this.options.context || document;
+        
+        // Find form fields within the specified context
         this.fields = {
-            id_ruang: document.querySelector('[name="id_ruang"]'),
-            tanggal: document.querySelector('[name="tanggal"]') || document.querySelector('[name="tanggal_pinjam"]'),
-            waktu_mulai: document.querySelector('[name="waktu_mulai"]') || document.querySelector('[name="jam_mulai"]'),
-            waktu_selesai: document.querySelector('[name="waktu_selesai"]') || document.querySelector('[name="jam_selesai"]'),
-            type: document.querySelector('[name="booking_type"]'), // Hidden field to specify type
-            hari: document.querySelector('[name="hari"]') // For jadwal only
+            id_ruang: searchContext.querySelector('[name="id_ruang"]'),
+            tanggal: searchContext.querySelector('[name="tanggal"]') || searchContext.querySelector('[name="tanggal_pinjam"]'),
+            waktu_mulai: searchContext.querySelector('[name="waktu_mulai"]') || searchContext.querySelector('[name="jam_mulai"]'),
+            waktu_selesai: searchContext.querySelector('[name="waktu_selesai"]') || searchContext.querySelector('[name="jam_selesai"]'),
+            type: searchContext.querySelector('[name="booking_type"]'), // Hidden field to specify type
+            hari: searchContext.querySelector('[name="hari"]') // For jadwal only
         };
 
-        // Find the form
-        this.form = document.querySelector('form');
+        // Find the form within the context
+        this.form = searchContext.querySelector('form');
+        
+        console.log('LiveConflictChecker fields found:', {
+            context: this.options.context ? 'scoped' : 'document',
+            id_ruang: !!this.fields.id_ruang,
+            hari: !!this.fields.hari,
+            waktu_mulai: !!this.fields.waktu_mulai,
+            waktu_selesai: !!this.fields.waktu_selesai,
+            form: !!this.form
+        });
         
         // Add form submission prevention
         if (this.form) {
@@ -88,14 +101,17 @@ class LiveConflictChecker {
 
         return 'peminjaman'; // Default
     }    createStatusElements() {
+        // Determine search context
+        const searchContext = this.options.context || document;
+        
         // Create conflict status container
-        const form = document.querySelector('form');
+        const form = searchContext.querySelector('form');
         if (!form) return;
 
         // Check if a specific status container already exists (e.g., in modals)
-        let statusContainer = document.getElementById('jadwal-conflict-status') || 
-                             document.getElementById('peminjaman-conflict-status') ||
-                             document.getElementById('conflict-status');
+        let statusContainer = searchContext.querySelector('#jadwal-conflict-status') || 
+                             searchContext.querySelector('#peminjaman-conflict-status') ||
+                             searchContext.querySelector('#conflict-status');
         
         if (!statusContainer) {
             // Create new container if none exists
@@ -113,7 +129,7 @@ class LiveConflictChecker {
         }
 
         this.statusContainer = statusContainer;
-        console.log('Status container set:', statusContainer.id);
+        console.log('Status container set:', statusContainer.id, 'context:', this.options.context ? 'scoped' : 'document');
     }
 
     scheduleCheck() {
@@ -583,15 +599,18 @@ class LiveConflictChecker {
         // Re-check conflicts
         setTimeout(() => this.checkConflicts(), 100);
     }    toggleSubmitButton(enabled, conflictData = null) {
-        // Only target specific button by ID
-        let submitButton = document.getElementById('jadwal-submit-btn');
+        // Search for submit button within the scoped context
+        const searchContext = this.options.context || document;
+        let submitButton = searchContext.querySelector('#jadwal-submit-btn') || 
+                          searchContext.querySelector('button[type="submit"]');
         
         console.log('Submit button search result:', {
             found: !!submitButton,
             id: submitButton?.id || 'no-id',
             element: submitButton,
             enabled: enabled,
-            conflictData: !!conflictData
+            conflictData: !!conflictData,
+            context: this.options.context ? 'scoped' : 'document'
         });
         
         if (submitButton) {
