@@ -5,7 +5,7 @@ import "flowbite";
 import Calendar from "@toast-ui/calendar";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 
-import Alpine, { raw } from "alpinejs";
+import Alpine from "alpinejs";
 
 window.Alpine = Alpine;
 
