@@ -13,8 +13,16 @@ use Carbon\Carbon;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Get filter parameters
+        $month = $request->get('month', date('m'));
+        $year = $request->get('year', date('Y'));
+        
+        // Calculate date range for the selected month/year
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        
         $currentDate = now()->format('Y-m-d');
         $currentTime = now()->format('H:i');
         
@@ -65,18 +73,10 @@ class HomeController extends Controller
             return $ruangan;
         });
         
-        // Get peminjaman data for calendar (filter out past bookings)
+        // Get peminjaman data for calendar filtered by selected month/year
         $peminjamans = Peminjaman::with(['pengguna', 'ruangan'])
             ->whereIn('status_persetujuan', ['pending', 'disetujui'])
-            ->where('status_persetujuan', '!=', 'ditolak')
-            ->where(function($query) use ($currentDate, $currentTime) {
-                // Only include current and future bookings
-                $query->where('tanggal_pinjam', '>', $currentDate)
-                      ->orWhere(function($subQuery) use ($currentDate, $currentTime) {
-                          $subQuery->where('tanggal_pinjam', '=', $currentDate)
-                                   ->where('waktu_selesai', '>=', $currentTime);
-                      });
-            })
+            ->whereBetween('tanggal_pinjam', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->get()
             ->map(function ($peminjaman) {
             return [
@@ -94,13 +94,23 @@ class HomeController extends Controller
             ];
             });
 
-        // Get jadwal data and generate recurring events for the current month view
-        $jadwalEvents = $this->generateJadwalEvents();
+        // Get jadwal data and generate recurring events for the selected month/year
+        $jadwalEvents = $this->generateJadwalEvents($startDate, $endDate);
         
         // Combine both peminjaman and jadwal events
-        $allEvents = $peminjamans->merge($jadwalEvents);
+        // Convert to regular collection to merge properly
+        $allEvents = collect($peminjamans)->merge($jadwalEvents);
         
-        return view('index', compact('ruangans', 'allEvents'));
+        // Generate months and years for filter dropdowns
+        $months = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+        
+        $years = range(date('Y') - 2, date('Y') + 1); // Previous 2 years to next year
+        
+        return view('index', compact('ruangans', 'allEvents', 'months', 'years', 'month', 'year'));
     }
 
     private function getStatusColor($status)

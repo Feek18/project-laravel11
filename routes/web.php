@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/auth.php';
 
 // homepage
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/ruangan/{id}', [HomeController::class, 'show'])
     ->name('ruangan.show')
     ->middleware('auth')

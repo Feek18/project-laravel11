@@ -94,6 +94,21 @@
         
         // Smooth scrolling and navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Auto-submit filter form when dropdown values change
+            const monthSelect = document.getElementById('month_filter');
+            const yearSelect = document.getElementById('year_filter');
+            const filterForm = document.getElementById('filter-form');
+            
+            if (monthSelect && yearSelect && filterForm) {
+                monthSelect.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+                
+                yearSelect.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+            
             // Handle smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
