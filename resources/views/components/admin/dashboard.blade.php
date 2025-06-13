@@ -157,7 +157,11 @@
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Aktivitas Terbaru</h3>
                             <div class="space-y-3 max-h-80 overflow-y-auto">
                                 @forelse($stats['recentBookings']->take(5) as $booking)
-                                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors border-l-4 
+                                        @if($booking->status_persetujuan === 'disetujui') border-green-400
+                                        @elseif($booking->status_persetujuan === 'ditolak') border-red-400
+                                        @else border-amber-400 @endif" id="booking-{{ $booking->id }}">
+                                        
                                         <div class="flex-shrink-0">
                                             <div class="w-8 h-8 rounded-full flex items-center justify-center
                                                 @if($booking->status_persetujuan === 'disetujui') bg-green-100
@@ -172,29 +176,62 @@
                                                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                                     </svg>
                                                 @else
-                                                    <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                                     </svg>
                                                 @endif
                                             </div>
                                         </div>
+                                        
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-gray-900 truncate">
-                                                {{ $booking->pengguna->nama ?? 'Unknown User' }}
-                                            </p>
-                                            <p class="text-xs text-gray-500 truncate">
-                                                {{ $booking->ruangan->nama_ruangan ?? 'Unknown Room' }} • {{ $booking->keperluan }}
-                                            </p>
-                                            <p class="text-xs text-gray-400">
-                                                {{ $booking->created_at->diffForHumans() }}
-                                            </p>
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex-1">
+                                                    <p class="text-sm font-medium text-gray-900 truncate">
+                                                        {{ $booking->pengguna->nama ?? 'Unknown User' }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 truncate">
+                                                        {{ $booking->ruangan->nama_ruangan ?? 'Unknown Room' }} • {{ $booking->keperluan }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-400 mt-1">
+                                                        📅 {{ \Carbon\Carbon::parse($booking->tanggal_pinjam)->format('d M Y') }} • 
+                                                        🕒 {{ $booking->waktu_mulai }} - {{ $booking->waktu_selesai }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-400">
+                                                        {{ $booking->created_at->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="flex flex-col items-end space-y-2">
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                                        @if($booking->status_persetujuan === 'disetujui') bg-green-100 text-green-800
+                                                        @elseif($booking->status_persetujuan === 'ditolak') bg-red-100 text-red-800
+                                                        @else bg-amber-100 text-amber-800 @endif">
+                                                        {{ ucfirst($booking->status_persetujuan) }}
+                                                    </span>
+                                                    
+                                                    @if($booking->status_persetujuan === 'pending')
+                                                        <div class="flex space-x-1">
+                                                            <button 
+                                                                onclick="quickApproval({{ $booking->id }}, 'disetujui')"
+                                                                class="inline-flex items-center px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors duration-200 shadow-sm"
+                                                                title="Setujui">
+                                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </button>
+                                                            <button style="background:red"
+                                                                onclick="quickApproval({{ $booking->id }}, 'ditolak')"
+                                                                class="inline-flex items-center px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded-md transition-colors duration-200 shadow-sm"
+                                                                title="Tolak">
+                                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                            @if($booking->status_persetujuan === 'disetujui') bg-green-100 text-green-800
-                                            @elseif($booking->status_persetujuan === 'ditolak') bg-red-100 text-red-800
-                                            @else bg-amber-100 text-amber-800 @endif">
-                                            {{ ucfirst($booking->status_persetujuan) }}
-                                        </span>
                                     </div>
                                 @empty
                                     <div class="text-center py-8 text-gray-500">
@@ -209,7 +246,7 @@
 
                         {{-- Popular Rooms --}}
                         <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruangan Populer</h3>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruangan Teramai</h3>
                             <div class="space-y-3">
                                 @forelse($stats['popularRooms']->take(5) as $index => $room)
                                     <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
@@ -371,5 +408,118 @@
                 clearInterval(refreshInterval);
             });
         });
+
+        // Quick Approval Function
+        async function quickApproval(bookingId, status) {
+            // Show loading state
+            const bookingElement = document.getElementById(`booking-${bookingId}`);
+            const buttons = bookingElement.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.innerHTML = '<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            });
+
+            try {
+                const response = await fetch(`/dashboard/quick-approval/${bookingId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        status_persetujuan: status
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update the UI to reflect the new status
+                    updateBookingStatus(bookingId, status);
+                    
+                    // Show success message using SweetAlert
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end'
+                        });
+                    }
+
+                    // Refresh statistics after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Show error message using SweetAlert
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error.message || 'Terjadi kesalahan saat memproses permintaan',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+
+                // Restore button states
+                buttons.forEach((btn, index) => {
+                    btn.disabled = false;
+                    if (index === 0) {
+                        btn.innerHTML = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+                    } else {
+                        btn.innerHTML = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+                    }
+                });
+            }
+        }
+
+        function updateBookingStatus(bookingId, status) {
+            const bookingElement = document.getElementById(`booking-${bookingId}`);
+            
+            // Update border color
+            bookingElement.className = bookingElement.className.replace(
+                /border-(amber|green|red)-400/g, 
+                status === 'disetujui' ? 'border-green-400' : 'border-red-400'
+            );
+            
+            // Update icon background
+            const iconDiv = bookingElement.querySelector('.w-8.h-8');
+            iconDiv.className = iconDiv.className.replace(
+                /bg-(amber|green|red)-100/g, 
+                status === 'disetujui' ? 'bg-green-100' : 'bg-red-100'
+            );
+            
+            // Update icon
+            const icon = iconDiv.querySelector('svg');
+            if (status === 'disetujui') {
+                icon.outerHTML = '<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+            } else {
+                icon.outerHTML = '<svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>';
+            }
+            
+            // Update status badge
+            const statusBadge = bookingElement.querySelector('.inline-flex.items-center');
+            statusBadge.className = statusBadge.className.replace(
+                /bg-(amber|green|red)-100 text-(amber|green|red)-800/g, 
+                status === 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            );
+            statusBadge.textContent = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
+            
+            // Remove buttons
+            const buttonContainer = bookingElement.querySelector('.flex.space-x-1');
+            if (buttonContainer) {
+                buttonContainer.remove();
+            }
+        }
     </script>
 </x-app-layout>

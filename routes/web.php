@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::put('/dashboard/quick-approval/{id}', [DashboardController::class, 'quickApproval'])
+            ->name('dashboard.quick-approval');
 
         // jadwal
         Route::resource('jadwal', JadwalController::class);

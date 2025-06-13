@@ -219,4 +219,48 @@ class DashboardController extends Controller
         
         return $events;
     }
+
+    /**
+     * Quick approval/rejection of peminjaman from dashboard
+     */
+    public function quickApproval(Request $request, $id)
+    {
+        $request->validate([
+            'status_persetujuan' => 'required|in:disetujui,ditolak',
+        ]);
+
+        $peminjam = Peminjaman::findOrFail($id);
+        
+        // Check for conflicts if approving
+        if ($request->status_persetujuan === 'disetujui') {
+            $conflictChecker = new \App\Services\RoomConflictService();
+            $conflicts = $conflictChecker->checkConflicts(
+                $peminjam->id_ruang,
+                $peminjam->tanggal_pinjam,
+                $peminjam->waktu_mulai,
+                $peminjam->waktu_selesai,
+                $peminjam->id
+            );
+            
+            if (!empty($conflicts)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Konflik jadwal terdeteksi! Tidak dapat menyetujui peminjaman.'
+                ], 400);
+            }
+        }
+
+        $peminjam->status_persetujuan = $request->status_persetujuan;
+        $peminjam->save();
+
+        $message = $request->status_persetujuan === 'disetujui' 
+            ? 'Peminjaman berhasil disetujui!' 
+            : 'Peminjaman berhasil ditolak!';
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'status' => $request->status_persetujuan
+        ]);
+    }
 }
