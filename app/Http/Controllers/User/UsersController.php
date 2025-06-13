@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Peminjaman;
 use App\Models\Pengguna;
+use Auth;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -14,8 +16,11 @@ class UsersController extends Controller
     public function index()
     {
         $pengguna = Pengguna::all();
-        return view('components.user.dashboard', compact('pengguna'));
+        $jmlhPesanan = Auth::user()->pengguna->peminjaman()->count() ?? 0;
+
+        return view('components.user.dashboard', compact('pengguna', 'jmlhPesanan'));
     }
+
 
     /**
      * Show the form for creating a new resource.
