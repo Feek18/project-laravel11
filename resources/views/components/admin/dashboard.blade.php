@@ -463,6 +463,11 @@
         async function quickApproval(bookingId, status) {
             // Show loading state
             const bookingElement = document.getElementById(`booking-${bookingId}`);
+            if (!bookingElement) {
+                console.error('Booking element not found:', bookingId);
+                return;
+            }
+
             const buttons = bookingElement.querySelectorAll('button');
             buttons.forEach(btn => {
                 btn.disabled = true;
@@ -470,20 +475,40 @@
             });
 
             try {
+                console.log('Sending approval request for booking:', bookingId, 'with status:', status);
+                
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfToken) {
+                    throw new Error('CSRF token not found');
+                }
+
                 const response = await fetch(`/dashboard/quick-approval/${bookingId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         status_persetujuan: status
                     })
                 });
 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
-                if (data.success) {
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('Non-JSON response received:', textResponse);
+                    throw new Error('Server returned invalid response format');
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok && data.success) {
                     // Update the UI to reflect the new status
                     updateBookingStatus(bookingId, status);
                     
@@ -506,19 +531,29 @@
                         window.location.reload();
                     }, 1500);
                 } else {
-                    throw new Error(data.message);
+                    throw new Error(data.message || `Server error: ${response.status}`);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Quick approval error:', error);
+                
+                let errorMessage = 'Terjadi kesalahan saat memproses permintaan';
+                
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
                 
                 // Show error message using SweetAlert
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
                         title: 'Error!',
-                        text: error.message || 'Terjadi kesalahan saat memproses permintaan',
+                        text: errorMessage,
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                } else {
+                    alert(errorMessage);
                 }
 
                 // Restore button states

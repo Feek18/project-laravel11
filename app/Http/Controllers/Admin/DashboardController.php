@@ -8,9 +8,11 @@ use App\Models\Jadwal;
 use App\Models\Pengguna;
 use App\Models\Ruangan;
 use App\Models\MataKuliah;
+use App\Services\RoomConflictService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -216,49 +218,96 @@ class DashboardController extends Controller
         }
         
         return $events;
-    }
-
-    /**
+    }    /**
      * Quick approval/rejection of peminjaman from dashboard
      */
     public function quickApproval(Request $request, $id)
     {
-        $request->validate([
-            'status_persetujuan' => 'required|in:disetujui,ditolak',
-        ]);
+        try {
+            Log::info('Quick approval request received', [
+                'id' => $id,
+                'request_data' => $request->all(),
+                'headers' => $request->headers->all()
+            ]);
 
-        $peminjam = Peminjaman::findOrFail($id);
-        
-        // Check for conflicts if approving
-        if ($request->status_persetujuan === 'disetujui') {
-            $conflictChecker = new \App\Services\RoomConflictService();
-            $conflicts = $conflictChecker->checkConflicts(
-                $peminjam->id_ruang,
-                $peminjam->tanggal_pinjam,
-                $peminjam->waktu_mulai,
-                $peminjam->waktu_selesai,
-                $peminjam->id
-            );
+            $request->validate([
+                'status_persetujuan' => 'required|in:disetujui,ditolak',
+            ]);
+
+            $peminjam = Peminjaman::findOrFail($id);
             
-            if (!empty($conflicts)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Konflik jadwal terdeteksi! Tidak dapat menyetujui peminjaman.'
-                ], 400);
+            Log::info('Found peminjaman', [
+                'peminjaman_id' => $peminjam->id,
+                'current_status' => $peminjam->status_persetujuan,
+                'requested_status' => $request->status_persetujuan
+            ]);
+              // Check for conflicts if approving
+            if ($request->status_persetujuan === 'disetujui') {
+                $conflictChecker = new RoomConflictService();
+                $conflicts = $conflictChecker->checkRoomConflicts(
+                    $peminjam->id_ruang,
+                    $peminjam->tanggal_pinjam,
+                    $peminjam->waktu_mulai,
+                    $peminjam->waktu_selesai,
+                    $peminjam->id
+                );
+                
+                if ($conflicts['has_conflicts']) {
+                    Log::info('Conflicts detected', ['conflicts' => $conflicts]);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Konflik jadwal terdeteksi! Tidak dapat menyetujui peminjaman.'
+                    ], 400);
+                }
             }
+
+            $peminjam->status_persetujuan = $request->status_persetujuan;
+            $peminjam->save();
+
+            $message = $request->status_persetujuan === 'disetujui' 
+                ? 'Peminjaman berhasil disetujui!' 
+                : 'Peminjaman berhasil ditolak!';
+
+            Log::info('Peminjaman status updated successfully', [
+                'peminjaman_id' => $peminjam->id,
+                'new_status' => $peminjam->status_persetujuan
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'status' => $request->status_persetujuan
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error in quickApproval', [
+                'errors' => $e->errors(),
+                'request' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('Model not found in quickApproval', [
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Peminjaman tidak ditemukan.'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error in quickApproval', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan server. Silakan coba lagi.'
+            ], 500);
         }
-
-        $peminjam->status_persetujuan = $request->status_persetujuan;
-        $peminjam->save();
-
-        $message = $request->status_persetujuan === 'disetujui' 
-            ? 'Peminjaman berhasil disetujui!' 
-            : 'Peminjaman berhasil ditolak!';
-
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'status' => $request->status_persetujuan
-        ]);
     }
 }
