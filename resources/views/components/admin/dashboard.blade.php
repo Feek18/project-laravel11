@@ -9,8 +9,12 @@
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             {{-- Header Section --}}
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard KelasReady</h1>
-                <p class="text-gray-600">Monitor dan kelola kegiatan pembelajaran kampus secara real-time</p>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard KelasReady</h1>
+                        <p class="text-gray-600">Monitor dan kelola kegiatan pembelajaran kampus secara real-time</p>
+                    </div>
+                </div>
             </div>
             
             {{-- Main Layout: Left Sidebar + Right Calendar --}}

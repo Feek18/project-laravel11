@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<section style="background-image: url('{{ asset('img/hero.png') }}')" class="relative min-h-[700px] bg-cover bg-center">
+<section id="beranda" style="background-image: url('{{ asset('img/hero.png') }}')" class="relative min-h-[700px] bg-cover bg-center">
     {{-- overlay --}}
     <div class="absolute inset-0 bg-black opacity-30"></div>
 

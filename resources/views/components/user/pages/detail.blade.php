@@ -245,6 +245,18 @@
             document.getElementById('qrModal').classList.add('hidden');
             document.getElementById('instant_keperluan').value = '';
         }
+        
+        // Mobile hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('[data-collapse-toggle="navbar-hamburger"]');
+            const navbar = document.getElementById('navbar-hamburger');
+            
+            if (menuToggle && navbar) {
+                menuToggle.addEventListener('click', function() {
+                    navbar.classList.toggle('hidden');
+                });
+            }
+        });
     </script>
 
     <!-- Real-time Room Availability Checker -->

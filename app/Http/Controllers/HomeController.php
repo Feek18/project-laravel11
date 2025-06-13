@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $ruangans = Ruangan::all()->slice(0, 4);
+        $ruangans = Ruangan::all(); // Show all rooms instead of just 4
         
         // Get peminjaman data
         $peminjamans = Peminjaman::with(['pengguna', 'ruangan'])

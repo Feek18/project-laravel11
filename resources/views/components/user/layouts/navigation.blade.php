@@ -12,7 +12,7 @@
                         </path>
                     </svg>
                 </button>
-                <a href="https://flowbite.com" class="flex ms-2 md:me-24">
+                <a href="{{ url('/') }}" class="flex ms-2 md:me-24">
                     <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
                     <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">KelasReady</span>
                 </a>
@@ -74,7 +74,7 @@
 </nav>
 
 <aside id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
     aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
         <ul class="space-y-2 font-medium">
@@ -101,7 +101,8 @@
                 </a>
             </li> --}}
             <li>
-                <a href="{{ route('pesanRuangan.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg group">
+                <a href="{{ route('pesanRuangan.index') }}"
+                    class="flex items-center p-2 text-gray-900 rounded-lg group">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round"

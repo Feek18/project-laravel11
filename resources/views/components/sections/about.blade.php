@@ -1,4 +1,4 @@
-<section class="bg-cover bg-center bg-no-repeat min-h-[600px] lg:min-h-[1140px]"
+<section id="tentang" class="bg-cover bg-center bg-no-repeat min-h-[600px] lg:min-h-[1140px]"
     style="background-image: url('{{ asset('img/about-bg.png') }}')">
     <div class="mt-10 font-poppins">
         <div class="container lg:px-14">

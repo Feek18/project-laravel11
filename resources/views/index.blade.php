@@ -87,9 +87,100 @@
 
     {{-- footer --}}
     @include('layouts.footer')
+    
     <script>
         // Pass combined events data (peminjaman + jadwal) to JavaScript
         window.peminjamanData = @json($allEvents);
+        
+        // Smooth scrolling and navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Mobile hamburger menu toggle
+            const menuToggle = document.querySelector('[data-collapse-toggle="navbar-hamburger"]');
+            const navbar = document.getElementById('navbar-hamburger');
+            
+            if (menuToggle && navbar) {
+                menuToggle.addEventListener('click', function() {
+                    navbar.classList.toggle('hidden');
+                });
+            }
+            
+            // Toggle rooms visibility
+            const toggleBtn = document.getElementById('toggle-rooms-btn');
+            const additionalRooms = document.getElementById('additional-rooms');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (toggleBtn && additionalRooms) {
+                toggleBtn.addEventListener('click', function() {
+                    const isHidden = additionalRooms.classList.contains('hidden');
+                    
+                    if (isHidden) {
+                        additionalRooms.classList.remove('hidden');
+                        toggleText.textContent = 'Sembunyikan';
+                        toggleIcon.style.transform = 'rotate(180deg)';
+                        
+                        // Smooth scroll to show the additional rooms
+                        setTimeout(() => {
+                            additionalRooms.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest'
+                            });
+                        }, 100);
+                    } else {
+                        additionalRooms.classList.add('hidden');
+                        toggleText.textContent = 'Lihat Semua Ruangan';
+                        toggleIcon.style.transform = 'rotate(0deg)';
+                        
+                        // Scroll back to the rooms section
+                        document.getElementById('ruangan').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+            
+            // Highlight active navigation item based on scroll position
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+            
+            function updateActiveNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('text-blue-400', 'font-semibold');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('text-blue-400', 'font-semibold');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveNav);
+            updateActiveNav(); // Call once on page load
+        });
     </script>
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
 </body>

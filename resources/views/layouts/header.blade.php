@@ -18,18 +18,18 @@
             <ul
                 class="text-sm font-medium flex flex-col py-4 md:p-0 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0">
                 <li>
-                    <a href="#"
-                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Beranda</a>
+                    <a href="{{ url('/#beranda') }}"
+                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent transition-all duration-300 {{ request()->is('/') ? 'text-blue-400 font-semibold' : '' }}">Beranda</a>
                 </li>
                 <li>
-                    <a href="#"
-                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Ruangan</a>
+                    <a href="{{ url('/#ruangan') }}"
+                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent transition-all duration-300">Ruangan</a>
                 </li>
                 <li>
-                    <a href="#"
-                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Tentang</a>
+                    <a href="{{ url('/#tentang') }}"
+                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent transition-all duration-300">Tentang</a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('qr.test') }}" target="_blank"
                         class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">
                         <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -37,7 +37,7 @@
                         </svg>
                         QR Test
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li>
                     <a href="{{ route('qr.conflict.demo') }}" target="_blank"
                         class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">
@@ -48,8 +48,8 @@
                     </a>
                 </li> --}}
                 <li>
-                    <a href="#"
-                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent">Kontak</a>
+                    <a href="{{ url('/#kontak') }}"
+                        class="block py-2 px-3 text-white rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 md:dark:hover:bg-transparent transition-all duration-300">Kontak</a>
                 </li>
             </ul>
             <div>
@@ -63,7 +63,7 @@
                     <button class="flex items-center gap-3 text-white text-sm" id="avatarButton" type="button"
                         data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start">
                         <img class="w-10 h-10 rounded-full cursor-pointer bg-cover bg-center"
-                            src="{{ auth()->user()->pengguna && auth()->user()->pengguna->gambar ? asset('storage/' . auth()->user()->pengguna->gambar) : asset('images/default-avatar.png') }}" 
+                            src="{{ auth()->user()->pengguna && auth()->user()->pengguna->gambar ? asset('storage/' . auth()->user()->pengguna->gambar) : 'https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg' }}"
                             alt="User dropdown">
                         <div class="hidden md:block text-left">
                             <h3>{{ Auth::user()->pengguna?->nama ?? Auth::user()->name ?? Auth::user()->email }}</h3>
@@ -78,6 +78,12 @@
                             <p class="font-medium truncate">{{ Auth::user()->email }}</p>
                         </div>
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                            @role('admin')
+                                <li>
+                                    <a href="{{ route('dashboard') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                                </li>
+                            @endrole
                             @role('pengguna')
                                 <li>
                                     <a href="{{ route('users.index') }}"
