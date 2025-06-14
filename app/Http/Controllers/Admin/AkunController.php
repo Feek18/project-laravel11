@@ -66,12 +66,16 @@ class AkunController extends Controller
             'password' => 'required|string|min:3|max:8',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('pengguna');
+        $user->assignRole('peminjam');
         if ($request->filled('pengguna')) {
             $pengguna = Pengguna::whereNull('user_id')->find($request->pengguna);
             if ($pengguna) {
