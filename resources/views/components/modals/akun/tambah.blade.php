@@ -31,7 +31,7 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Masukkan email" required />
                     </div>
-                    <div>
+                    {{-- <div>
                         <label for="pengguna">Nama Pengguna</label>
                         <select id="pengguna" name="pengguna"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -40,7 +40,7 @@
                                 <option value="{{ $p->id }}">{{ $p->nama }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900">password</label>
                         <input type="password" name="password" id="password"

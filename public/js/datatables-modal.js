@@ -35,7 +35,7 @@ function loadEditModal(type, id) {
         
         // Initialize Flowbite modal
         let modalElement = modalContainer.querySelector('[id^="edit-modal-"]') || 
-                          modalContainer.querySelector('[id^="matkul-edit-modal-"]') ||
+                          modalContainer.querySelector('[id^="edit-matkul-modal"]') ||
                           modalContainer.querySelector('[id^="edit-jadwal-modal"]');
         
         if (modalElement) {

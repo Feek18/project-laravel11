@@ -19,7 +19,7 @@ class MatkulController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editBtn = '<button onclick="loadEditModal(\'matkul\', ' . $row->id . ')" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
+                    $editBtn = '<button onclick="loadEditModal(\'matkul\', ' . $row->id . ')" type="button" id="edit-matkul-' . $row->id . '" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                         </svg>
@@ -62,7 +62,7 @@ class MatkulController extends Controller
         $validatedData = $request->validate([
             'kode_matkul' => 'required|string|max:255',
             'mata_kuliah' => 'required|string|max:255',
-            'semester' => 'required|string|max:255',
+            'semester' => 'required|integer|max:8|min:1',
         ]);
 
         MataKuliah::create($validatedData);
@@ -102,7 +102,7 @@ class MatkulController extends Controller
         $validatedData = $request->validate([
             'kode_matkul' => 'required|string|max:255',
             'mata_kuliah' => 'required|string|max:255',
-            'semester' => 'required|string|max:255',
+            'semester' => 'required|integer|max:8|min:1',
         ]);
 
         $matakuliah->update($validatedData);

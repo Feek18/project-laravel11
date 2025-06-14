@@ -23,8 +23,8 @@ require __DIR__ . '/auth.php';
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/ruangan/{id}', [HomeController::class, 'show'])
     ->name('ruangan.show')
-    ->middleware('auth')
-    ->middleware('role:pengguna'); // Only allow users with 'pengguna' role
+    ->middleware('auth');
+    // ->middleware('role:peminjam'); // Only allow users with 'pengguna' role
 
 // QR Code routes (accessible without auth for scanning)
 Route::prefix('qr')->group(function () {
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/qr/generate-room', [QRCodeController::class, 'generateRoomQR'])->name('qr.generate.room');
     });
 
-    Route::middleware(['role:peminjam'])->group(function () {
+    Route::middleware([])->group(function () {
         Route::resource('users', UsersController::class);
 
         // detail ruangan
