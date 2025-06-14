@@ -15,22 +15,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('jadwal.index')" :active="request()->routeIs('jadwal.*')">
+                    <x-nav-link :href="route('jadwal.index')" :active="request()->routeIs('jadwal.*')" id="jadwal-link">
                         {{ __('Jadwal') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('matkul.index')" :active="request()->routeIs('matkul.*')">
+                    <x-nav-link :href="route('matkul.index')" :active="request()->routeIs('matkul.*')" id="matkul-link">
                         {{ __('Mata Kuliah') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('ruangan.index')" :active="request()->routeIs('ruangan.*')">
+                    <x-nav-link :href="route('ruangan.index')" :active="request()->routeIs('ruangan.*')" id="ruangan-link">
                         {{ __('Ruangan') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('akun.index')" :active="request()->routeIs('akun.index')">
+                    <x-nav-link :href="route('akun.index')" :active="request()->routeIs('akun.index')" id="akun-link">
                         {{ __('Akun') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')">
+                    <x-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')" id="pengguna-link">
                         {{ __('Pengguna') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')">
+                    <x-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')" id="peminjam-link">
                         {{ __('Peminjam') }}
                     </x-nav-link>
                 </div>
@@ -105,16 +105,16 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('jadwal.index')" :active="request()->routeIs('jadwal.*')">
+            <x-responsive-nav-link :href="route('jadwal.index')" :active="request()->routeIs('jadwal.*')" id="jadwal-link">
                 {{ __('Jadwal') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('ruangan.index')" :active="request()->routeIs('ruangan.*')">
+            <x-responsive-nav-link :href="route('ruangan.index')" :active="request()->routeIs('ruangan.*')" id="ruangan-link">
                 {{ __('Ruangan') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')">
+            <x-responsive-nav-link :href="route('pengguna.index')" :active="request()->routeIs('pengguna.index')" id="pengguna-link">
                 {{ __('Pengguna') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')">
+            <x-responsive-nav-link :href="route('peminjam.index')" :active="request()->routeIs('peminjam.index')" id="peminjam-link">
                 {{ __('Peminjam') }}
             </x-responsive-nav-link>
         </div>

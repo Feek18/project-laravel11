@@ -11,7 +11,7 @@
             <div class="mb-8">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard KelasReady</h1>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2" id="dashboard">Dashboard KelasReady</h1>
                         <p class="text-gray-600">Monitor dan kelola kegiatan pembelajaran kampus secara real-time</p>
                     </div>
                 </div>

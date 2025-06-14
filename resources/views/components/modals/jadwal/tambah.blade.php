@@ -75,14 +75,14 @@
                         <label for="jam_mulai" class="block mb-2 text-sm font-medium text-gray-900">Jam Mulai</label>
                         <input type="time" name="jam_mulai" id="jam_mulai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan lokasi" required />
+                            placeholder="Masukkan jam" />
                     </div>
                     <div>
                         <label for="jam_selesai" class="block mb-2 text-sm font-medium text-gray-900">Jam
                             Selesai</label>
                         <input type="time" name="jam_selesai" id="jam_selesai"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan lokasi" required />
+                            placeholder="Masukkan jam" />
                     </div>
                     
                     <!-- Live Conflict Check Results will be inserted here -->

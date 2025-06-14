@@ -41,7 +41,7 @@
                             @foreach ($ruangan as $r)
                                 <option value="{{ $r->id_ruang }}"
                                     {{ (old('id_ruang') !== null ? old('id_ruang') == $r->id_ruang : $jadwal->id_ruang == $r->id_ruang) ? 'selected' : '' }}>
-                                    {{ $r->nama_ruangan }}
+                                    {{ $r->nama_ruangan }} - {{ $r->lokasi }}
                                 </option>
                             @endforeach
 

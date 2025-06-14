@@ -55,7 +55,7 @@
             <div>
                 @guest
                     <a href="{{ route('login') }}">
-                        <button type="button"
+                        <button type="button" id="loginButton"
                             class="text-white text-sm bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-8 py-2 me-2 focus:outline-none">Masuk</button>
                     </a>
                 @endguest

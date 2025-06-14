@@ -25,7 +25,7 @@ class JadwalController extends Controller
                     return $row->matkul->mata_kuliah ?? '-';
                 })
                 ->addColumn('action', function ($row) {
-                    $editBtn = '<button onclick="loadEditModal(\'jadwal\', ' . $row->id . ')" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
+                    $editBtn = '<button onclick="loadEditModal(\'jadwal\', ' . $row->id . ')" type="button" id="edit-jadwal-' . $row->id . '" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded transition duration-150">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                         </svg>
@@ -62,6 +62,12 @@ class JadwalController extends Controller
             'hari' => 'required|string|in:minggu,senin,selasa,rabu,kamis,jumat,sabtu',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+        ],[],[
+            'id_ruang' => 'Nama Ruangan',
+            'id_matkul' => 'Nama Mata Kuliah',
+            'hari' => 'Hari',
+            'jam_mulai' => 'Jam Mulai',
+            'jam_selesai' => 'Jam Selesai',
         ]);
 
         // Use the conflict service to validate the booking
