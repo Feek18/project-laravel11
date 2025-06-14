@@ -36,7 +36,8 @@ function loadEditModal(type, id) {
         // Initialize Flowbite modal
         let modalElement = modalContainer.querySelector('[id^="edit-modal-"]') || 
                           modalContainer.querySelector('[id^="edit-matkul-modal"]') ||
-                          modalContainer.querySelector('[id^="edit-jadwal-modal"]');
+                          modalContainer.querySelector('[id^="edit-jadwal-modal"]') ||
+                          modalContainer.querySelector('[id^="edit-ruangan-modal"]');
         
         if (modalElement) {
             // Special handling for jadwal edit modals - initialize conflict checker

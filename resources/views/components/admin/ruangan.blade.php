@@ -16,6 +16,15 @@
                         Ruangan</button>
                 </div>
             </div>
+            @if ($errors->any())
+                    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                        <ul class="list-disc ml-5 text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <table id="ruangan-table" class="w-full">
                     <thead>
