@@ -32,7 +32,7 @@
                         <label for="id_pengguna" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
                         <select id="id_pengguna" name="id_pengguna"
                             class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                            required>
+                            >
                             <option value="" disabled selected>Pilih pengguna</option>
                             @foreach ($pengguna as $p)
                                 <option value="{{ $p->id }}">{{ $p->nama }}
@@ -45,7 +45,7 @@
                         <label for="id_ruang" class="block text-sm font-medium text-gray-700">Nama Ruangan</label>
                         <select id="id_ruang" name="id_ruang"
                             class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                            required>
+                            >
                             <option value="" disabled selected>Pilih ruangan</option>
                             @foreach ($ruangan as $r)
                                 <option value="{{ $r->id_ruang }}">{{ $r->nama_ruangan }} - {{ $r->lokasi }}
@@ -61,7 +61,7 @@
                             Pinjam</label>
                         <input type="date" name="tanggal_pinjam" id="tanggal_pinjam"
                             class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                            required />
+                             />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -70,7 +70,7 @@
                                 Mulai</label>
                             <input type="time" name="waktu_mulai" id="waktu_mulai"
                                 class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                required />
+                                 />
                         </div>
 
                         <div class="mb-4">
@@ -78,7 +78,7 @@
                                 Selesai</label>
                             <input type="time" name="waktu_selesai" id="waktu_selesai"
                                 class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                required />
+                                 />
                         </div>
                     </div>
 

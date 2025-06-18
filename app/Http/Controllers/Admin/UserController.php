@@ -54,6 +54,10 @@ class UserController extends Controller
             'no_telp' => 'nullable|string|max:20',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $pengguna = Pengguna::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
@@ -80,14 +84,18 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = Pengguna::findOrFail($id);
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
             'gender' => 'required|in:pria,wanita',
             'no_telp' => 'nullable|string|max:20',
         ]);
 
-        $user->update($validatedData);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user->update($validator->validated());
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diupdate.');
     }
 

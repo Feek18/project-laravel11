@@ -1,975 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.3 (Python 3.11.9 on win32)" generated="2025-06-15T01:40:33.058808" rpa="false" schemaversion="5">
-<suite id="s1" name="Akun" source="c:\FIle Kerja\project-laravel11\robot\admin\akun.robot">
-<test id="s1-t1" name="Buka Akun Page" line="17">
+<robot generator="Robot 7.3 (Python 3.11.9 on win32)" generated="2025-06-18T11:39:25.482460" rpa="false" schemaversion="5">
+<suite id="s1" name="Peminjam" source="c:\FIle Kerja\project-laravel11\robot\admin\peminjam.robot">
+<test id="s1-t1" name="Test Conflict Detection" line="253">
 <kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:33.706054" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
+<msg time="2025-06-18T11:39:26.104035" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
 <arg>${LOGIN_URL}</arg>
 <arg>${BROWSER}</arg>
 <doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:40:33.705060" elapsed="3.042737"/>
+<status status="PASS" start="2025-06-18T11:39:26.104035" elapsed="2.448668"/>
 </kw>
 <kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:36.751806" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
+<msg time="2025-06-18T11:39:28.556713" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
 <arg>id=email</arg>
 <arg>${EMAIL}</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:36.749796" elapsed="0.230617"/>
+<status status="PASS" start="2025-06-18T11:39:28.555058" elapsed="0.234527"/>
 </kw>
 <kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:36.982418" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
+<msg time="2025-06-18T11:39:28.792398" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
 <arg>id=password</arg>
 <arg>${PASSWORD}</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:36.981898" elapsed="0.170854"/>
+<status status="PASS" start="2025-06-18T11:39:28.791385" elapsed="0.138413"/>
 </kw>
 <kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:37.155718" level="INFO">Clicking button 'id=login-button'.</msg>
+<msg time="2025-06-18T11:39:28.930812" level="INFO">Clicking button 'id=login-button'.</msg>
 <arg>id=login-button</arg>
 <doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:37.154235" elapsed="2.621156"/>
+<status status="PASS" start="2025-06-18T11:39:28.929798" elapsed="2.391068"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
 <arg>id=dashboard</arg>
 <arg>timeout=10</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:39.777496" elapsed="0.051926"/>
+<status status="PASS" start="2025-06-18T11:39:31.321868" elapsed="0.057093"/>
 </kw>
 <kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:39.855101" level="INFO">Element 'id=dashboard' is displayed.</msg>
+<msg time="2025-06-18T11:39:31.404510" level="INFO">Element 'id=dashboard' is displayed.</msg>
 <arg>id=dashboard</arg>
 <doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:39.830435" elapsed="0.024666"/>
+<status status="PASS" start="2025-06-18T11:39:31.379960" elapsed="0.025161"/>
 </kw>
 <kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:39.856467" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
+<msg time="2025-06-18T11:39:31.406930" level="INFO">Clicking element 'id=peminjam-link'.</msg>
+<arg>id=peminjam-link</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:39.856467" elapsed="1.663987"/>
+<status status="PASS" start="2025-06-18T11:39:31.406143" elapsed="1.602027"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
+<arg>id=peminjam-table</arg>
 <arg>timeout=10</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:41.521748" elapsed="0.035014"/>
+<status status="PASS" start="2025-06-18T11:39:33.010170" elapsed="0.032186"/>
 </kw>
 <kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:41.582026" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
+<msg time="2025-06-18T11:39:33.103212" level="INFO">Element 'id=peminjam-table' is displayed.</msg>
+<arg>id=peminjam-table</arg>
 <doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:41.558734" elapsed="0.024757"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:40:41.585009" elapsed="2.245764"/>
-</kw>
-<doc>Test opening akun page and verify table visibility</doc>
-<status status="PASS" start="2025-06-15T01:40:33.701687" elapsed="10.130089"/>
-</test>
-<test id="s1-t2" name="Tambah Akun tanpa Email" line="30">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:43.836188" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:40:43.834950" elapsed="2.642569"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:46.480511" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:46.479515" elapsed="0.214767"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:46.696292" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:46.695281" elapsed="0.130879"/>
+<status status="PASS" start="2025-06-18T11:39:33.043486" elapsed="0.059726"/>
 </kw>
 <kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:46.828157" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:46.827150" elapsed="2.776393"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:49.604205" elapsed="0.080889"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:49.718155" level="INFO">Element 'id=dashboard' is displayed.</msg>
-<arg>id=dashboard</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:49.686107" elapsed="0.033062"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:49.721180" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:49.721180" elapsed="1.448006"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.170184" elapsed="0.036945"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:51.237399" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.208124" elapsed="0.029275"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:51.240690" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
+<msg time="2025-06-18T11:39:33.106208" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
 <arg>xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']</arg>
 <doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.240144" elapsed="0.163509"/>
+<status status="PASS" start="2025-06-18T11:39:33.105220" elapsed="0.160262"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
 <arg>id=authentication-modal</arg>
 <arg>timeout=10</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.405663" elapsed="0.035658"/>
+<status status="PASS" start="2025-06-18T11:39:33.266483" elapsed="0.036933"/>
 </kw>
 <kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:51.468667" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
+<msg time="2025-06-18T11:39:33.329439" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
 <arg>id=authentication-modal</arg>
 <doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.442837" elapsed="0.025830"/>
+<status status="PASS" start="2025-06-18T11:39:33.304414" elapsed="0.025025"/>
+</kw>
+<kw name="Select From List By Value" owner="SeleniumLibrary">
+<msg time="2025-06-18T11:39:33.331438" level="INFO">Selecting options from selection list 'id=id_pengguna' by value 2.</msg>
+<arg>id=id_pengguna</arg>
+<arg>2</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<status status="PASS" start="2025-06-18T11:39:33.331438" elapsed="0.130601"/>
+</kw>
+<kw name="Select From List By Value" owner="SeleniumLibrary">
+<msg time="2025-06-18T11:39:33.464048" level="INFO">Selecting options from selection list 'id=id_ruang' by value 3.</msg>
+<arg>id=id_ruang</arg>
+<arg>3</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<status status="PASS" start="2025-06-18T11:39:33.464048" elapsed="0.133077"/>
 </kw>
 <kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:51.471550" level="INFO">Typing text '123456' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>123456</arg>
+<msg time="2025-06-18T11:39:33.598711" level="INFO">Typing text '2025-06-19' into text field 'id=tanggal_pinjam'.</msg>
+<arg>id=tanggal_pinjam</arg>
+<arg>2025-06-19</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.469977" elapsed="0.139705"/>
+<status status="PASS" start="2025-06-18T11:39:33.597697" elapsed="0.128922"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-06-18T11:39:33.728636" level="INFO">Typing text '09:00' into text field 'id=waktu_mulai'.</msg>
+<arg>id=waktu_mulai</arg>
+<arg>09:00</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-06-18T11:39:33.727631" elapsed="0.123842"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-06-18T11:39:33.853479" level="INFO">Typing text '12:00' into text field 'id=waktu_selesai'.</msg>
+<arg>id=waktu_selesai</arg>
+<arg>12:00</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-06-18T11:39:33.852477" elapsed="0.249202"/>
 </kw>
 <kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:40:53.611415" level="INFO">Slept 2 seconds.</msg>
-<arg>2s</arg>
+<msg time="2025-06-18T11:39:37.103901" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:40:51.609682" elapsed="2.001733"/>
+<status status="PASS" start="2025-06-18T11:39:34.102671" elapsed="3.001230"/>
 </kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:53.613500" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Add')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Add')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:40:53.612446" elapsed="2.212500"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'email') and contains(text(), 'required')]</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:40:55.828486" elapsed="0.064178"/>
+<kw name="Element Should Be Visible" owner="SeleniumLibrary">
+<msg time="2025-06-18T11:39:37.139828" level="INFO">Element 'id=peminjaman-conflict-status' is displayed.</msg>
+<arg>id=peminjaman-conflict-status</arg>
+<doc>Verifies that the element identified by ``locator`` is visible.</doc>
+<status status="PASS" start="2025-06-18T11:39:37.105922" elapsed="0.033906"/>
 </kw>
 <kw name="Close Browser" owner="SeleniumLibrary">
 <doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:40:55.893668" elapsed="2.320964"/>
+<status status="PASS" start="2025-06-18T11:39:37.140828" elapsed="2.262509"/>
 </kw>
-<doc>Test adding akun without email - should show validation error</doc>
-<status status="PASS" start="2025-06-15T01:40:43.833949" elapsed="14.382168"/>
+<doc>Test room booking conflict detection feature</doc>
+<status status="PASS" start="2025-06-18T11:39:26.101296" elapsed="13.303721"/>
 </test>
-<test id="s1-t3" name="Tambah Akun tanpa Password" line="51">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:40:58.220820" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:40:58.219543" elapsed="2.821077"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:01.043981" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:01.042617" elapsed="0.248949"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:01.293640" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:01.292566" elapsed="0.166542"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:01.460593" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:01.460593" elapsed="2.698966"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:04.161665" elapsed="0.061564"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:04.248889" level="INFO">Element 'id=dashboard' is displayed.</msg>
-<arg>id=dashboard</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:04.224234" elapsed="0.025658"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:04.251015" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:04.249892" elapsed="1.677416"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:05.928400" elapsed="0.033950"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:05.989119" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:05.964418" elapsed="0.025712"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:05.992162" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
-<arg>xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:05.991165" elapsed="0.141584"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=authentication-modal</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:06.132749" elapsed="0.031856"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:06.190009" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
-<arg>id=authentication-modal</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:06.166091" elapsed="0.023918"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:06.192346" level="INFO">Typing text 'testuser@example.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>testuser@example.com</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:06.191007" elapsed="0.201982"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:41:08.404029" level="INFO">Slept 2 seconds.</msg>
-<arg>2s</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:41:06.402540" elapsed="2.001489"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:08.407564" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Add')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Add')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:08.406050" elapsed="1.874119"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'password') and contains(text(), 'required')]</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:10.281488" elapsed="0.060050"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:41:10.342514" elapsed="2.313884"/>
-</kw>
-<doc>Test adding akun without password - should show validation error</doc>
-<status status="PASS" start="2025-06-15T01:40:58.218543" elapsed="14.439240"/>
-</test>
-<test id="s1-t4" name="Tambah Akun dengan Email Invalid" line="72">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:12.669685" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:41:12.667683" elapsed="2.887276"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:15.557398" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:15.556391" elapsed="0.209842"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:15.768313" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:15.767746" elapsed="0.129980"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:15.899755" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:15.898720" elapsed="2.798988"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:18.700107" elapsed="0.063576"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:18.790343" level="INFO">Element 'id=dashboard' is displayed.</msg>
-<arg>id=dashboard</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:18.764682" elapsed="0.027084"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:18.792788" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:18.792788" elapsed="1.495428"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.289370" elapsed="0.034809"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:20.364884" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.325675" elapsed="0.040227"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:20.367923" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
-<arg>xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.366905" elapsed="0.190222"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=authentication-modal</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.558142" elapsed="0.034012"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:20.616199" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
-<arg>id=authentication-modal</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.593749" elapsed="0.023468"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:20.619219" level="INFO">Typing text 'invalid-email-format' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>invalid-email-format</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.618220" elapsed="0.216098"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:20.836584" level="INFO">Typing text '123456' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>123456</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:20.835337" elapsed="0.165213"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:41:23.002673" level="INFO">Slept 2 seconds.</msg>
-<arg>2s</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:41:21.001553" elapsed="2.001120"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:23.005696" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Add')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Add')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:23.004691" elapsed="0.159195"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'valid email')]</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:23.164891" elapsed="1.920415"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:41:25.085306" elapsed="2.286817"/>
-</kw>
-<doc>Test adding akun with invalid email format - should show validation error</doc>
-<status status="PASS" start="2025-06-15T01:41:12.663882" elapsed="14.709761"/>
-</test>
-<test id="s1-t5" name="Tambah Akun dengan Email yang Sudah Ada" line="93">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:27.378130" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:41:27.377138" elapsed="2.937682"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:30.317841" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:30.316305" elapsed="0.285123"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:30.603882" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:30.602430" elapsed="0.157533"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:30.762356" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:30.761349" elapsed="2.772191"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:33.534538" elapsed="0.061160"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:33.621390" level="INFO">Element 'id=dashboard' is displayed.</msg>
-<arg>id=dashboard</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:33.596698" elapsed="0.025819"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:33.624031" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:33.622517" elapsed="1.444348"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.067875" elapsed="0.048230"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:35.140312" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.117624" elapsed="0.022688"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:35.142900" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
-<arg>xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.142900" elapsed="0.196021"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=authentication-modal</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.339910" elapsed="0.031450"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:35.396739" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
-<arg>id=authentication-modal</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.373276" elapsed="0.023463"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:35.399575" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>admin@gmail.com</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.398797" elapsed="0.209182"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:35.610196" level="INFO">Typing text '123456' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>123456</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.609179" elapsed="0.177340"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:41:37.789020" level="INFO">Slept 2 seconds.</msg>
-<arg>2s</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:41:35.788599" elapsed="2.000937"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:37.791989" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Add')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Add')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:37.790561" elapsed="2.194137"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'email has already been taken') or contains(text(), 'already exists') or contains(text(), 'sudah ada')]</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:39.986033" elapsed="0.064369"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:41:40.051872" elapsed="3.827252"/>
-</kw>
-<doc>Test adding akun with duplicate email - should show validation error</doc>
-<status status="PASS" start="2025-06-15T01:41:27.375817" elapsed="16.504319"/>
-</test>
-<test id="s1-t6" name="Tambah Akun - Berhasil" line="114">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:43.885622" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:41:43.884110" elapsed="2.728901"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:46.615131" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:46.614007" elapsed="0.215876"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:46.831013" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:46.831013" elapsed="0.152708"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:46.985748" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:46.984735" elapsed="2.634690"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:49.619996" elapsed="0.064819"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:49.710931" level="INFO">Element 'id=dashboard' is displayed.</msg>
-<arg>id=dashboard</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:49.685817" elapsed="0.025114"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:49.713955" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:49.712949" elapsed="1.608939"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.323258" elapsed="0.032120"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:51.379462" level="INFO">Element 'id=akun-table' is displayed.</msg>
-<arg>id=akun-table</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.356396" elapsed="0.023066"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:51.381464" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']'.</msg>
-<arg>xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.381464" elapsed="0.177691"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=authentication-modal</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.560181" elapsed="0.032367"/>
-</kw>
-<kw name="Element Should Be Visible" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:51.618410" level="INFO">Element 'id=authentication-modal' is displayed.</msg>
-<arg>id=authentication-modal</arg>
-<doc>Verifies that the element identified by ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.593551" elapsed="0.025884"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:51.620536" level="INFO">Typing text 'newuser@example.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>newuser@example.com</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.620536" elapsed="0.200623"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:51.822959" level="INFO">Typing text 'newpass' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>newpass</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.822959" elapsed="0.156265"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:41:53.982599" level="INFO">Slept 2 seconds.</msg>
-<arg>2s</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:41:51.980356" elapsed="2.002243"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:53.985678" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Add')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Add')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:41:53.984618" elapsed="2.387126"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'success!') or contains(text(), 'berhasil')]</arg>
-<arg>timeout=10</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:41:56.375744" elapsed="0.067931"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:41:56.445073" elapsed="2.291299"/>
-</kw>
-<doc>Test successful akun addition</doc>
-<status status="PASS" start="2025-06-15T01:41:43.882905" elapsed="14.854476"/>
-</test>
-<test id="s1-t7" name="Delete Akun - Berhasil" line="134">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:41:58.740379" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:41:58.740379" elapsed="2.836805"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:01.580839" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:01.578707" elapsed="0.215654"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:01.795564" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:01.795564" elapsed="0.164271"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:01.962108" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:01.961074" elapsed="2.605321"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:04.567393" elapsed="0.057168"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:04.626823" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:04.626823" elapsed="1.412559"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:06.040422" elapsed="0.034045"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>css=table#akun-table tbody tr</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:06.075463" elapsed="1.109129"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:42:12.187398" level="INFO">Slept 5 seconds.</msg>
-<arg>${LONG_WAIT}</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:42:07.185591" elapsed="5.002320"/>
-</kw>
-<kw name="Get Element Count" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:12.206906" level="INFO">${rows_before} = 4</msg>
-<var>${rows_before}</var>
-<arg>css=table#akun-table tbody tr</arg>
-<doc>Returns the number of elements matching ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:12.188933" elapsed="0.017973"/>
-</kw>
-<kw name="Log" owner="BuiltIn">
-<msg time="2025-06-15T01:42:12.209283" level="INFO">Rows before deletion: 4</msg>
-<arg>Rows before deletion: ${rows_before}</arg>
-<doc>Logs the given message with the given level.</doc>
-<status status="PASS" start="2025-06-15T01:42:12.208279" elapsed="0.001004"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>css=button.bg-red-500</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:12.210768" elapsed="0.066540"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:12.283019" level="INFO">Clicking element 'css=button.bg-red-500'.</msg>
-<arg>css=button.bg-red-500</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:12.281323" elapsed="0.206083"/>
-</kw>
-<kw name="Run Keyword And Return Status" owner="BuiltIn">
-<kw name="Alert Should Be Present" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:12.490734" level="INFO">HANDLE::&lt;class 'NoneType'&gt;::None</msg>
-<msg time="2025-06-15T01:42:17.695231" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-114.png"&gt;&lt;img src="selenium-screenshot-114.png" width="800px"&gt;&lt;/a&gt;</msg>
-<msg time="2025-06-15T01:42:17.695231" level="FAIL">Alert not found in 5 seconds.</msg>
-<doc>Verifies that an alert is present and by default, accepts it.</doc>
-<status status="FAIL" start="2025-06-15T01:42:12.489670" elapsed="5.212109">Alert not found in 5 seconds.</status>
-</kw>
-<msg time="2025-06-15T01:42:17.701779" level="INFO">${alert_present} = False</msg>
-<var>${alert_present}</var>
-<arg>Alert Should Be Present</arg>
-<doc>Runs the given keyword with given arguments and returns the status as a Boolean value.</doc>
-<status status="PASS" start="2025-06-15T01:42:12.488673" elapsed="5.214133"/>
-</kw>
-<kw name="Run Keyword If" owner="BuiltIn">
-<arg>${alert_present}</arg>
-<arg>Handle Alert</arg>
-<arg>action=ACCEPT</arg>
-<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
-<status status="PASS" start="2025-06-15T01:42:17.709797" elapsed="0.001524"/>
-</kw>
-<kw name="Run Keyword Unless" owner="BuiltIn">
-<msg time="2025-06-15T01:42:17.717360" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
-<kw name="Run Keywords" owner="BuiltIn">
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<arg>timeout=5</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:17.728835" elapsed="0.045899"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:17.777549" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:17.776029" elapsed="3.912599"/>
-</kw>
-<arg>Wait Until Element Is Visible</arg>
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<arg>timeout=5</arg>
-<arg>AND</arg>
-<arg>Click Button</arg>
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<doc>Executes all the given keywords in a sequence.</doc>
-<status status="PASS" start="2025-06-15T01:42:17.726827" elapsed="3.962800"/>
-</kw>
-<arg>${alert_present}</arg>
-<arg>Run Keywords</arg>
-<arg>Wait Until Element Is Visible</arg>
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<arg>timeout=5</arg>
-<arg>AND</arg>
-<arg>Click Button</arg>
-<arg>xpath=//button[contains(text(), 'Delete') or contains(text(), 'Hapus') or contains(text(), 'Ya')]</arg>
-<doc>*DEPRECATED since RF 5.0. Use Native IF/ELSE or `Run Keyword If` instead.*</doc>
-<status status="PASS" start="2025-06-15T01:42:17.716358" elapsed="3.973269"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//*[contains(text(), 'success!') or contains(text(), 'berhasil') or contains(text(), 'dihapus')]</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:21.691866" elapsed="0.062041"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:42:23.756627" level="INFO">Slept 2 seconds.</msg>
-<arg>${SHORT_WAIT}</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:42:21.754931" elapsed="2.001696"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:42:23.757662" elapsed="2.393487"/>
-</kw>
-<doc>Test successful akun deletion</doc>
-<status status="PASS" start="2025-06-15T01:41:58.739379" elapsed="27.412769"/>
-</test>
-<test id="s1-t8" name="Delete Akun - Batal" line="172">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:26.156321" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8000/login'.</msg>
-<arg>${LOGIN_URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2025-06-15T01:42:26.156321" elapsed="2.915016"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:29.075004" level="INFO">Typing text 'admin@gmail.com' into text field 'id=email'.</msg>
-<arg>id=email</arg>
-<arg>${EMAIL}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:29.073484" elapsed="0.217918"/>
-</kw>
-<kw name="Input Text" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:29.293623" level="INFO">Typing text 'admin123' into text field 'id=password'.</msg>
-<arg>id=password</arg>
-<arg>${PASSWORD}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:29.292626" elapsed="0.160597"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:29.455242" level="INFO">Clicking button 'id=login-button'.</msg>
-<arg>id=login-button</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:29.454728" elapsed="2.637866"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=dashboard</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:32.093606" elapsed="0.066394"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:32.162640" level="INFO">Clicking element 'id=akun-link'.</msg>
-<arg>id=akun-link</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:32.161341" elapsed="1.469003"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>id=akun-table</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:33.631387" elapsed="0.037227"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>css=table#akun-table tbody tr</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:33.669126" elapsed="1.100532"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:42:39.770937" level="INFO">Slept 5 seconds.</msg>
-<arg>${LONG_WAIT}</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:42:34.770658" elapsed="5.000279"/>
-</kw>
-<kw name="Get Element Count" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:39.787874" level="INFO">${rows_before} = 4</msg>
-<var>${rows_before}</var>
-<arg>css=table#akun-table tbody tr</arg>
-<doc>Returns the number of elements matching ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:39.772959" elapsed="0.015912"/>
-</kw>
-<kw name="Log" owner="BuiltIn">
-<msg time="2025-06-15T01:42:39.790867" level="INFO">Rows before deletion attempt: 4</msg>
-<arg>Rows before deletion attempt: ${rows_before}</arg>
-<doc>Logs the given message with the given level.</doc>
-<status status="PASS" start="2025-06-15T01:42:39.789865" elapsed="0.001002"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>css=button.bg-red-500</arg>
-<arg>timeout=${WAIT_TIMEOUT}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:39.792391" elapsed="0.037941"/>
-</kw>
-<kw name="Click Element" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:39.831996" level="INFO">Clicking element 'css=button.bg-red-500'.</msg>
-<arg>css=button.bg-red-500</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:39.830872" elapsed="0.141235"/>
-</kw>
-<kw name="Run Keyword And Return Status" owner="BuiltIn">
-<kw name="Alert Should Be Present" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:39.976027" level="INFO">HANDLE::&lt;class 'NoneType'&gt;::None</msg>
-<msg time="2025-06-15T01:42:45.189826" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-115.png"&gt;&lt;img src="selenium-screenshot-115.png" width="800px"&gt;&lt;/a&gt;</msg>
-<msg time="2025-06-15T01:42:45.189826" level="FAIL">Alert not found in 5 seconds.</msg>
-<doc>Verifies that an alert is present and by default, accepts it.</doc>
-<status status="FAIL" start="2025-06-15T01:42:39.975004" elapsed="5.216865">Alert not found in 5 seconds.</status>
-</kw>
-<msg time="2025-06-15T01:42:45.192949" level="INFO">${alert_present} = False</msg>
-<var>${alert_present}</var>
-<arg>Alert Should Be Present</arg>
-<doc>Runs the given keyword with given arguments and returns the status as a Boolean value.</doc>
-<status status="PASS" start="2025-06-15T01:42:39.973986" elapsed="5.218963"/>
-</kw>
-<kw name="Run Keyword If" owner="BuiltIn">
-<arg>${alert_present}</arg>
-<arg>Handle Alert</arg>
-<arg>action=DISMISS</arg>
-<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
-<status status="PASS" start="2025-06-15T01:42:45.195174" elapsed="0.001004"/>
-</kw>
-<kw name="Run Keyword Unless" owner="BuiltIn">
-<msg time="2025-06-15T01:42:45.198410" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
-<kw name="Run Keywords" owner="BuiltIn">
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<arg>timeout=5</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2025-06-15T01:42:45.204315" elapsed="0.032735"/>
-</kw>
-<kw name="Click Button" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:45.239048" level="INFO">Clicking button 'xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]'.</msg>
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:45.238048" elapsed="0.132785"/>
-</kw>
-<arg>Wait Until Element Is Visible</arg>
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<arg>timeout=5</arg>
-<arg>AND</arg>
-<arg>Click Button</arg>
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<doc>Executes all the given keywords in a sequence.</doc>
-<status status="PASS" start="2025-06-15T01:42:45.202925" elapsed="0.169117"/>
-</kw>
-<arg>${alert_present}</arg>
-<arg>Run Keywords</arg>
-<arg>Wait Until Element Is Visible</arg>
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<arg>timeout=5</arg>
-<arg>AND</arg>
-<arg>Click Button</arg>
-<arg>xpath=//button[contains(text(), 'Cancel') or contains(text(), 'Batal') or contains(text(), 'Tidak')]</arg>
-<doc>*DEPRECATED since RF 5.0. Use Native IF/ELSE or `Run Keyword If` instead.*</doc>
-<status status="PASS" start="2025-06-15T01:42:45.198410" elapsed="0.173632"/>
-</kw>
-<kw name="Sleep" owner="BuiltIn">
-<msg time="2025-06-15T01:42:47.374236" level="INFO">Slept 2 seconds.</msg>
-<arg>${SHORT_WAIT}</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-06-15T01:42:45.373049" elapsed="2.001187"/>
-</kw>
-<kw name="Get Element Count" owner="SeleniumLibrary">
-<msg time="2025-06-15T01:42:47.393121" level="INFO">${rows_after} = 4</msg>
-<var>${rows_after}</var>
-<arg>css=table#akun-table tbody tr</arg>
-<doc>Returns the number of elements matching ``locator``.</doc>
-<status status="PASS" start="2025-06-15T01:42:47.375777" elapsed="0.018346"/>
-</kw>
-<kw name="Log" owner="BuiltIn">
-<msg time="2025-06-15T01:42:47.397637" level="INFO">Rows after canceling deletion: 4</msg>
-<arg>Rows after canceling deletion: ${rows_after}</arg>
-<doc>Logs the given message with the given level.</doc>
-<status status="PASS" start="2025-06-15T01:42:47.396128" elapsed="0.002528"/>
-</kw>
-<kw name="Should Be Equal As Integers" owner="BuiltIn">
-<arg>${rows_before}</arg>
-<arg>${rows_after}</arg>
-<doc>Fails if objects are unequal after converting them to integers.</doc>
-<status status="PASS" start="2025-06-15T01:42:47.398656" elapsed="0.001513"/>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2025-06-15T01:42:47.402338" elapsed="2.355414"/>
-</kw>
-<doc>Test canceling akun deletion</doc>
-<status status="PASS" start="2025-06-15T01:42:26.154143" elapsed="23.605128"/>
-</test>
-<status status="PASS" start="2025-06-15T01:40:33.069682" elapsed="136.692263"/>
+<status status="PASS" start="2025-06-18T11:39:25.493397" elapsed="13.913617"/>
 </suite>
 <statistics>
 <total>
-<stat pass="8" fail="0" skip="0">All Tests</stat>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat name="Akun" id="s1" pass="8" fail="0" skip="0">Akun</stat>
+<stat name="Peminjam" id="s1" pass="1" fail="0" skip="0">Peminjam</stat>
 </suite>
 </statistics>
 <errors>
-<msg time="2025-06-15T01:42:17.717360" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
-<msg time="2025-06-15T01:42:45.198410" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
 </errors>
 </robot>

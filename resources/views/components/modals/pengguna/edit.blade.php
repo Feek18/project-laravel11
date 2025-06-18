@@ -30,13 +30,13 @@
                         <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
                         <input type="text" name="nama" id="nama"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan nama anda" required value="{{ old('nama', $user->nama) }}" />
+                            placeholder="Masukkan nama anda" value="{{ old('nama', $user->nama) }}" />
                     </div>
                     <div>
                         <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900">Alamat</label>
                         <input type="textarea" name="alamat" id="alamat"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Masukkan alamat anda" required value="{{ old('alamat', $user->alamat) }}" />
+                            placeholder="Masukkan alamat anda" value="{{ old('alamat', $user->alamat) }}" />
                     </div>
                     <div>
                         <label for="gender" class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
