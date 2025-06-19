@@ -18,7 +18,9 @@ class PesananController extends Controller
         if ($request->ajax()) {
             $data = Peminjaman::with(['ruangan'])
                 ->where('id_pengguna', Auth::user()->pengguna->id)
-                ->select('peminjaman.*');
+                ->select('peminjaman.*')
+                ->orderByRaw("FIELD(status_persetujuan, 'pending', 'disetujui', 'ditolak')")
+                ->orderBy('created_at', 'desc');
 
             return DataTables::of($data)
                 ->addIndexColumn()
