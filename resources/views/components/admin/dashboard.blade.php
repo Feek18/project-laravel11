@@ -1,4 +1,6 @@
 <x-app-layout>
+    {{-- toast --}}
+    @include('components.toast')
     <x-slot name="header">
         <h2 class="font-normal text-xs text-gray-500 leading-tight">
             {{ __('Dashboard') }}
@@ -16,13 +18,14 @@
                     </div>
                 </div>
             </div>
-            
+
             {{-- Main Layout: Top to Bottom --}}
             <div class="space-y-6">
                 {{-- Quick Stats Grid --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {{-- Total Users --}}
-                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div
+                        class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -30,11 +33,13 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-600">Total Pengguna</p>
-                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalUsers']) }}</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalUsers']) }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
                                     {{ $stats['userGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $stats['userGrowth'] >= 0 ? '+' : '' }}{{ $stats['userGrowth'] }}%
                                 </span>
@@ -43,7 +48,8 @@
                     </div>
 
                     {{-- Total Rooms --}}
-                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div
+                        class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -51,7 +57,8 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-600">Ruangan</p>
-                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalRooms']) }}</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalRooms']) }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -62,7 +69,8 @@
                     </div>
 
                     {{-- Total Bookings --}}
-                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div
+                        class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -70,11 +78,13 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-600">Peminjaman</p>
-                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['totalPeminjaman']) }}</p>
+                                    <p class="text-xl font-bold text-gray-900">
+                                        {{ number_format($stats['totalPeminjaman']) }}</p>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
                                     {{ $stats['peminjamanGrowth'] >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $stats['peminjamanGrowth'] >= 0 ? '+' : '' }}{{ $stats['peminjamanGrowth'] }}%
                                 </span>
@@ -83,17 +93,21 @@
                     </div>
 
                     {{-- Pending Approvals --}}
-                    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div
+                        class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-600">Pending</p>
-                                    <p class="text-xl font-bold text-gray-900">{{ number_format($stats['peminjaman']['pending']) }}</p>
+                                    <p class="text-xl font-bold text-gray-900">
+                                        {{ number_format($stats['peminjaman']['pending']) }}</p>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -110,7 +124,8 @@
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <div>
                                     <h2 class="text-xl font-semibold text-gray-900">Kalender Peminjaman & Jadwal</h2>
-                                    <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap</p>
+                                    <p class="text-sm text-gray-600 mt-1">Klik pada event untuk melihat detail lengkap
+                                    </p>
                                 </div>
                                 {{-- Legend --}}
                                 <div class="flex flex-wrap items-center gap-4 text-sm">
@@ -128,21 +143,25 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {{-- Date Filter Controls --}}
                             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                                 <div class="flex items-center gap-2 text-sm font-medium text-gray-700">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
                                     </svg>
                                     Filter Tanggal:
                                 </div>
                                 <form method="GET" action="{{ route('dashboard') }}" class="flex items-center gap-3">
                                     <div class="flex items-center gap-2">
                                         <label for="month" class="text-sm text-gray-600">Bulan:</label>
-                                        <select name="month" id="month" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                            @foreach($months as $monthNum => $monthName)
-                                                <option value="{{ $monthNum }}" {{ $month == $monthNum ? 'selected' : '' }}>
+                                        <select name="month" id="month"
+                                            class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            @foreach ($months as $monthNum => $monthName)
+                                                <option value="{{ $monthNum }}"
+                                                    {{ $month == $monthNum ? 'selected' : '' }}>
                                                     {{ $monthName }}
                                                 </option>
                                             @endforeach
@@ -150,18 +169,22 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <label for="year" class="text-sm text-gray-600">Tahun:</label>
-                                        <select name="year" id="year" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                            @foreach($years as $yearOption)
-                                                <option value="{{ $yearOption }}" {{ $year == $yearOption ? 'selected' : '' }}>
+                                        <select name="year" id="year"
+                                            class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            @foreach ($years as $yearOption)
+                                                <option value="{{ $yearOption }}"
+                                                    {{ $year == $yearOption ? 'selected' : '' }}>
                                                     {{ $yearOption }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                                    <button type="submit"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                                         Terapkan Filter
                                     </button>
-                                    <a href="{{ route('dashboard') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                                    <a href="{{ route('dashboard') }}"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                                         Reset
                                     </a>
                                 </form>
@@ -197,10 +220,12 @@
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruangan Teramai</h3>
                             <div class="space-y-3">
                                 @forelse($stats['popularRooms']->take(5) as $index => $room)
-                                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <div
+                                        class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-8 h-8 rounded-full bg-gradient-to-r 
-                                                @if($index === 0) from-yellow-400 to-orange-500
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-gradient-to-r 
+                                                @if ($index === 0) from-yellow-400 to-orange-500
                                                 @elseif($index === 1) from-gray-300 to-gray-400
                                                 @elseif($index === 2) from-yellow-600 to-yellow-700
                                                 @else from-blue-400 to-blue-500 @endif
@@ -214,16 +239,22 @@
                                                 <p class="text-xs text-gray-500">{{ $room->total }} peminjaman</p>
                                             </div>
                                         </div>
-                                        @if($index === 0)
-                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                        @if ($index === 0)
+                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                </path>
                                             </svg>
                                         @endif
                                     </div>
                                 @empty
                                     <div class="text-center py-6 text-gray-500">
-                                        <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                        <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                            </path>
                                         </svg>
                                         <p class="text-sm">Belum ada data</p>
                                     </div>
@@ -239,69 +270,86 @@
                                 <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
                                 <div class="flex items-center space-x-2">
                                     <div class="flex space-x-1">
-                                        <button onclick="filterActivity('all')" class="filter-btn active px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors" data-filter="all">
+                                        <button onclick="filterActivity('all')"
+                                            class="filter-btn active px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                            data-filter="all">
                                             Semua
                                         </button>
-                                        <button onclick="filterActivity('pending')" class="filter-btn px-2 py-1 text-xs rounded-md bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors" data-filter="pending">
+                                        <button onclick="filterActivity('pending')"
+                                            class="filter-btn px-2 py-1 text-xs rounded-md bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors"
+                                            data-filter="pending">
                                             Pending
                                         </button>
-                                        <button onclick="filterActivity('disetujui')" class="filter-btn px-2 py-1 text-xs rounded-md bg-green-100 text-green-700 hover:bg-green-200 transition-colors" data-filter="disetujui">
+                                        <button onclick="filterActivity('disetujui')"
+                                            class="filter-btn px-2 py-1 text-xs rounded-md bg-green-100 text-green-700 hover:bg-green-200 transition-colors"
+                                            data-filter="disetujui">
                                             Disetujui
                                         </button>
-                                        <button onclick="filterActivity('ditolak')" class="filter-btn px-2 py-1 text-xs rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition-colors" data-filter="ditolak">
+                                        <button onclick="filterActivity('ditolak')"
+                                            class="filter-btn px-2 py-1 text-xs rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                                            data-filter="ditolak">
                                             Ditolak
                                         </button>
                                     </div>
-                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full" id="activity-count">
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full"
+                                        id="activity-count">
                                         {{ $stats['recentBookings']->count() }} items
                                     </span>
                                 </div>
                             </div>
-                            
+
                             {{-- Search Input --}}
                             <div class="mb-3">
                                 <div class="relative">
-                                    <input 
-                                        type="text" 
-                                        id="activity-search" 
-                                        placeholder="Cari berdasarkan nama pengguna atau ruangan..." 
-                                        class="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    >
+                                    <input type="text" id="activity-search"
+                                        placeholder="Cari berdasarkan nama pengguna atau ruangan..."
+                                        class="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                             </div>
-                            <div class="space-y-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2">
+                            <div
+                                class="space-y-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2">
                                 @forelse($stats['recentBookings'] as $booking)
                                     <div class="activity-item flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors border-l-4
-                                        @if($booking->status_persetujuan === 'disetujui') border-green-400
+                                        @if ($booking->status_persetujuan === 'disetujui') border-green-400
                                         @elseif($booking->status_persetujuan === 'ditolak') border-red-400
-                                        @else border-yellow-400 @endif" 
-                                        id="booking-{{ $booking->id }}" 
+                                        @else border-yellow-400 @endif"
+                                        id="booking-{{ $booking->id }}"
                                         data-status="{{ $booking->status_persetujuan }}"
                                         data-user="{{ strtolower($booking->pengguna->nama ?? 'unknown') }}"
                                         data-room="{{ strtolower($booking->ruangan->nama_ruangan ?? 'unknown') }}"
                                         data-purpose="{{ strtolower($booking->keperluan) }}">
-                                        
+
                                         <div class="flex-shrink-0">
-                                            <div class="w-8 h-8 rounded-full flex items-center justify-center
-                                                @if($booking->status_persetujuan === 'disetujui') bg-green-100
+                                            <div
+                                                class="w-8 h-8 rounded-full flex items-center justify-center
+                                                @if ($booking->status_persetujuan === 'disetujui') bg-green-100
                                                 @elseif($booking->status_persetujuan === 'ditolak') bg-red-100
                                                 @else bg-yellow-100 @endif">
-                                                @if($booking->status_persetujuan === 'disetujui')
-                                                    <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                @if ($booking->status_persetujuan === 'disetujui')
+                                                    <svg class="w-4 h-4 text-green-600" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                            clip-rule="evenodd"></path>
                                                     </svg>
                                                 @elseif($booking->status_persetujuan === 'ditolak')
-                                                    <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                    <svg class="w-4 h-4 text-red-600" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                            clip-rule="evenodd"></path>
                                                     </svg>
                                                 @else
-                                                    <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                                    <svg class="w-4 h-4 text-yellow-600" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                            clip-rule="evenodd"></path>
                                                     </svg>
                                                 @endif
                                             </div>
                                         </div>
-                                        
+
                                         <div class="flex-1 min-w-0">
                                             <div class="flex justify-between items-start">
                                                 <div class="flex-1">
@@ -309,41 +357,51 @@
                                                         {{ $booking->pengguna->nama ?? 'Unknown User' }}
                                                     </p>
                                                     <p class="text-xs text-gray-500 truncate">
-                                                        {{ $booking->ruangan->nama_ruangan ?? 'Unknown Room' }} • {{ $booking->keperluan }}
+                                                        {{ $booking->ruangan->nama_ruangan ?? 'Unknown Room' }} •
+                                                        {{ $booking->keperluan }}
                                                     </p>
                                                     <p class="text-xs text-gray-400 mt-1">
-                                                        📅 {{ \Carbon\Carbon::parse($booking->tanggal_pinjam)->format('d M Y') }} • 
+                                                        📅
+                                                        {{ \Carbon\Carbon::parse($booking->tanggal_pinjam)->format('d M Y') }}
+                                                        •
                                                         🕒 {{ $booking->waktu_mulai }} - {{ $booking->waktu_selesai }}
                                                     </p>
                                                     <p class="text-xs text-gray-400">
                                                         {{ $booking->created_at->diffForHumans() }}
                                                     </p>
                                                 </div>
-                                                
+
                                                 <div class="flex flex-col items-end space-y-2">
-                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                                        @if($booking->status_persetujuan === 'disetujui') bg-green-100 text-green-800
+                                                    <span
+                                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                                        @if ($booking->status_persetujuan === 'disetujui') bg-green-100 text-green-800
                                                         @elseif($booking->status_persetujuan === 'ditolak') bg-red-100 text-red-800
                                                         @else bg-yellow-100 text-yellow-800 @endif">
                                                         {{ ucfirst($booking->status_persetujuan) }}
                                                     </span>
-                                                    
-                                                    @if($booking->status_persetujuan === 'pending')
+
+                                                    @if ($booking->status_persetujuan === 'pending')
                                                         <div class="flex space-x-1">
-                                                            <button 
+                                                            <button
                                                                 onclick="quickApproval({{ $booking->id }}, 'disetujui')"
                                                                 class="inline-flex items-center px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors duration-200 shadow-sm"
                                                                 title="Setujui">
-                                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                                <svg class="w-3 h-3" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                        clip-rule="evenodd"></path>
                                                                 </svg>
                                                             </button>
                                                             <button style="background:red"
                                                                 onclick="quickApproval({{ $booking->id }}, 'ditolak')"
                                                                 class="inline-flex items-center px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded-md transition-colors duration-200 shadow-sm"
                                                                 title="Tolak">
-                                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                                <svg class="w-3 h-3" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                                        clip-rule="evenodd"></path>
                                                                 </svg>
                                                             </button>
                                                         </div>
@@ -354,20 +412,24 @@
                                     </div>
                                 @empty
                                     <div class="text-center py-8 text-gray-500">
-                                        <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                        <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                                            </path>
                                         </svg>
                                         <p class="text-sm">Belum ada aktivitas terbaru</p>
                                         <p class="text-xs text-gray-400 mt-1">Data peminjaman akan muncul di sini</p>
                                     </div>
                                 @endforelse
                             </div>
-                            
-                            @if($stats['recentBookings']->count() >= 50)
+
+                            @if ($stats['recentBookings']->count() >= 50)
                                 <div class="mt-4 text-center">
                                     <p class="text-xs text-gray-500">
-                                        Menampilkan 50 aktivitas terbaru • 
-                                        <a href="{{ route('peminjam.index') }}" class="text-blue-600 hover:text-blue-800 underline">
+                                        Menampilkan 50 aktivitas terbaru •
+                                        <a href="{{ route('peminjam.index') }}"
+                                            class="text-blue-600 hover:text-blue-800 underline">
                                             Lihat semua peminjaman →
                                         </a>
                                     </p>
@@ -817,12 +879,12 @@
             // Auto-submit filter form when month or year changes
             const monthSelect = document.getElementById('month');
             const yearSelect = document.getElementById('year');
-            
+
             if (monthSelect && yearSelect) {
                 monthSelect.addEventListener('change', function() {
                     this.form.submit();
                 });
-                
+
                 yearSelect.addEventListener('change', function() {
                     this.form.submit();
                 });

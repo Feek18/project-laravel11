@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Peminjaman;
 use App\Models\Ruangan;
 use App\Models\Pengguna;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -18,19 +19,29 @@ class QRCodeController extends Controller
      */
     private function getOrCreatePenggunaId()
     {
+
+        $user = Auth::user();
+
+        // ❌ Tolak selain role 'mahasiswa' atau 'dosen' (bisa sesuaikan)
+        if (!in_array($user->role, ['mahasiswa', 'dosen'])) {
+            throw new HttpResponseException(
+                redirect()->route('dashboard')->with('error', 'Admin tidak diperbolehkan melakukan peminjaman ruangan.')
+            );
+        }
+
         if (Auth::user()->pengguna) {
             return Auth::user()->pengguna->id;
         }
-        
+
         // Create a basic pengguna record if it doesn't exist
-        $pengguna = \App\Models\Pengguna::create([
+        $pengguna = Pengguna::create([
             'nama' => Auth::user()->name ?? Auth::user()->email,
             'alamat' => 'Address not provided',
             'gender' => 'Tidak diketahui',
             'no_telp' => null,
             'user_id' => Auth::user()->id,
         ]);
-        
+
         return $pengguna->id;
     }
 
@@ -108,10 +119,10 @@ class QRCodeController extends Controller
 
             // Generate unique token
             $token = Str::random(32);
-            
+
             // Get or create pengguna ID
             $penggunaId = $this->getOrCreatePenggunaId();
-            
+
             // Create instant borrowing record
             $peminjaman = Peminjaman::create([
                 'id_pengguna' => $penggunaId,
@@ -127,7 +138,7 @@ class QRCodeController extends Controller
 
             // Generate QR code
             $qrCodeContent = route('qr.scan', ['token' => $token]);
-            
+
             // Generate QR code image
             $qrCode = QrCode::format('png')
                 ->size(300)
@@ -137,7 +148,7 @@ class QRCodeController extends Controller
             // Save QR code image
             $fileName = 'qrcodes/peminjaman_' . $peminjaman->id . '.png';
             Storage::disk('public')->put($fileName, $qrCode);
-            
+
             // Update peminjaman record with QR code path
             $peminjaman->update(['qr_code' => $fileName]);
 
@@ -225,7 +236,7 @@ class QRCodeController extends Controller
             );
 
             $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
-                ->map(function($booking) {
+                ->map(function ($booking) {
                     return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
                 })->implode(', ');
 
@@ -257,10 +268,10 @@ class QRCodeController extends Controller
         ]);
 
         $ruangan = Ruangan::findOrFail($request->ruangan_id);
-        
+
         // Generate room-specific QR code URL
         $qrContent = route('qr.room.borrow', ['room_id' => $ruangan->id_ruang]);
-        
+
         // Generate QR code
         $qrCode = QrCode::format('svg')
             ->size(400)
@@ -276,7 +287,7 @@ class QRCodeController extends Controller
     public function showRoomBorrowForm($room_id)
     {
         $ruangan = Ruangan::findOrFail($room_id);
-        
+
         return view('qr.room-borrow-form', compact('ruangan'));
     }
 
@@ -285,21 +296,38 @@ class QRCodeController extends Controller
      */
     public function processRoomBorrow(Request $request, $room_id)
     {
-        $request->validate([
-            'keperluan' => 'required|string|max:255',
-            'duration' => 'required|integer|min:1|max:8' // hours
-        ]);
 
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
         }
 
+        $user = Auth::user();
+
+        // ✅ Cek apakah role-nya admin
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard') // sesuaikan dengan route dashboard admin
+                ->with('error', 'Admin tidak diperbolehkan melakukan peminjaman ruangan.');
+        }
+
+        // ✅ Cek apakah profil pengguna sudah lengkap
+        $pengguna = $user->pengguna;
+
+        if (!$pengguna || !$pengguna->nama || !$pengguna->alamat || !$pengguna->no_telp || !$pengguna->gender) {
+            return redirect()->route('profile.edit')
+                ->with('error', 'Silakan lengkapi biodata Anda terlebih dahulu sebelum meminjam ruangan.');
+        }
+
+        $request->validate([
+            'keperluan' => 'required|string|max:255',
+            'duration' => 'required|integer|min:1|max:8' // hours
+        ]);
+
         $ruangan = Ruangan::findOrFail($room_id);
-        
+
         // Check if room is available
         $currentTime = now();
         $endTime = $currentTime->copy()->addHours((int) $request->duration);
-        
+
         // Use the same conflict checking system as the room availability checker
         $pendingConflict = Peminjaman::hasPendingConflict(
             $room_id,
@@ -325,11 +353,12 @@ class QRCodeController extends Controller
         // Show detailed conflict information
         if ($approvedConflict) {
             $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
-                ->map(function($booking) {
+                ->map(function ($booking) {
                     return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
                 })->implode(', ');
-            
-            return back()->with('error', 
+
+            return back()->with(
+                'error',
                 'Ruangan tidak tersedia karena sudah dikonfirmasi untuk peminjaman lain. ' .
                 'Konflik dengan: ' . $conflictDetails
             );
@@ -337,12 +366,13 @@ class QRCodeController extends Controller
 
         if ($pendingConflict) {
             $conflictDetails = $conflictingBookings->where('status_persetujuan', 'pending')
-                ->map(function($booking) {
+                ->map(function ($booking) {
                     return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
                 })->implode(', ');
-            
+
             // Allow booking but show warning
-            session()->flash('warning', 
+            session()->flash(
+                'warning',
                 'Perhatian: Ada peminjaman pending yang mungkin bertabrakan. ' .
                 'Konflik dengan: ' . $conflictDetails
             );
@@ -350,10 +380,10 @@ class QRCodeController extends Controller
 
         // Generate unique token
         $token = Str::random(32);
-        
+
         // Get or create pengguna ID
         $penggunaId = $this->getOrCreatePenggunaId();
-        
+
         // Create borrowing record
         $peminjaman = Peminjaman::create([
             'id_pengguna' => $penggunaId,
@@ -377,7 +407,7 @@ class QRCodeController extends Controller
     public function showSuccess($id)
     {
         $peminjaman = Peminjaman::with(['ruangan', 'pengguna'])->findOrFail($id);
-        
+
         return view('qr.success', compact('peminjaman'));
     }
 

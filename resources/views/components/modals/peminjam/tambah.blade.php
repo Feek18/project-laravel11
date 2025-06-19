@@ -31,12 +31,10 @@
                     <div class="mb-4">
                         <label for="id_pengguna" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
                         <select id="id_pengguna" name="id_pengguna"
-                            class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                            >
+                            class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500">
                             <option value="" disabled selected>Pilih pengguna</option>
                             @foreach ($pengguna as $p)
-                                <option value="{{ $p->id }}">{{ $p->nama }}
-                                </option>
+                                <option value="{{ $p->id }}">{{ $p->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -44,8 +42,7 @@
                     <div class="mb-4">
                         <label for="id_ruang" class="block text-sm font-medium text-gray-700">Nama Ruangan</label>
                         <select id="id_ruang" name="id_ruang"
-                            class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                            >
+                            class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500">
                             <option value="" disabled selected>Pilih ruangan</option>
                             @foreach ($ruangan as $r)
                                 <option value="{{ $r->id_ruang }}">{{ $r->nama_ruangan }} - {{ $r->lokasi }}
@@ -60,8 +57,8 @@
                         <label for="tanggal_pinjam" class="block text-sm font-medium text-gray-700">Tanggal
                             Pinjam</label>
                         <input type="date" name="tanggal_pinjam" id="tanggal_pinjam"
-                            class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                             />
+                            class="w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            min="{{ date('Y-m-d') }}" required />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -69,16 +66,14 @@
                             <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu
                                 Mulai</label>
                             <input type="time" name="waktu_mulai" id="waktu_mulai"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                 />
+                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
 
                         <div class="mb-4">
                             <label for="waktu_selesai" class="block text-sm font-medium text-gray-700">Waktu
                                 Selesai</label>
                             <input type="time" name="waktu_selesai" id="waktu_selesai"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500"
-                                 />
+                                class="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                     </div>
 
@@ -102,3 +97,31 @@
 </div>
 
 <script src="{{ asset('js/live-conflict-checker.js') }}"></script>
+<script>
+    const tom = new TomSelect("#id_pengguna", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        placeholder: "Cari nama pengguna..."
+    });
+
+    // Tambahkan class Tailwind ke elemen Tom Select
+    const wrapper = document.querySelector('.ts-wrapper');
+    const control = document.querySelector('.ts-control');
+    const dropdown = document.querySelector('.ts-dropdown');
+
+    if (wrapper) {
+        wrapper.classList.add('w-full');
+    }
+
+    if (control) {
+        control.classList.add('border', 'border-gray-300', 'cursor-default', 'text-sm', 'focus:ring-blue-500',
+            'focus:border-blue-500');
+    }
+
+    if (dropdown) {
+        dropdown.classList.add('border', 'border-gray-300', 'rounded-lg', 'text-sm');
+    }
+</script>

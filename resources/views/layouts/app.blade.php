@@ -18,7 +18,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert-custom.css') }}">
-    
+
+    <!-- Tambahkan di dalam <head> -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
     <!-- Dashboard Custom Styles -->
     <link rel="stylesheet" href="{{ asset('css/dashboard-custom.css') }}">
 
@@ -48,23 +52,23 @@
     @include('components.toast')
 
     <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
-    
+
     <!-- SweetAlert Helper -->
     <script src="{{ asset('js/sweetalert-helper.js') }}"></script>
     <script src="{{ asset('js/session-messages.js') }}"></script>
-    
+
     <!-- Pass Laravel session messages to JavaScript -->
     {{-- <script>
-        @if(session('success'))
+        @if (session('success'))
             window.sessionSuccess = @json(session('success'));
         @endif
-        @if(session('error'))
+        @if (session('error'))
             window.sessionError = @json(session('error'));
         @endif
-        @if(session('warning'))
+        @if (session('warning'))
             window.sessionWarning = @json(session('warning'));
         @endif
-        @if(session('info'))
+        @if (session('info'))
             window.sessionInfo = @json(session('info'));
         @endif
     </script> --}}
