@@ -42,7 +42,7 @@ Tambah Peminjam tanpa Pengguna
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     # Select From List By Value    id=id_pengguna    1
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-20
     Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00
@@ -92,7 +92,7 @@ Tambah Peminjam tanpa Tanggal
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     # Input Text    id=tanggal_pinjam    2025-06-20
     Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00
@@ -117,7 +117,7 @@ Tambah Peminjam tanpa Waktu Mulai
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-20
     # Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00
@@ -142,7 +142,7 @@ Tambah Peminjam tanpa Waktu Selesai
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-20
     Input Text    id=waktu_mulai    09:00
     # Input Text    id=waktu_selesai    12:00
@@ -167,7 +167,7 @@ Tambah Peminjam dengan Waktu Invalid
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna   2 
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-20
     Input Text    id=waktu_mulai    15:00
     Input Text    id=waktu_selesai    12:00
@@ -191,7 +191,7 @@ Tambah Peminjam dengan Tanggal Masa Lalu
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2024-01-01
     Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00
@@ -215,7 +215,7 @@ Tambah Peminjam tanpa Keperluan
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-25
     Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00
@@ -240,7 +240,7 @@ Tambah Peminjam - Berhasil
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
     Element Should Be Visible    id=authentication-modal
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    20-02-2025
     Input Text    id=waktu_mulai    14:00
     Input Text    id=waktu_selesai    16:00
@@ -267,7 +267,7 @@ Test Conflict Detection
     
     # Fill form that might have conflict
     Select From List By Value    id=id_pengguna    2
-    Select From List By Value    id=id_ruang    3
+    Select From List By Value    id=id_ruang    5
     Input Text    id=tanggal_pinjam    2025-06-19
     Input Text    id=waktu_mulai    09:00
     Input Text    id=waktu_selesai    12:00

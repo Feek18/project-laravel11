@@ -39,21 +39,21 @@
         <div>
             <x-input-label for="nama" :value="__('Nama')" />
             <x-text-input id="nama" name="nama" type="text" class="mt-1 block w-full" :value="old('nama', optional($user->pengguna)->nama)"
-                required autofocus autocomplete="name" />
+                autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('nama')" />
         </div>
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)"
-                required autocomplete="username" />
+                autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
         <div>
             <x-input-label for="no_telp" :value="__('No. Telp')" />
             <x-text-input id="no_telp" name="no_telp" type="tel" class="mt-1 block w-full" :value="old('no_telp', optional($user->pengguna)->no_telp)"
-                required autocomplete="tel" />
+                autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('no_telp')" />
         </div>
 
@@ -61,7 +61,7 @@
             <x-input-label for="alamat" :value="__('Alamat')" />
             <textarea id="alamat" name="alamat"
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required autofocus autocomplete="street-address">{{ old('alamat', optional($user->pengguna)->alamat) }}</textarea>
+                autofocus autocomplete="street-address">{{ old('alamat', optional($user->pengguna)->alamat) }}</textarea>
             <x-input-error class="mt-2" :messages="$errors->get('alamat')" />
         </div>
 
@@ -69,7 +69,7 @@
             <x-input-label for="gender" :value="__('Jenis Kelamin')" />
             <select id="gender" name="gender"
                 class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                required autocomplete="sex">
+                autocomplete="sex">
                 <option value="pria"
                     {{ old('gender', optional($user->pengguna)->gender) == 'pria' ? 'selected' : '' }}>Pria</option>
                 <option value="wanita"

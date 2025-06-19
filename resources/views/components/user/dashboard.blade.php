@@ -27,7 +27,7 @@
                         <div>
                             <span class="text-sm text-gray-700">Pesanan</span>
                             <h4 class="mt-2 font-bold text-gray-800 text-2xl">
-                                {{ number_format($jmlhPesanan) }}
+                                {{-- {{ number_format($jmlhPesanan) }} --}}
                             </h4>
                         </div>
                         {{-- <x-icons.badge color="success">
