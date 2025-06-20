@@ -57,7 +57,7 @@ class UserLoginTest extends TestCase
         ]);
 
         // Pastikan sesuai dengan folder saat store()
-        Storage::disk('public')->assertExists('gambar/' . $file->hashName()); // ✅ BENAR
+        Storage::disk('public')->assertExists('gambar/' . $file->hashName());
 
     }
 

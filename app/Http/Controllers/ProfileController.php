@@ -29,31 +29,29 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
-        // dd($request->all());    
         $user = $request->user();
 
-        // Update data email (users table)
+        // Update email di tabel users
         $user->fill($request->only('email'));
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
         $user->save();
 
-        // Update atau buat data pengguna (penggunas table)
+        // Simpan gambar dulu dengan disk 'public'
+        $path = $request->file('gambar')->store('gambar', 'public');
+
+        // Baru update atau buat data pengguna
         $user->pengguna()->updateOrCreate(
             ['user_id' => $user->id],
             [
-                'gambar' => $request->input('gambar'),
+                'gambar' => $path, // ✅ path hasil upload
                 'nama' => $request->input('nama'),
                 'alamat' => $request->input('alamat'),
                 'no_telp' => $request->input('no_telp'),
                 'gender' => $request->input('gender'),
             ]
         );
-        $path = $request->file('gambar')->store('images', 'public');
-        $user->pengguna->gambar = $path;
-        $user->pengguna->save();
 
         return Redirect::route('profile.edit')->with('success', 'Profile berhasil diupdate');
     }
