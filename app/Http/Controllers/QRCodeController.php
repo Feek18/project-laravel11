@@ -22,8 +22,9 @@ class QRCodeController extends Controller
 
         $user = Auth::user();
 
-        // ❌ Tolak selain role 'mahasiswa' atau 'dosen' (bisa sesuaikan)
-        if (!in_array($user->role, ['mahasiswa', 'dosen'])) {
+        // ❌ Tolak selain role 'pengguna' atau 'dosen' (bisa sesuaikan)
+        if (!in_array($user->getRoleNames()->first(), ['pengguna', 'dosen'])) {
+            \Log::info("User with role {$user->getRoleNames()->first()} attempted to borrow room but is not allowed.");
             throw new HttpResponseException(
                 redirect()->route('dashboard')->with('error', 'Admin tidak diperbolehkan melakukan peminjaman ruangan.')
             );
@@ -295,110 +296,121 @@ class QRCodeController extends Controller
      * Process room borrowing from QR scan
      */
     public function processRoomBorrow(Request $request, $room_id)
-    {
+    {   
+        try {
+            \Log::info("Processing room borrow for room ID: $room_id");
 
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
-        }
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
+            }
 
-        $user = Auth::user();
+            $user = Auth::user();
+            \Log::info("Authenticated user: " . $user->name . " (ID: " . $user->id . ")");
 
-        // ✅ Cek apakah role-nya admin
-        if ($user->role === 'admin') {
-            return redirect()->route('dashboard') // sesuaikan dengan route dashboard admin
-                ->with('error', 'Admin tidak diperbolehkan melakukan peminjaman ruangan.');
-        }
+            // ✅ Cek apakah role-nya admin
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard') // sesuaikan dengan route dashboard admin
+                    ->with('error', 'Admin tidak diperbolehkan melakukan peminjaman ruangan.');
+            }
 
-        // ✅ Cek apakah profil pengguna sudah lengkap
-        $pengguna = $user->pengguna;
+            // ✅ Cek apakah profil pengguna sudah lengkap
+            $pengguna = $user->pengguna;
 
-        if (!$pengguna || !$pengguna->nama || !$pengguna->alamat || !$pengguna->no_telp || !$pengguna->gender) {
-            return redirect()->route('profile.edit')
-                ->with('error', 'Silakan lengkapi biodata Anda terlebih dahulu sebelum meminjam ruangan.');
-        }
+            if (!$pengguna || !$pengguna->nama || !$pengguna->alamat || !$pengguna->no_telp || !$pengguna->gender) {
+                return redirect()->route('profile.edit')
+                    ->with('error', 'Silakan lengkapi biodata Anda terlebih dahulu sebelum meminjam ruangan.');
+            }
 
-        $request->validate([
-            'keperluan' => 'required|string|max:255',
-            'duration' => 'required|integer|min:1|max:8' // hours
-        ]);
+            $request->validate([
+                'keperluan' => 'required|string|max:255',
+                'duration' => 'required|integer|min:1|max:8' // hours
+            ]);
 
-        $ruangan = Ruangan::findOrFail($room_id);
+            $ruangan = Ruangan::findOrFail($room_id);
 
-        // Check if room is available
-        $currentTime = now();
-        $endTime = $currentTime->copy()->addHours((int) $request->duration);
+            // Check if room is available
+            $currentTime = now();
+            $endTime = $currentTime->copy()->addHours((int) $request->duration);
 
-        // Use the same conflict checking system as the room availability checker
-        $pendingConflict = Peminjaman::hasPendingConflict(
-            $room_id,
-            $currentTime->format('Y-m-d'),
-            $currentTime->format('H:i'),
-            $endTime->format('H:i')
-        );
-
-        $approvedConflict = Peminjaman::hasApprovedConflict(
-            $room_id,
-            $currentTime->format('Y-m-d'),
-            $currentTime->format('H:i'),
-            $endTime->format('H:i')
-        );
-
-        $conflictingBookings = Peminjaman::getConflictingBookings(
-            $room_id,
-            $currentTime->format('Y-m-d'),
-            $currentTime->format('H:i'),
-            $endTime->format('H:i')
-        );
-
-        // Show detailed conflict information
-        if ($approvedConflict) {
-            $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
-                ->map(function ($booking) {
-                    return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
-                })->implode(', ');
-
-            return back()->with(
-                'error',
-                'Ruangan tidak tersedia karena sudah dikonfirmasi untuk peminjaman lain. ' .
-                'Konflik dengan: ' . $conflictDetails
+            // Use the same conflict checking system as the room availability checker
+            $pendingConflict = Peminjaman::hasPendingConflict(
+                $room_id,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
             );
-        }
 
-        if ($pendingConflict) {
-            $conflictDetails = $conflictingBookings->where('status_persetujuan', 'pending')
-                ->map(function ($booking) {
-                    return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
-                })->implode(', ');
-
-            // Allow booking but show warning
-            session()->flash(
-                'warning',
-                'Perhatian: Ada peminjaman pending yang mungkin bertabrakan. ' .
-                'Konflik dengan: ' . $conflictDetails
+            $approvedConflict = Peminjaman::hasApprovedConflict(
+                $room_id,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
             );
+
+            $conflictingBookings = Peminjaman::getConflictingBookings(
+                $room_id,
+                $currentTime->format('Y-m-d'),
+                $currentTime->format('H:i'),
+                $endTime->format('H:i')
+            );
+
+            // Show detailed conflict information
+            if ($approvedConflict) {
+                \Log::info("Approved conflict found for room ID: $room_id");
+                $conflictDetails = $conflictingBookings->where('status_persetujuan', 'disetujui')
+                    ->map(function ($booking) {
+                        return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
+                    })->implode(', ');
+
+                return back()->with(
+                    'error',
+                    'Ruangan tidak tersedia karena sudah dikonfirmasi untuk peminjaman lain. ' .
+                    'Konflik dengan: ' . $conflictDetails
+                );
+            }
+
+            if ($pendingConflict) {
+                \Log::info("Pending conflict found for room ID: $room_id");
+                $conflictDetails = $conflictingBookings->where('status_persetujuan', 'pending')
+                    ->map(function ($booking) {
+                        return $booking->pengguna->nama . ' (' . $booking->waktu_mulai . ' - ' . $booking->waktu_selesai . ')';
+                    })->implode(', ');
+
+                // Allow booking but show warning
+                session()->flash(
+                    'warning',
+                    'Perhatian: Ada peminjaman pending yang mungkin bertabrakan. ' .
+                    'Konflik dengan: ' . $conflictDetails
+                );
+            }
+
+            // Generate unique token
+            $token = Str::random(32);
+            \Log::info("Generated token for room borrowing: $token");
+            // Get or create pengguna ID
+            $penggunaId = $this->getOrCreatePenggunaId();
+            \Log::info("Using pengguna ID: $penggunaId for room borrowing");
+            // Create borrowing record
+            $peminjaman = Peminjaman::create([
+                'id_pengguna' => $penggunaId,
+                'id_ruang' => $room_id,
+                'status_peminjaman' => 'insidental',
+                'keperluan' => $request->keperluan,
+                'status_persetujuan' => 'disetujui', // Auto approve for QR-based borrowing
+                'tanggal_pinjam' => $currentTime->format('Y-m-d'),
+                'waktu_mulai' => $currentTime->format('H:i'),
+                'waktu_selesai' => $endTime->format('H:i'),
+                'qr_token' => $token,
+            ]);
+
+            \Log::info("Peminjaman created: " . $peminjaman);
+
+            return redirect()->route('qr.success', ['id' => $peminjaman->id])
+                ->with('success', 'Peminjaman ruangan berhasil! Anda dapat menggunakan ruangan sekarang.');
+        } catch (\Exception $e) {
+            \Log::error("Error processing room borrow: " . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memproses peminjaman ruangan: ' . $e->getMessage());
         }
-
-        // Generate unique token
-        $token = Str::random(32);
-
-        // Get or create pengguna ID
-        $penggunaId = $this->getOrCreatePenggunaId();
-
-        // Create borrowing record
-        $peminjaman = Peminjaman::create([
-            'id_pengguna' => $penggunaId,
-            'id_ruang' => $room_id,
-            'status_peminjaman' => 'insidental',
-            'keperluan' => $request->keperluan,
-            'status_persetujuan' => 'disetujui', // Auto approve for QR-based borrowing
-            'tanggal_pinjam' => $currentTime->format('Y-m-d'),
-            'waktu_mulai' => $currentTime->format('H:i'),
-            'waktu_selesai' => $endTime->format('H:i'),
-            'qr_token' => $token,
-        ]);
-
-        return redirect()->route('qr.success', ['id' => $peminjaman->id])
-            ->with('success', 'Peminjaman ruangan berhasil! Anda dapat menggunakan ruangan sekarang.');
     }
 
     /**
