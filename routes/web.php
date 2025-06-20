@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/qr/generate-room', [QRCodeController::class, 'generateRoomQR'])->name('qr.generate.room');
     });
 
-    Route::middleware([])->group(function () {
+    Route::middleware(['role:pengguna'])->group(function () {
         Route::resource('users', UsersController::class);
 
         // detail ruangan

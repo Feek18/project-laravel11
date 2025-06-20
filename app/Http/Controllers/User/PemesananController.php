@@ -35,7 +35,6 @@ class PemesananController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'tanggal_pinjam' => 'required|date',
             'waktu_mulai' => 'required|date_format:H:i',
@@ -46,7 +45,7 @@ class PemesananController extends Controller
         // Prepare data for validation
         $validatedData = [
             'id_ruang' => $request->id_ruang,
-            'tanggal_pinjam' => $request->tanggal_pinjam, 
+            'tanggal_pinjam' => $request->tanggal_pinjam,
             'waktu_mulai' => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
             'keperluan' => $request->keperluan,
@@ -59,9 +58,12 @@ class PemesananController extends Controller
         if (!$validation['valid']) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', implode(' ', $validation['messages']));
+                ->withErrors(['conflict' => implode(' ', $validation['messages'])]);
         }
 
+        // dd($request->all());
+
+        // dd(Auth::user()->pengguna->id);
         Peminjaman::create([
             'id_pengguna' => Auth::user()->pengguna->id,
             'id_ruang' => $request->id_ruang,
@@ -72,6 +74,7 @@ class PemesananController extends Controller
             'waktu_mulai' => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai
         ]);
+        // dd($request->all());
 
         return redirect()->route('pemesanan.index')->with('success', 'Peminjaman berhasil dibuat');
     }
