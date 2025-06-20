@@ -24,7 +24,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/ruangan/{id}', [HomeController::class, 'show'])
     ->name('ruangan.show')
     ->middleware('auth');
-    // ->middleware('role:peminjam'); // Only allow users with 'pengguna' role
+// ->middleware('role:peminjam'); // Only allow users with 'pengguna' role
 
 // QR Code routes (accessible without auth for scanning)
 Route::prefix('qr')->group(function () {
@@ -33,7 +33,7 @@ Route::prefix('qr')->group(function () {
     Route::post('/room/{room_id}/process', [QRCodeController::class, 'processRoomBorrow'])->name('qr.room.process');
     Route::get('/success/{id}', [QRCodeController::class, 'showSuccess'])->name('qr.success');
     Route::post('/approve/{token}', [QRCodeController::class, 'approveQR'])->name('qr.approve');
-    Route::get('/test', function() {
+    Route::get('/test', function () {
         return view('qr.test');
     })->name('qr.test');
 });
@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('peminjam', PeminjamanController::class);
         Route::put('/peminjam/{id}/persetujuan', [PeminjamanController::class, 'persetujuan'])
             ->name('peminjam.persetujuan');
-        
+
         // QR Code generation for admin
         Route::post('/qr/generate-room', [QRCodeController::class, 'generateRoomQR'])->name('qr.generate.room');
     });
@@ -84,17 +84,18 @@ Route::middleware('auth')->group(function () {
 
         // QR Code generation for users
         Route::post('/qr/generate-instant', [QRCodeController::class, 'generateInstantQR'])->name('qr.generate.instant');
+        
+        // Profile routes for all authenticated users
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
-    // Profile routes for all authenticated users
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // QR Code testing and demo routes (accessible to all)
 Route::get('/qr/test', [QRCodeController::class, 'showTestPage'])->name('qr.test');
-Route::get('/qr/conflict-demo', function() {
+Route::get('/qr/conflict-demo', function () {
     return view('qr.conflict-demo');
 })->name('qr.conflict.demo');
 

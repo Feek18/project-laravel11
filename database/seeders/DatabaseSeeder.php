@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MatkulSeeder::class);
 
         $this->call(Peminjaman::class);
+
+        $this->call(JadwalSeeder::class);
     }
 }

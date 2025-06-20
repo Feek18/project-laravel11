@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Jadwal extends Model
 {
+    use HasFactory;
     protected $table = 'jadwals';
     protected $fillable = [
         'id_ruang',
@@ -69,7 +71,7 @@ class Jadwal extends Model
     {
         // For jadwal, we check by day of the week instead of specific date
         $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
-        
+
         return self::hasJadwalConflictByDay($id_ruang, $dayOfWeek, $jam_mulai, $jam_selesai, $exclude_id);
     }
 
@@ -90,7 +92,7 @@ class Jadwal extends Model
             'Friday' => 'jumat',
             'Saturday' => 'sabtu'
         ];
-        
+
         $englishDay = date('l', strtotime($tanggal));
         return $dayMap[$englishDay] ?? 'senin';
     }
@@ -110,12 +112,17 @@ class Jadwal extends Model
     {
         // Get all future peminjaman that fall on the same day of week as this jadwal
         $dayMap = [
-            'minggu' => 0, 'senin' => 1, 'selasa' => 2, 'rabu' => 3,
-            'kamis' => 4, 'jumat' => 5, 'sabtu' => 6
+            'minggu' => 0,
+            'senin' => 1,
+            'selasa' => 2,
+            'rabu' => 3,
+            'kamis' => 4,
+            'jumat' => 5,
+            'sabtu' => 6
         ];
-        
+
         $targetDayNumber = $dayMap[$hari] ?? 1;
-        
+
         $conflictingPeminjaman = Peminjaman::with(['pengguna', 'ruangan'])
             ->where('id_ruang', $id_ruang)
             ->where('tanggal_pinjam', '>=', now()->toDateString()) // Only future bookings
@@ -193,7 +200,7 @@ class Jadwal extends Model
     {
         // For jadwal, we check by day of the week instead of specific date
         $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
-        
+
         return self::getConflictingJadwalByDay($id_ruang, $dayOfWeek, $jam_mulai, $jam_selesai, $exclude_id);
     }
 
@@ -216,7 +223,7 @@ class Jadwal extends Model
     {
         // For room schedule display, show jadwal by day of the week
         $dayOfWeek = self::getDayOfWeekFromDate($tanggal);
-        
+
         return self::getRoomScheduleByDay($id_ruang, $dayOfWeek);
     }
 }
