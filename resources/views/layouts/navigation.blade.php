@@ -64,10 +64,10 @@
                                 </a>
                             </li>
                         @endrole
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('profile.edit') }}"
                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</a>
-                        </li>
+                        </li> --}}
                     </ul>
                     <div class="py-1">
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
