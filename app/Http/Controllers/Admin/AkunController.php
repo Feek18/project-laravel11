@@ -75,7 +75,7 @@ class AkunController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('peminjam');
+        // $user->assignRole('peminjam');
         if ($request->filled('pengguna')) {
             $pengguna = Pengguna::whereNull('user_id')->find($request->pengguna);
             if ($pengguna) {
