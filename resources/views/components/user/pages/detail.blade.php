@@ -19,7 +19,7 @@
     @include('layouts.header')
 
     {{-- Room Detail Section --}}
-    <section class="py-8 mt-16">
+    <section class="py-8">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <!-- Breadcrumb -->
             <nav class="flex mb-6" aria-label="Breadcrumb">
