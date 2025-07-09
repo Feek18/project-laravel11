@@ -33,25 +33,27 @@ class JadwalTest extends TestCase
 
     public function test_admin_dapat_menambahkan_jadwal()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
-        $this->actingAs($admin);
+        // $admin = User::factory()->create(['role' => 'admin']);
+        $this->actingAs($this->admin);
 
         $ruang = Ruangan::factory()->create();
         $matkul = MataKuliah::factory()->create();
 
         $response = $this->post('/jadwal', [
-            'id_ruang' => $ruang->id,
+            'id_ruang' => $ruang->id_ruang,
             'id_matkul' => $matkul->id,
-            'hari' => 'Senin',
+            'hari' => 'senin',
             'jam_mulai' => '08:00',
             'jam_selesai' => '10:00',
         ]);
 
         $response->assertRedirect(); // pastikan redirect (302)
-        $this->assertDatabaseHas('jadwal', [
-            'id_ruang' => $ruang->id,
+        \Log::info($ruang->id_ruang);
+        \Log::info($matkul->id);
+        $this->assertDatabaseHas('jadwals', [
+            'id_ruang' => $ruang->id_ruang,
             'id_matkul' => $matkul->id,
-            'hari' => 'Senin',
+            'hari' => 'senin',
         ]);
     }
 
@@ -74,10 +76,10 @@ class JadwalTest extends TestCase
         $ruang = Ruangan::factory()->create();
         $matkul = MataKuliah::factory()->create();
 
-        $response = $this->actingAs($this->admin)->post('/admin/jadwal', [
-            'id_ruang' => $ruang->id,
+        $response = $this->actingAs($this->admin)->post('/jadwal', [
+            'id_ruang' => $ruang->id_ruang,
             'id_matkul' => $matkul->id,
-            'hari' => 'Senin',
+            'hari' => 'senin',
             'jam_mulai' => '10:00',
             'jam_selesai' => '08:00',
         ]);
@@ -93,7 +95,7 @@ class JadwalTest extends TestCase
 
         // Jadwal pertama
         Jadwal::create([
-            'id_ruang' => $ruang->id,
+            'id_ruang' => $ruang->id_ruang,
             'id_matkul' => $matkul1->id,
             'hari' => 'Selasa',
             'jam_mulai' => '09:00',
@@ -101,7 +103,7 @@ class JadwalTest extends TestCase
         ]);
 
         // Tambah jadwal konflik
-        $response = $this->actingAs($this->admin)->post('/admin/jadwal', [
+        $response = $this->actingAs($this->admin)->post('/jadwal', [
             'id_ruang' => $ruang->id,
             'id_matkul' => $matkul2->id,
             'hari' => 'Selasa',
@@ -119,15 +121,15 @@ class JadwalTest extends TestCase
         $matkul = MataKuliah::factory()->create();
 
         $response = $this->actingAs($this->admin)->put("/jadwal/{$jadwal->id}", [
-            'id_ruang' => $ruang->id,
+            'id_ruang' => $ruang->id_ruang,
             'id_matkul' => $matkul->id,
-            'hari' => 'Kamis',
+            'hari' => 'kamis',
             'jam_mulai' => '13:00',
             'jam_selesai' => '15:00',
         ]);
 
         $response->assertRedirect();
-        $this->assertDatabaseHas('jadwal', [
+        $this->assertDatabaseHas('jadwals', [
             'id' => $jadwal->id,
             'hari' => 'Kamis',
         ]);
@@ -140,6 +142,6 @@ class JadwalTest extends TestCase
         $response = $this->actingAs($this->admin)->delete("/jadwal/{$jadwal->id}");
 
         $response->assertRedirect();
-        $this->assertDatabaseMissing('jadwal', ['id' => $jadwal->id]);
+        $this->assertDatabaseMissing('jadwals', ['id' => $jadwal->id]);
     }
 }

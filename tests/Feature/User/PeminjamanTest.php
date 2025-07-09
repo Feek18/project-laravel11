@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 class PeminjamanTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $user;
     protected $user_2nd;
