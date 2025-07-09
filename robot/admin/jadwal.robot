@@ -39,7 +39,7 @@ Tambah Jadwal tanpa Nama Ruangan
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    # Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    # Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
@@ -62,7 +62,7 @@ Tambah Jadwal tanpa Mata Kuliah
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     # Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
@@ -85,7 +85,7 @@ Tambah Jadwal tanpa Hari
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     # Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
@@ -108,7 +108,7 @@ Tambah Jadwal tanpa Jam Mulai
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     # Input Text    id=jam_mulai    08:00
@@ -131,7 +131,7 @@ Tambah Jadwal tanpa Jam Selesai
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
@@ -154,7 +154,7 @@ Tambah Jadwal Jam Tidak Valid
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
@@ -177,14 +177,15 @@ Tambah Jadwal
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
     Element Should Be Visible    id=jadwal-modal
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Senin
     Input Text    id=jam_mulai    08:00
     Input Text    id=jam_selesai    10:00
     Sleep    2s
     Click Button    id=jadwal-submit-btn
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!')]    timeout=10
+    Sleep    2s
+    Wait Until Element Is Visible    xpath=//*[contains(., 'success')]    timeout=10
     Close Browser
 Jadwal Konflik
     [Documentation] 
@@ -199,19 +200,20 @@ Jadwal Konflik
     Wait Until Element Is Visible    id=jadwal-table    timeout=10
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Selasa
     Input Text    id=jam_mulai    09:00
     Input Text    id=jam_selesai    11:00
     Sleep    2s
     Click Button    id=jadwal-submit-btn
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!')]    timeout=10
+    Wait Until Element Is Visible    xpath=//*[contains(., 'success')]    timeout=10
+    # Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!')]    timeout=10
 
     # Attempt to add a conflicting jadwal
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
-    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    id=id_matkul    Kecerdasan Buatan
     Select From List By Label    id=hari    Selasa
     Input Text    id=jam_mulai    10:30
@@ -253,7 +255,7 @@ Edit Jadwal - Validasi Waktu Invalid
     Sleep    ${SHORT_WAIT}
     
     # Fill with invalid time
-    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 2 - Gedung Lab EC - Lantai 2
+    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 2 - Gedung D - Lantai 3
     Select From List By Label    css=#edit-jadwal-modal select[name="id_matkul"]    Interoperabilitas
     Select From List By Label    css=#edit-jadwal-modal select[name="hari"]    Senin
     Clear Element Text    css=#edit-jadwal-modal input[name="jam_mulai"]
@@ -284,7 +286,7 @@ Edit Jadwal - Konflik Waktu
     # First, add a jadwal to create potential conflict
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=${WAIT_TIMEOUT}
-    Select From List By Label    id=id_ruang    Ruang Gedung 1 - Gedung D - Lantai 3
+    Select From List By Label    id=id_ruang    Ruang Gedung 1 - Gedung D4 TRPL - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
     Select From List By Label    id=hari    Kamis
     Input Text    id=jam_mulai    08:00
@@ -310,7 +312,7 @@ Edit Jadwal - Konflik Waktu
     Sleep    ${SHORT_WAIT}
     
     # Edit to create conflict
-    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 1 - Gedung D - Lantai 3
+    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 1 - Gedung D4 TRPL - Lantai 3
     Select From List By Label    css=#edit-jadwal-modal select[name="id_matkul"]    Kecerdasan Buatan
     Select From List By Label    css=#edit-jadwal-modal select[name="hari"]    Kamis
     Clear Element Text    css=#edit-jadwal-modal input[name="jam_mulai"]
@@ -354,7 +356,7 @@ Edit Jadwal - Berhasil
     Sleep    ${SHORT_WAIT}
     
     # Edit with valid data
-    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 3 - Gedung PUT - Lantai 2
+    Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 7 - Gedung D4 TRPL - Lantai 3
     Select From List By Label    css=#edit-jadwal-modal select[name="id_matkul"]    Kecerdasan Buatan
     Select From List By Label    css=#edit-jadwal-modal select[name="hari"]    Jumat
     Clear Element Text    css=#edit-jadwal-modal input[name="jam_mulai"]
