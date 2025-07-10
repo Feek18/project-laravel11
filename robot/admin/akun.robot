@@ -8,6 +8,8 @@ ${AKUN_URL}    http://localhost:8000/akun
 ${BROWSER}      chrome
 ${EMAIL}     admin@gmail.com
 ${PASSWORD}     admin123
+${NEW_EMAIL}       jack@gmail.com
+${NEW_PASSWORD}    newpass
 ${WAIT_TIMEOUT}    15
 ${SHORT_WAIT}      2
 ${LONG_WAIT}       5
@@ -114,23 +116,43 @@ Tambah Akun dengan Email yang Sudah Ada
 Tambah Akun - Berhasil
     [Documentation]    Test successful akun addition
     Open Browser    ${LOGIN_URL}    ${BROWSER}
+    Maximize Browser Window
+
     Input Text    id=email    ${EMAIL}
-    Input Text    id=password    ${PASSWORD}  
+    Input Text    id=password    ${PASSWORD}
     Click Button    id=login-button
+
     Wait Until Element Is Visible    id=dashboard    timeout=10
-    Element Should Be Visible    id=dashboard
+
     Click Element    id=akun-link
     Wait Until Element Is Visible    id=akun-table    timeout=10
-    Element Should Be Visible    id=akun-table
+
     Click Button    xpath=//button[contains(text(), 'Tambah') or @data-modal-target='authentication-modal']
     Wait Until Element Is Visible    id=authentication-modal    timeout=10
-    Element Should Be Visible    id=authentication-modal
-    Input Text    id=email    newuser@example.com
-    Input Text    id=password    newpass
-    Sleep    2s
+
+    Input Text    id=email    ${NEW_EMAIL}
+    Input Text    id=password    ${NEW_PASSWORD}
+
+    Sleep    1s
     Click Button    xpath=//button[contains(text(), 'Add')]
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!') or contains(text(), 'berhasil')]    timeout=10
+
+    # Tunggu modal tertutup dan data dimuat ulang
+    Wait Until Element Is Not Visible    id=authentication-modal    timeout=10
+    Sleep    2s
+    Reload Page
+
+    Wait Until Element Is Visible    id=akun-table    timeout=10
+
+    # Cari user berdasarkan email (jika pakai fitur pencarian di tabel)
+    Input Text    css=input[type="search"]    ${NEW_EMAIL}
+    Sleep    1s
+
+    # Verifikasi email muncul di tabel
+    Wait Until Page Contains    ${NEW_EMAIL}    timeout=10
+
+    Capture Page Screenshot
     Close Browser
+
 Delete Akun - Berhasil
     [Documentation]    Test successful akun deletion
     Open Browser    ${LOGIN_URL}    ${BROWSER}
