@@ -187,51 +187,65 @@ Tambah Jadwal
     Sleep    2s
     Wait Until Element Is Visible    xpath=//*[contains(., 'success')]    timeout=10
     Close Browser
+
 Jadwal Konflik
-    [Documentation] 
+    [Documentation]  Test menambahkan jadwal yang saling konflik dan validasi error
+
     Open Browser    ${LOGIN_URL}    ${BROWSER}
-    Input Text    id=email    ${EMAIL}
-    Input Text    id=password    ${PASSWORD}
+    Input Text      id=email        ${EMAIL}
+    Input Text      id=password     ${PASSWORD}
     Click Button    id=login-button
     Wait Until Element Is Visible    id=dashboard    timeout=10
 
-    # Add the first valid jadwal
+    # Add jadwal pertama (valid)
     Click Element    id=jadwal-link
     Wait Until Element Is Visible    id=jadwal-table    timeout=10
-    Click Button    id=tambah-jadwal-button
+    Click Button     id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
+
     Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
-    Select From List By Label    id=id_matkul    Interoperabilitas
-    Select From List By Label    id=hari    Selasa
-    Input Text    id=jam_mulai    09:00
-    Input Text    id=jam_selesai    11:00
+    Select From List By Label    id=id_matkul   Interoperabilitas
+    Select From List By Label    id=hari        Selasa
+    Input Text                  id=jam_mulai    09:00
+    Input Text                  id=jam_selesai  11:00
+
     Sleep    2s
     Click Button    id=jadwal-submit-btn
+
+    # Tunggu pesan sukses muncul
     Wait Until Element Is Visible    xpath=//*[contains(., 'success')]    timeout=10
-    # Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!')]    timeout=10
 
-    # Attempt to add a conflicting jadwal
-    Click Button    id=tambah-jadwal-button
+    # Tutup modal secara manual (jika tidak otomatis)
+    Run Keyword And Ignore Error    Click Element    xpath=//button[@data-modal-hide='jadwal-modal' or contains(text(), '×')]
+    Wait Until Element Is Not Visible    id=jadwal-modal    timeout=10
+
+    Sleep    1s
+
+    # Add jadwal kedua (konflik)
+    Click Button     id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=10
+
     Select From List By Label    id=id_ruang    Ruang Gedung 2 - Gedung D - Lantai 3
-    Select From List By Label    id=id_matkul    Kecerdasan Buatan
-    Select From List By Label    id=hari    Selasa
-    Input Text    id=jam_mulai    10:30
-    Input Text    id=jam_selesai    12:00
+    Select From List By Label    id=id_matkul   Kecerdasan Buatan
+    Select From List By Label    id=hari        Selasa
+    Input Text                  id=jam_mulai    10:30
+    Input Text                  id=jam_selesai  12:00
 
-    Sleep    2s    # Give time for debounce conflict checker to run
+    Sleep    2s
 
-    # Validate conflict checker response
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'Konflik')]    timeout=10
+    # Validasi pesan konflik muncul (jika menggunakan alert)
+    Wait Until Element Is Visible    xpath=//*[contains(., 'Konflik')]    timeout=10
 
-    # Try submitting anyway
+    # Tetap coba klik submit
     Click Button    id=jadwal-submit-btn
     Sleep    2s
 
-    # Check that page still shows modal or does not show success
-    # Wait Until Element Is Not Visible    xpath=//*[contains(text(), 'success!')]    timeout=10
+    # Validasi bahwa modal tetap muncul, artinya tidak berhasil submit
+    Element Should Be Visible    id=jadwal-modal
 
+    Capture Page Screenshot
     Close Browser
+
 Edit Jadwal - Validasi Waktu Invalid
     [Documentation]    Test editing jadwal with invalid time (end time before start time)
     Open Browser    ${LOGIN_URL}    ${BROWSER}
@@ -273,61 +287,66 @@ Edit Jadwal - Validasi Waktu Invalid
 
 Edit Jadwal - Konflik Waktu
     [Documentation]    Test editing jadwal that creates a time conflict
+
     Open Browser    ${LOGIN_URL}    ${BROWSER}
     Input Text    id=email    ${EMAIL}
     Input Text    id=password    ${PASSWORD}
     Click Button    id=login-button
     Wait Until Element Is Visible    id=dashboard    timeout=${WAIT_TIMEOUT}
-    
+
     # Navigate to jadwal page
     Click Element    id=jadwal-link
     Wait Until Element Is Visible    id=jadwal-table    timeout=${WAIT_TIMEOUT}
-    
-    # First, add a jadwal to create potential conflict
+
+    # Add valid jadwal terlebih dahulu
     Click Button    id=tambah-jadwal-button
     Wait Until Element Is Visible    id=jadwal-modal    timeout=${WAIT_TIMEOUT}
     Select From List By Label    id=id_ruang    Ruang Gedung 1 - Gedung D4 TRPL - Lantai 3
     Select From List By Label    id=id_matkul    Interoperabilitas
-    Select From List By Label    id=hari    Kamis
-    Input Text    id=jam_mulai    08:00
-    Input Text    id=jam_selesai    10:00
-    Click Button    id=jadwal-submit-btn
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'success!')]    timeout=${WAIT_TIMEOUT}
-    
-    # Wait for table to refresh
+    Select From List By Label    id=hari         Kamis
+    Input Text                  id=jam_mulai     08:00
+    Input Text                  id=jam_selesai   10:00
+    Click Button                id=jadwal-submit-btn
+
+    Wait Until Element Is Visible    xpath=//*[contains(., 'success')]    timeout=${WAIT_TIMEOUT}
+    Sleep    ${SHORT_WAIT}
+    Wait Until Element Is Not Visible    id=jadwal-modal    timeout=10
+
+    # Refresh jadwal list
     Sleep    ${LONG_WAIT}
     Wait Until Element Is Visible    css=table#jadwal-table tbody tr    timeout=${WAIT_TIMEOUT}
-    
-    # Get all edit buttons and click the second one
+
+    # Klik tombol edit
     ${edit_buttons}=    Get WebElements    css=button[id^="edit-jadwal-"]
-    ${button_count}=    Get Length    ${edit_buttons}
-    Log    Found ${button_count} edit buttons
-    
-    # Click the second edit button if it exists, otherwise click the first
-    Run Keyword If    ${button_count} >= 2    Click Element    xpath=(//button[starts-with(@id, 'edit-jadwal-')])[2]
+    ${count}=    Get Length    ${edit_buttons}
+    Log    Found ${count} edit buttons
+    Run Keyword If    ${count} >= 2    Click Element    xpath=(//button[starts-with(@id, 'edit-jadwal-')])[2]
     ...    ELSE    Click Element    xpath=(//button[starts-with(@id, 'edit-jadwal-')])[1]
-    
-    # Wait for edit modal
+
     Wait Until Element Is Visible    id=edit-jadwal-modal    timeout=${WAIT_TIMEOUT}
     Sleep    ${SHORT_WAIT}
-    
-    # Edit to create conflict
+
+    # Edit menjadi jadwal yang konflik
     Select From List By Label    css=#edit-jadwal-modal select[name="id_ruang"]    Ruang Gedung 1 - Gedung D4 TRPL - Lantai 3
     Select From List By Label    css=#edit-jadwal-modal select[name="id_matkul"]    Kecerdasan Buatan
     Select From List By Label    css=#edit-jadwal-modal select[name="hari"]    Kamis
-    Clear Element Text    css=#edit-jadwal-modal input[name="jam_mulai"]
-    Input Text    css=#edit-jadwal-modal input[name="jam_mulai"]    09:00
-    Clear Element Text    css=#edit-jadwal-modal input[name="jam_selesai"]
-    Input Text    css=#edit-jadwal-modal input[name="jam_selesai"]    11:00
-    
-    Sleep    ${SHORT_WAIT}    # Wait for conflict checker
-    
-    # Check for conflict warning
-    Wait Until Element Is Visible    xpath=//*[contains(text(), 'Konflik') or contains(text(), 'error!')]    timeout=${WAIT_TIMEOUT}
-    
-    # Try to submit anyway
+    Clear Element Text           css=#edit-jadwal-modal input[name="jam_mulai"]
+    Input Text                   css=#edit-jadwal-modal input[name="jam_mulai"]    09:00
+    Clear Element Text           css=#edit-jadwal-modal input[name="jam_selesai"]
+    Input Text                   css=#edit-jadwal-modal input[name="jam_selesai"]  11:00
+
+    Sleep    ${SHORT_WAIT}
+
+    # Validasi muncul pesan konflik
+    Wait Until Element Is Visible    xpath=//*[contains(., 'Konflik') or contains(., 'error')]    timeout=${WAIT_TIMEOUT}
+
+    # Tetap klik submit
     Click Button    css=#edit-jadwal-modal button[type="submit"]
-    Sleep    3s
+
+    # Modal tidak tertutup (submit gagal karena konflik)
+    Wait Until Element Is Visible    id=edit-jadwal-modal    timeout=5
+
+    Capture Page Screenshot
     Close Browser
 
 Edit Jadwal - Berhasil
