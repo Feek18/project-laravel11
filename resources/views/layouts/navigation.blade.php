@@ -55,20 +55,20 @@
                         <div>Bonnie Green</div>
                         <div class="font-medium truncate">name@flowbite.com</div>
                     </div> --}}
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                        @role('admin')
+                    {{-- <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                        {{-- @role('admin')
                             <li>
                                 <a href="{{ url('/') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     Back to Home
                                 </a>
                             </li>
-                        @endrole
+                        @endrole --}}
                         {{-- <li>
                             <a href="{{ route('profile.edit') }}"
                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</a>
-                        </li> --}}
-                    </ul>
+                        </li>
+                    </ul> --}}
                     <div class="py-1">
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
@@ -145,3 +145,11 @@
     </div>
 
 </nav>
+
+<script>
+    function confirmLogout(formId) {
+        if (confirm('Apakah Anda yakin ingin logout?')) {
+            document.getElementById(formId).submit();
+        }
+    }
+</script>
